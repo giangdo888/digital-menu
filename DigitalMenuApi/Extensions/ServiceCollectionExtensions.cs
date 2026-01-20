@@ -1,4 +1,6 @@
 using DigitalMenuApi.Data;
+using DigitalMenuApi.Repositories.Implementations;
+using DigitalMenuApi.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace DigitalMenuApi.Extensions;
@@ -30,6 +32,11 @@ public static class ServiceCollectionExtensions
         // Add DbContext
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+        // Add Repositories
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<IUserRepository, UserRepository>();
 
         // TODO: Add other services here as you build them:
         // - Repositories
