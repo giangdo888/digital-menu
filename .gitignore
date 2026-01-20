@@ -1,0 +1,39 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# .NET
+bin/
+obj/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.cache
+*.dll
+*.exe
+*.pdb
+
+# User-specific files (contains secrets)
+**/Properties/launchSettings.json
+
+# IDE
+.idea/
+.vs/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+#document
+docs/
