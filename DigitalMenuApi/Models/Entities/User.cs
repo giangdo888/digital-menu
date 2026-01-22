@@ -12,7 +12,7 @@ public class User : BaseEntity
     //navigation properties
     public Role Role { get; set; } = null!;
     public UserProfile? UserProfile { get; set; }  // Nullable - customers may not have profile
-    public Restaurant? Restaurant { get; set; }  //Nullalble - only retaurant_admins have this 
+    public ICollection<Restaurant> Restaurants { get; set; } = new List<Restaurant>();  // Only restaurant_admins have this 
     public ICollection<MealLog> MealLogs { get; set; } = new List<MealLog>();
     public ICollection<WeightHistory> WeightHistories { get; set; } = new List<WeightHistory>();
     public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();

@@ -71,6 +71,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<INutritionService, NutritionService>();
+        services.AddScoped<IRestaurantService, RestaurantService>();
 
         // TODO: Add other services here as you build them:
         // - AWS S3 Storage Service

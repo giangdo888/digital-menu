@@ -47,12 +47,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .WithOne(up => up.User)
             .HasForeignKey<UserProfile>(up => up.UserId)
             .OnDelete(DeleteBehavior.Restrict);
-        
-        builder.HasOne(u => u.Restaurant)
-            .WithOne(r => r.User)
-            .HasForeignKey<Restaurant>(r => r.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
-            
+
+        // User -> Restaurants relationship defined in RestaurantConfiguration
+
         builder.HasMany(u => u.MealLogs)
             .WithOne(ml => ml.User)
             .HasForeignKey(ml => ml.UserId)

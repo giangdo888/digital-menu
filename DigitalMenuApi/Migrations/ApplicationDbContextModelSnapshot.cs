@@ -323,6 +323,14 @@ namespace DigitalMenuApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -337,6 +345,19 @@ namespace DigitalMenuApi.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("OpeningHours")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -345,8 +366,10 @@ namespace DigitalMenuApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
+                    b.HasIndex("Slug")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Restaurants", (string)null);
                 });
@@ -611,8 +634,8 @@ namespace DigitalMenuApi.Migrations
             modelBuilder.Entity("DigitalMenuApi.Models.Entities.Restaurant", b =>
                 {
                     b.HasOne("DigitalMenuApi.Models.Entities.User", "User")
-                        .WithOne("Restaurant")
-                        .HasForeignKey("DigitalMenuApi.Models.Entities.Restaurant", "UserId")
+                        .WithMany("Restaurants")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -685,7 +708,7 @@ namespace DigitalMenuApi.Migrations
 
                     b.Navigation("RefreshTokens");
 
-                    b.Navigation("Restaurant");
+                    b.Navigation("Restaurants");
 
                     b.Navigation("UserProfile");
 
