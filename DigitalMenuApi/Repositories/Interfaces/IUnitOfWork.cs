@@ -14,6 +14,7 @@ public interface IUnitOfWork : IDisposable
     IRepository<DishIngredient> DishIngredients { get; }
     IRepository<MealLog> MealLogs { get; }
     IRepository<WeightHistory> WeightHistories { get; }
+    IRepository<RefreshToken> RefreshTokens { get; }
 
     Task<int> SaveChangesAsync();
 

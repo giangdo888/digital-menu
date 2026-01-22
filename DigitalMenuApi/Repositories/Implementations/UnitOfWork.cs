@@ -21,6 +21,7 @@ public class UnitOfWork : IUnitOfWork
     private IRepository<DishIngredient>? _dishIngredients;
     private IRepository<MealLog>? _mealLogs;
     private IRepository<WeightHistory>? _weightHistories;
+    private IRepository<RefreshToken>? _refreshTokens;
 
     public UnitOfWork(ApplicationDbContext context)
     {
@@ -38,6 +39,7 @@ public class UnitOfWork : IUnitOfWork
     public IRepository<DishIngredient> DishIngredients => _dishIngredients ??= new Repository<DishIngredient>(_context);
     public IRepository<MealLog> MealLogs => _mealLogs ??= new Repository<MealLog>(_context);
     public IRepository<WeightHistory> WeightHistories => _weightHistories ??= new Repository<WeightHistory>(_context);
+    public IRepository<RefreshToken> RefreshTokens => _refreshTokens ??= new Repository<RefreshToken>(_context);
 
     public async Task<int> SaveChangesAsync()
     {

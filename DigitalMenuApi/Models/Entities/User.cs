@@ -15,4 +15,5 @@ public class User : BaseEntity
     public Restaurant? Restaurant { get; set; }  //Nullalble - only retaurant_admins have this 
     public ICollection<MealLog> MealLogs { get; set; } = new List<MealLog>();
     public ICollection<WeightHistory> WeightHistories { get; set; } = new List<WeightHistory>();
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }

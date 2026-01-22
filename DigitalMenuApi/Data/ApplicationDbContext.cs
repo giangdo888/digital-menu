@@ -16,6 +16,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<DishIngredient> DishIngredients { get; set; }
     public DbSet<MealLog> MealLogs { get; set; }
     public DbSet<WeightHistory> WeightHistories { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

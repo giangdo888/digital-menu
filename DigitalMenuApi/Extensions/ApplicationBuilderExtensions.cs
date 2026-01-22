@@ -1,4 +1,5 @@
 namespace DigitalMenuApi.Extensions;
+using DigitalMenuApi.Middleware;
 
 public static class ApplicationBuilderExtensions
 {
@@ -7,6 +8,9 @@ public static class ApplicationBuilderExtensions
     /// </summary>
     public static WebApplication ConfigureApplicationPipeline(this WebApplication app)
     {
+
+        // add exception middleware
+        app.UseMiddleware<ExceptionMiddleware>();
         // Configure Swagger in Development
         if (app.Environment.IsDevelopment())
         {
@@ -20,6 +24,7 @@ public static class ApplicationBuilderExtensions
 
         // Security & Routing
         app.UseHttpsRedirection();
+        app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
 

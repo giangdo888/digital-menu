@@ -265,6 +265,48 @@ namespace DigitalMenuApi.Migrations
                     b.ToTable("MealLogs", (string)null);
                 });
 
+            modelBuilder.Entity("DigitalMenuApi.Models.Entities.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReplacedByToken")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens", (string)null);
+                });
+
             modelBuilder.Entity("DigitalMenuApi.Models.Entities.Restaurant", b =>
                 {
                     b.Property<int>("Id")
@@ -560,6 +602,17 @@ namespace DigitalMenuApi.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("DigitalMenuApi.Models.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("DigitalMenuApi.Models.Entities.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("DigitalMenuApi.Models.Entities.Restaurant", b =>
                 {
                     b.HasOne("DigitalMenuApi.Models.Entities.User", "User")
@@ -634,6 +687,8 @@ namespace DigitalMenuApi.Migrations
             modelBuilder.Entity("DigitalMenuApi.Models.Entities.User", b =>
                 {
                     b.Navigation("MealLogs");
+
+                    b.Navigation("RefreshTokens");
 
                     b.Navigation("Restaurant");
 

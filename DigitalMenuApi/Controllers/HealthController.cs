@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DigitalMenuApi.Controllers;
 
@@ -9,6 +10,7 @@ public class HealthController : ControllerBase
     /// <summary>
     /// Health check endpoint to verify API is running
     /// </summary>
+    [Authorize]
     [HttpGet]
     public IActionResult Get()
     {

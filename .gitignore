@@ -37,3 +37,6 @@ docker-compose.override.yml
 
 #document
 docs/
+
+//migartion files
+DigitalMenuApi/Migrations/
