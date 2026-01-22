@@ -41,4 +41,7 @@ public class Result
 
     public static Result Success() => new(true, null, 200);
     public static Result Failure(string error, int statusCode = 400) => new(false, error, statusCode);
+    public static Result Unauthorized(string error = "Unauthorized") => new(false, error, 401);
+    public static Result Forbidden(string error = "Forbidden") => new(false, error, 403);
+    public static Result NotFound(string error = "Not found") => new(false, error, 404);
 }

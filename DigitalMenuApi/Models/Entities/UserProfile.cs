@@ -7,8 +7,7 @@ public class UserProfile : BaseEntity
     public required DateOnly DateOfBirth { get; set; }
     public required decimal HeightCm { get; set; }
     public required decimal CurrentWeightKg { get; set; }
-    public required decimal GoalWeightKg { get; set; }
-    public required string DietaryGoal { get; set; }  // "weight_loss" / "maintenance" / "muscle_gain"
+    public decimal BmiGoal { get; set; } = 20m; // 20 is the ideal BMI
     public DateTime LastWeightUpdate { get; set; }
 
     // Navigation properties

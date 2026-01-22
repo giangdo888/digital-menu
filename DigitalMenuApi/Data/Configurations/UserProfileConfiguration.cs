@@ -32,13 +32,8 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             .IsRequired()
             .HasPrecision(5, 2);
 
-        builder.Property(up => up.GoalWeightKg)
-            .IsRequired()
+        builder.Property(up => up.BmiGoal)
             .HasPrecision(5, 2);
-
-        builder.Property(up => up.DietaryGoal)
-            .IsRequired()
-            .HasMaxLength(20);
 
         builder.Property(up => up.LastWeightUpdate)
             .IsRequired();

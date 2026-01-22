@@ -5,7 +5,7 @@ using DigitalMenuApi.Services.Interfaces;
 using DigitalMenuApi.DTOs.Requests;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/auth")]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
@@ -15,6 +15,9 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
+    /// <summary>
+    /// Register a new user
+    /// </summary>
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
@@ -25,6 +28,9 @@ public class AuthController : ControllerBase
         return Ok(result.Data);
     }
 
+    /// <summary>
+    /// Login a user
+    /// </summary>
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
@@ -35,6 +41,9 @@ public class AuthController : ControllerBase
         return Ok(result.Data);
     }
 
+    /// <summary>
+    /// Refresh a token
+    /// </summary>
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
     {
@@ -45,6 +54,9 @@ public class AuthController : ControllerBase
         return Ok(result.Data);
     }
 
+    /// <summary>
+    /// Revoke a token
+    /// </summary>
     [HttpPost("revoke-token")]
     public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenRequest request)
     {

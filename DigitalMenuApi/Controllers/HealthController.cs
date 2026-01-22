@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace DigitalMenuApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/health")]
 public class HealthController : ControllerBase
 {
     /// <summary>
