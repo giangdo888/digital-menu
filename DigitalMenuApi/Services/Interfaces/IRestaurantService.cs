@@ -19,4 +19,5 @@ public interface IRestaurantService
     // Public operations
     Task<Result<RestaurantPublicResponse>> GetRestaurantBySlugAsync(string slug);
     Task<Result<IEnumerable<RestaurantListItemResponse>>> GetPublicRestaurantListAsync();
+    Task<Result<MenuResponse>> GetMenuBySlugAsync(string slug);
 }

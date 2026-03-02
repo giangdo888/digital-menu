@@ -230,6 +230,53 @@ public class RestaurantService : IRestaurantService
         return Result<IEnumerable<RestaurantListItemResponse>>.Success(restaurants.Select(MapToListItemResponse));
     }
 
+    public async Task<Result<MenuResponse>> GetMenuBySlugAsync(string slug)
+    {
+        var restaurant = await _unitOfWork.Restaurants.Query()
+            .Include(r => r.Categories.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name))
+                .ThenInclude(c => c.Dishes.Where(d => d.IsActive).OrderBy(d => d.DisplayOrder).ThenBy(d => d.Name))
+                    .ThenInclude(d => d.DishIngredients)
+                        .ThenInclude(di => di.AfcdItem)
+            .FirstOrDefaultAsync(r => r.Slug == slug && r.IsActive);
+
+        if (restaurant == null)
+        {
+            return Result<MenuResponse>.NotFound("Restaurant not found");
+        }
+
+        var menu = new MenuResponse
+        {
+            Restaurant = MapToPublicResponse(restaurant),
+            Categories = restaurant.Categories.Select(c => new MenuCategoryResponse
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Type = c.Type,
+                DisplayOrder = c.DisplayOrder,
+                Dishes = c.Dishes.Select(d => new MenuDishResponse
+                {
+                    Id = d.Id,
+                    Name = d.Name,
+                    Price = d.Price,
+                    ImageUrl = d.ImageUrl,
+                    DisplayOrder = d.DisplayOrder,
+                    Calories = d.Calories,
+                    ProteinG = d.ProteinG,
+                    CarbsG = d.CarbsG,
+                    FatG = d.FatG,
+                    Ingredients = d.DishIngredients.Select(di => new MenuIngredientResponse
+                    {
+                        Name = di.AfcdItem?.Name ?? string.Empty,
+                        Variant = di.AfcdItem?.Variant,
+                        AmountInGrams = di.Amount
+                    }).ToList()
+                }).ToList()
+            }).ToList()
+        };
+
+        return Result<MenuResponse>.Success(menu);
+    }
+
     #endregion
 
     #region Helpers

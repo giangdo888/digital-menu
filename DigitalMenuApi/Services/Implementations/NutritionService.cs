@@ -66,30 +66,28 @@ public class NutritionService : INutritionService
 
     /// <summary>
     /// Adjust calories based on goal:
-    /// - Lose: TDEE - 500 (0.5kg/week loss)
+    /// - Lose: TDEE - 500 (approx. 0.5kg/week loss)
     /// - Maintain: TDEE
     /// - Gain: TDEE + 300 (lean gain)
+    /// References: 
+    /// - Hall, K. D. (2008). What is the required energy deficit per unit weight loss? International Journal of Obesity.
+    /// - Redman, L. M., et al. (2009). Metabolic and Behavioral Compensations in Response to Caloric Restriction.
     /// </summary>
     public decimal CalculateDailyCaloriesTarget(decimal tdee, string dietaryGoal)
     {
         return dietaryGoal.ToLower() switch
         {
-            "lose" => Math.Max(1200, tdee - 500),  // Minimum 1200 calories for safety
+            "lose" => Math.Max(1200, tdee - 500),  // Minimum 1200 calories for safety (ACSM guidelines)
             "gain" => tdee + 300,
             _ => tdee  // maintain
         };
     }
 
     /// <summary>
-    /// Calculate macros based on goal:
-    /// - Protein: 1.6-2.2g per kg body weight (using calories as proxy)
-    /// - Fat: 25-30% of calories
-    /// - Carbs: remainder
-    ///
-    /// Simplified approach using calorie percentages:
-    /// - Lose:     40% protein, 30% carbs, 30% fat
-    /// - Maintain: 30% protein, 40% carbs, 30% fat
-    /// - Gain:     30% protein, 45% carbs, 25% fat
+    /// Calculate macros based on goal using calorie percentages.
+    /// References:
+    /// - Protein (1.6-2.2g/kg proxy): Morton, R. W., et al. (2018). A systematic review... protein supplementation on resistance training-induced gains. British Journal of Sports Medicine.
+    /// - AMDR (Acceptable Macronutrient Distribution Ranges): Institute of Medicine (2005). Dietary Reference Intakes for Energy, Carbohydrate, Fiber, Fat, Fatty Acids, Cholesterol, Protein, and Amino Acids.
     /// </summary>
     public (decimal proteinG, decimal carbsG, decimal fatG) CalculateMacros(decimal dailyCalories, string dietaryGoal)
     {
@@ -114,7 +112,7 @@ public class NutritionService : INutritionService
                 break;
         }
 
-        // Protein: 4 cal/g, Carbs: 4 cal/g, Fat: 9 cal/g
+        // Energy density: Protein 4 kcal/g, Carbs 4 kcal/g, Fat 9 kcal/g (Atwater system)
         var proteinG = Math.Round((dailyCalories * proteinPct) / 4, 0);
         var carbsG = Math.Round((dailyCalories * carbsPct) / 4, 0);
         var fatG = Math.Round((dailyCalories * fatPct) / 9, 0);

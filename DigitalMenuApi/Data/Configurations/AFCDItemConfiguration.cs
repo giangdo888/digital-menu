@@ -12,6 +12,11 @@ public class AFCDItemConfiguration : IEntityTypeConfiguration<AFCDItem>
 
         // Indexes
         builder.HasIndex(a => a.Name);
+        builder.HasIndex(a => a.PublicFoodKey).IsUnique();
+
+        // PublicFoodKey config
+        builder.Property(a => a.PublicFoodKey)
+            .HasMaxLength(50);
 
         // Column configs
         builder.Property(a => a.Name)

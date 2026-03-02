@@ -173,5 +173,21 @@ public class RestaurantController : ControllerBase
         return Ok(result.Data);
     }
 
+    /// <summary>
+    /// Get full menu by restaurant slug (Public - no auth required)
+    /// Returns restaurant info + categories + dishes with nutrition
+    /// </summary>
+    [HttpGet("public/{slug}/menu")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetMenuBySlug(string slug)
+    {
+        var result = await _restaurantService.GetMenuBySlugAsync(slug);
+
+        if (result.IsFailure)
+            return StatusCode(result.StatusCode, new { error = result.Error });
+
+        return Ok(result.Data);
+    }
+
     #endregion
 }

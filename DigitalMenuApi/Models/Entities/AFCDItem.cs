@@ -2,6 +2,7 @@ namespace DigitalMenuApi.Models.Entities;
 
 public class AFCDItem : BaseEntity
 {
+    public string? PublicFoodKey { get; set; }  // AFCD unique identifier for deduplication
     public required string Name { get; set; }  // Main ingredient name (e.g., "Avocado")
     public string? Variant { get; set; }       // Variant details (e.g., "hass, raw")
 
