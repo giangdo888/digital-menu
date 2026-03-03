@@ -315,7 +315,7 @@ public class UserService : IUserService
         var weightGoal = _nutritionService.CalculateWeightFromBmi(profile.BmiGoal, profile.HeightCm);
         //maintain tolerance of 1kg
         var weightDifference = weightGoal - profile.CurrentWeightKg;
-        var dietaryGoal = weightDifference < 1 ? "lose" : weightDifference > -1 ? "gain" : "maintain";
+        var dietaryGoal = weightDifference < -1 ? "lose" : weightDifference > 1 ? "gain" : "maintain";
         var dailyCalories = _nutritionService.CalculateDailyCaloriesTarget(tdee, dietaryGoal);
         var (proteinG, carbsG, fatG) = _nutritionService.CalculateMacros(dailyCalories, dietaryGoal);
 
