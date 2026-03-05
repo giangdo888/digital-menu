@@ -11,8 +11,6 @@ public class MealLog : BaseEntity
     public required decimal CarbsG { get; set; }
     public required decimal FatG { get; set; }
 
-    public DateTime LoggedAt { get; set; }
-
     // Navigation properties
     public User User { get; set; } = null!;
     public Dish Dish { get; set; } = null!;

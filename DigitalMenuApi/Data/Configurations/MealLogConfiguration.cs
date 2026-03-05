@@ -11,7 +11,7 @@ public class MealLogConfiguration : IEntityTypeConfiguration<MealLog>
         builder.ToTable("MealLogs");
 
         // Indexes
-        builder.HasIndex(ml => new { ml.UserId, ml.LoggedAt });
+        builder.HasIndex(ml => new { ml.UserId, ml.CreatedAt });
 
         // Column configs
         builder.Property(ml => ml.UserId)
@@ -37,7 +37,7 @@ public class MealLogConfiguration : IEntityTypeConfiguration<MealLog>
             .IsRequired()
             .HasPrecision(8, 2);
 
-        builder.Property(ml => ml.LoggedAt)
+        builder.Property(ml => ml.CreatedAt)
             .IsRequired();
     }
 }
