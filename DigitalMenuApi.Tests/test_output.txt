@@ -1,4 +1,0 @@
-  Determining projects to restore...
-C:\Program Files\dotnet\sdk\9.0.306\NuGet.targets(186,5): error : Access to the path 'D:\side projects\digital menu\digital menu\DigitalMenuApi\obj\DigitalMenuApi.csproj.nuget.g.props' is denied. [D:\side projects\digital menu\digital menu\DigitalMenuApi.Tests\DigitalMenuApi.Tests.csproj]
-
-Workload updates are available. Run `dotnet workload list` for more information.

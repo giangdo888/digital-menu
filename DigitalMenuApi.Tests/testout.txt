@@ -1,9 +1,0 @@
-Test run for D:\side projects\digital menu\digital menu\DigitalMenuApi.Tests\bin\Debug\net9.0\DigitalMenuApi.Tests.dll (.NETCoreApp,Version=v9.0)
-VSTest version 17.14.1 (x64)
-
-Starting test execution, please wait...
-A total of 1 test files matched the specified pattern.
-
-Passed!  - Failed:     0, Passed:    44, Skipped:     0, Total:    44, Duration: 3 s - DigitalMenuApi.Tests.dll (net9.0)
-
-Workload updates are available. Run `dotnet workload list` for more information.

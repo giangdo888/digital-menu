@@ -26,7 +26,7 @@ public class AuthServiceTests
         _mockLogger = new Mock<ILogger<AuthService>>();
 
         // Setup mock JWT config so GenerateJwtToken doesn't throw
-        var jwtSettings = new Dictionary<string, string>
+        var jwtSettings = new Dictionary<string, string?>
         {
             {"JwtSettings:SecretKey", "SuperSecretKeyForTestingThatIsAtLeast32Bytes!"},
             {"JwtSettings:Issuer", "TestIssuer"},
