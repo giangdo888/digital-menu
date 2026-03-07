@@ -4,6 +4,7 @@ using DigitalMenuApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,13 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DigitalMenuApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260122081702_UpdateProfile")]
+    partial class UpdateProfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.13")
+                .HasAnnotation("ProductVersion", "9.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -57,10 +60,6 @@ namespace DigitalMenuApi.Migrations
                         .HasPrecision(8, 2)
                         .HasColumnType("decimal(8,2)");
 
-                    b.Property<string>("PublicFoodKey")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -71,10 +70,6 @@ namespace DigitalMenuApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Name");
-
-                    b.HasIndex("PublicFoodKey")
-                        .IsUnique()
-                        .HasFilter("[PublicFoodKey] IS NOT NULL");
 
                     b.ToTable("AFCDItems", (string)null);
                 });
@@ -251,6 +246,9 @@ namespace DigitalMenuApi.Migrations
                         .HasPrecision(8, 2)
                         .HasColumnType("decimal(8,2)");
 
+                    b.Property<DateTime>("LoggedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<decimal>("ProteinG")
                         .HasPrecision(8, 2)
                         .HasColumnType("decimal(8,2)");
@@ -265,7 +263,7 @@ namespace DigitalMenuApi.Migrations
 
                     b.HasIndex("DishId");
 
-                    b.HasIndex("UserId", "CreatedAt");
+                    b.HasIndex("UserId", "LoggedAt");
 
                     b.ToTable("MealLogs", (string)null);
                 });
@@ -328,14 +326,6 @@ namespace DigitalMenuApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -350,19 +340,6 @@ namespace DigitalMenuApi.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("OpeningHours")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Phone")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -371,10 +348,8 @@ namespace DigitalMenuApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Slug")
+                    b.HasIndex("UserId")
                         .IsUnique();
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Restaurants", (string)null);
                 });
@@ -639,8 +614,8 @@ namespace DigitalMenuApi.Migrations
             modelBuilder.Entity("DigitalMenuApi.Models.Entities.Restaurant", b =>
                 {
                     b.HasOne("DigitalMenuApi.Models.Entities.User", "User")
-                        .WithMany("Restaurants")
-                        .HasForeignKey("UserId")
+                        .WithOne("Restaurant")
+                        .HasForeignKey("DigitalMenuApi.Models.Entities.Restaurant", "UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -713,7 +688,7 @@ namespace DigitalMenuApi.Migrations
 
                     b.Navigation("RefreshTokens");
 
-                    b.Navigation("Restaurants");
+                    b.Navigation("Restaurant");
 
                     b.Navigation("UserProfile");
 

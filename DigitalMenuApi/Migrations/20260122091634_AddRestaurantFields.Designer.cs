@@ -4,6 +4,7 @@ using DigitalMenuApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,13 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DigitalMenuApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260122091634_AddRestaurantFields")]
+    partial class AddRestaurantFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.13")
+                .HasAnnotation("ProductVersion", "9.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -57,10 +60,6 @@ namespace DigitalMenuApi.Migrations
                         .HasPrecision(8, 2)
                         .HasColumnType("decimal(8,2)");
 
-                    b.Property<string>("PublicFoodKey")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -71,10 +70,6 @@ namespace DigitalMenuApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Name");
-
-                    b.HasIndex("PublicFoodKey")
-                        .IsUnique()
-                        .HasFilter("[PublicFoodKey] IS NOT NULL");
 
                     b.ToTable("AFCDItems", (string)null);
                 });
@@ -251,6 +246,9 @@ namespace DigitalMenuApi.Migrations
                         .HasPrecision(8, 2)
                         .HasColumnType("decimal(8,2)");
 
+                    b.Property<DateTime>("LoggedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<decimal>("ProteinG")
                         .HasPrecision(8, 2)
                         .HasColumnType("decimal(8,2)");
@@ -265,7 +263,7 @@ namespace DigitalMenuApi.Migrations
 
                     b.HasIndex("DishId");
 
-                    b.HasIndex("UserId", "CreatedAt");
+                    b.HasIndex("UserId", "LoggedAt");
 
                     b.ToTable("MealLogs", (string)null);
                 });
