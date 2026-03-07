@@ -11,16 +11,13 @@ public static class ApplicationBuilderExtensions
 
         // add exception middleware
         app.UseMiddleware<ExceptionMiddleware>();
-        // Configure Swagger in Development
-        if (app.Environment.IsDevelopment())
+        // Configure Swagger (Enabled in Production for testing/portfolio purposes)
+        app.UseSwagger();
+        app.UseSwaggerUI(options =>
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Digital Menu API v1");
-                options.RoutePrefix = "swagger"; // Swagger at /swagger
-            });
-        }
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Digital Menu API v1");
+            options.RoutePrefix = "swagger"; // Swagger at /swagger
+        });
 
         // Security & Routing
         app.UseHttpsRedirection();
