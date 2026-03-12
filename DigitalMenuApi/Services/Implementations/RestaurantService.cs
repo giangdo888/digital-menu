@@ -237,6 +237,7 @@ public class RestaurantService : IRestaurantService
                 .ThenInclude(c => c.Dishes.Where(d => d.IsActive).OrderBy(d => d.DisplayOrder).ThenBy(d => d.Name))
                     .ThenInclude(d => d.DishIngredients)
                         .ThenInclude(di => di.AfcdItem)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(r => r.Slug == slug && r.IsActive);
 
         if (restaurant == null)
