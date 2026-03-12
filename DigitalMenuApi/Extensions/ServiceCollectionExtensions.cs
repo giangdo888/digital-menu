@@ -21,6 +21,21 @@ public static class ServiceCollectionExtensions
         // Add Controllers
         services.AddControllers();
 
+        // Add CORS
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowFrontend",
+                builder =>
+                {
+                    builder.WithOrigins(
+                            "http://localhost:3000",
+                            "https://squid-app-zbydk.ondigitalocean.app")
+                           .AllowAnyMethod()
+                           .AllowAnyHeader()
+                           .AllowCredentials();
+                });
+        });
+
         // Add API Explorer for Swagger
         services.AddEndpointsApiExplorer();
 
@@ -90,12 +105,15 @@ public static class ServiceCollectionExtensions
         var jwtSettings = configuration.GetSection("JwtSettings");
         var secretKey = jwtSettings["SecretKey"] ?? throw new Exception("JwtSettings:SecretKey is not configured");
 
-        services.AddAuthentication(option => {
+        services.AddAuthentication(option =>
+        {
             option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         })
-        .AddJwtBearer(options => {
-            options.TokenValidationParameters = new TokenValidationParameters {
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
                 ValidateIssuer = true,
                 ValidateAudience = true,
                 ValidateLifetime = true,
