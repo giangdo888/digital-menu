@@ -64,6 +64,7 @@ public class CategoryService : ICategoryService
         }
 
         var categories = await _unitOfWork.Categories.Query()
+            .AsNoTracking()
             .Include(c => c.Dishes)
             .Where(c => c.RestaurantId == restaurantId)
             .OrderBy(c => c.DisplayOrder)
@@ -76,6 +77,7 @@ public class CategoryService : ICategoryService
     public async Task<Result<CategoryResponse>> GetCategoryByIdAsync(int categoryId, int userId, string userRole)
     {
         var category = await _unitOfWork.Categories.Query()
+            .AsNoTracking()
             .Include(c => c.Restaurant)
             .Include(c => c.Dishes)
             .FirstOrDefaultAsync(c => c.Id == categoryId);

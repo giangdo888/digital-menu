@@ -26,7 +26,9 @@ public class AFCDItemService : IAFCDItemService
         if (!string.IsNullOrWhiteSpace(query))
         {
             var searchTerm = query.ToLower();
-            itemsQuery = itemsQuery.Where(a =>
+            itemsQuery = itemsQuery
+                .AsNoTracking()
+                .Where(a =>
                 a.Name.ToLower().Contains(searchTerm) ||
                 (a.Variant != null && a.Variant.ToLower().Contains(searchTerm)));
         }

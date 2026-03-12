@@ -58,6 +58,7 @@ public class RestaurantService : IRestaurantService
     public async Task<Result<RestaurantResponse>> GetRestaurantByIdAsync(int restaurantId, int userId, string userRole)
     {
         var restaurant = await _unitOfWork.Restaurants.Query()
+            .AsNoTracking()
             .Include(r => r.User)
             .Include(r => r.Categories)
             .FirstOrDefaultAsync(r => r.Id == restaurantId);
@@ -80,6 +81,7 @@ public class RestaurantService : IRestaurantService
     public async Task<Result<IEnumerable<RestaurantResponse>>> GetMyRestaurantsAsync(int ownerId)
     {
         var restaurants = await _unitOfWork.Restaurants.Query()
+            .AsNoTracking()
             .Include(r => r.User)
             .Include(r => r.Categories)
             .Where(r => r.UserId == ownerId)
@@ -195,6 +197,7 @@ public class RestaurantService : IRestaurantService
     public async Task<Result<IEnumerable<RestaurantResponse>>> GetAllRestaurantsAsync()
     {
         var restaurants = await _unitOfWork.Restaurants.Query()
+            .AsNoTracking()
             .Include(r => r.User)
             .Include(r => r.Categories)
             .OrderByDescending(r => r.CreatedAt)
@@ -210,6 +213,7 @@ public class RestaurantService : IRestaurantService
     public async Task<Result<RestaurantPublicResponse>> GetRestaurantBySlugAsync(string slug)
     {
         var restaurant = await _unitOfWork.Restaurants.Query()
+            .AsNoTracking()
             .FirstOrDefaultAsync(r => r.Slug == slug && r.IsActive);
 
         if (restaurant == null)
@@ -223,6 +227,7 @@ public class RestaurantService : IRestaurantService
     public async Task<Result<IEnumerable<RestaurantListItemResponse>>> GetPublicRestaurantListAsync()
     {
         var restaurants = await _unitOfWork.Restaurants.Query()
+            .AsNoTracking()
             .Where(r => r.IsActive)
             .OrderBy(r => r.Name)
             .ToListAsync();
@@ -233,6 +238,7 @@ public class RestaurantService : IRestaurantService
     public async Task<Result<MenuResponse>> GetMenuBySlugAsync(string slug)
     {
         var restaurant = await _unitOfWork.Restaurants.Query()
+            .AsNoTracking()
             .Include(r => r.Categories.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name))
                 .ThenInclude(c => c.Dishes.Where(d => d.IsActive).OrderBy(d => d.DisplayOrder).ThenBy(d => d.Name))
                     .ThenInclude(d => d.DishIngredients)

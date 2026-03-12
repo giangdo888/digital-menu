@@ -31,6 +31,7 @@ public class UserService : IUserService
     public async Task<Result<UserResponse>> GetUserByIdAsync(int userId)
     {
         var user = await _unitOfWork.Users.Query()
+            .AsNoTracking()
             .Include(u => u.Role)
             .Include(u => u.UserProfile)
             .FirstOrDefaultAsync(u => u.Id == userId);
@@ -47,6 +48,7 @@ public class UserService : IUserService
     public async Task<Result<IEnumerable<UserResponse>>> GetAllUsersAsync()
     {
         var users = await _unitOfWork.Users.Query()
+            .AsNoTracking()
             .Include(u => u.Role)
             .Include(u => u.UserProfile)
             .OrderByDescending(u => u.CreatedAt)
@@ -71,7 +73,7 @@ public class UserService : IUserService
         // Check email uniqueness if changing
         if (!string.IsNullOrEmpty(request.Email) && request.Email != user.Email)
         {
-            if (await _unitOfWork.Users.Query().AnyAsync(u => u.Email == request.Email))
+            if (await _unitOfWork.Users.Query().AsNoTracking().AnyAsync(u => u.Email == request.Email))
             {
                 _logger.LogWarning("Update failed: Email {Email} already exists", request.Email);
                 return Result<UserResponse>.Failure("Email already in use");
@@ -131,6 +133,7 @@ public class UserService : IUserService
     public async Task<Result<UserProfileResponse>> GetProfileAsync(int userId)
     {
         var profile = await _unitOfWork.UserProfiles.Query()
+            .AsNoTracking()
             .FirstOrDefaultAsync(p => p.UserId == userId);
 
         if (profile == null)
@@ -146,6 +149,7 @@ public class UserService : IUserService
     {
         // Check if profile already exists
         var existingProfile = await _unitOfWork.UserProfiles.Query()
+            .AsNoTracking()
             .AnyAsync(p => p.UserId == userId);
 
         if (existingProfile)
@@ -258,6 +262,7 @@ public class UserService : IUserService
     public async Task<Result<IEnumerable<WeightHistoryResponse>>> GetWeightHistoryAsync(int userId, int limit = 30)
     {
         var history = await _unitOfWork.WeightHistories.Query()
+            .AsNoTracking()
             .Where(w => w.UserId == userId)
             .OrderByDescending(w => w.RecordedAt)
             .Take(limit)

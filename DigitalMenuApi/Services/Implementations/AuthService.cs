@@ -32,7 +32,7 @@ public class AuthService : IAuthService
         _logger.LogInformation("Registration attempt for {Email}", request.Email);
 
         //1. Check if email exists
-        if (await _unitOfWork.Users.Query().AnyAsync(u => u.Email == request.Email)) {
+        if (await _unitOfWork.Users.Query().AsNoTracking().AnyAsync(u => u.Email == request.Email)) {
             _logger.LogWarning("Registration failed: Email {Email} already exists", request.Email);
             return Result<AuthResponse>.Failure("Email already registered", 400);
         }
@@ -42,7 +42,7 @@ public class AuthService : IAuthService
             _logger.LogWarning("Registration failed: Attempted system_admin registration for {Email}", request.Email);
             return Result<AuthResponse>.Failure("Invalid account type", 400);
         }
-        var role = await _unitOfWork.Roles.Query().FirstOrDefaultAsync(r => r.Name == request.AccountType);
+        var role = await _unitOfWork.Roles.Query().AsNoTracking().FirstOrDefaultAsync(r => r.Name == request.AccountType);
         if (role == null) {
             _logger.LogWarning("Registration failed: Invalid account type {AccountType}", request.AccountType);
             return Result<AuthResponse>.Failure("Invalid account type", 400);
@@ -74,6 +74,7 @@ public class AuthService : IAuthService
         //1. Check if email exists
         var user = await _unitOfWork.Users
         .Query()
+        .AsNoTracking()
         .Include(u => u.Role)
         .FirstOrDefaultAsync(u => u.Email == request.Email);
         if (user == null) {
@@ -101,7 +102,7 @@ public class AuthService : IAuthService
 
     public async Task<Result<bool>> IsEmailExistsAsync(string email)
     {
-        return Result<bool>.Success(await _unitOfWork.Users.Query().AnyAsync(u => u.Email == email));
+        return Result<bool>.Success(await _unitOfWork.Users.Query().AsNoTracking().AnyAsync(u => u.Email == email));
     }
 
     public async Task<Result<AuthResponse>> RefreshTokenAsync(string refreshToken)

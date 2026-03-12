@@ -25,6 +25,7 @@ public class DishService : IDishService
     {
         // Verify category exists and user has access
         var category = await _unitOfWork.Categories.Query()
+            .AsNoTracking()
             .Include(c => c.Restaurant)
             .FirstOrDefaultAsync(c => c.Id == request.CategoryId);
 
@@ -64,6 +65,7 @@ public class DishService : IDishService
     public async Task<Result<IEnumerable<DishResponse>>> GetDishesByCategoryAsync(int categoryId, int userId, string userRole)
     {
         var category = await _unitOfWork.Categories.Query()
+            .AsNoTracking()
             .Include(c => c.Restaurant)
             .FirstOrDefaultAsync(c => c.Id == categoryId);
 
@@ -78,6 +80,7 @@ public class DishService : IDishService
         }
 
         var dishes = await _unitOfWork.Dishes.Query()
+            .AsNoTracking()
             .Include(d => d.Category)
             .Include(d => d.DishIngredients)
             .Where(d => d.CategoryId == categoryId)
@@ -91,6 +94,7 @@ public class DishService : IDishService
     public async Task<Result<DishResponse>> GetDishByIdAsync(int dishId, int userId, string userRole)
     {
         var dish = await _unitOfWork.Dishes.Query()
+            .AsNoTracking()
             .Include(d => d.Category)
                 .ThenInclude(c => c.Restaurant)
             .Include(d => d.DishIngredients)
@@ -203,6 +207,7 @@ public class DishService : IDishService
     public async Task<Result<IEnumerable<DishIngredientResponse>>> GetDishIngredientsAsync(int dishId, int userId, string userRole)
     {
         var dish = await _unitOfWork.Dishes.Query()
+            .AsNoTracking()
             .Include(d => d.Category)
                 .ThenInclude(c => c.Restaurant)
             .Include(d => d.DishIngredients)
@@ -244,6 +249,7 @@ public class DishService : IDishService
         // Validate all AFCD items exist
         var afcdItemIds = request.Ingredients.Select(i => i.AfcdItemId).Distinct().ToList();
         var afcdItems = await _unitOfWork.AFCDItems.Query()
+            .AsNoTracking()
             .Where(a => afcdItemIds.Contains(a.Id))
             .ToDictionaryAsync(a => a.Id);
 

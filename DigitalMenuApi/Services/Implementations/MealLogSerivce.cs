@@ -22,6 +22,7 @@ public class MealLogService : IMealLogService
     public async Task<Result<List<MealLogResponse>>> GetMealLogsByUserIdAsync(int userId)
     {
         var mealLogs = await _unitOfWork.MealLogs.Query()
+            .AsNoTracking()
             .Include(m => m.Dish)
             .Where(m => m.UserId == userId)
             .ToListAsync();
@@ -32,6 +33,7 @@ public class MealLogService : IMealLogService
     public async Task<Result<MealLogResponse>> GetMealLogByIdAsync(int userId, int mealLogId)
     {
         var mealLog = await _unitOfWork.MealLogs.Query()
+            .AsNoTracking()
             .Include(m => m.Dish)
             .FirstOrDefaultAsync(m => m.Id == mealLogId && m.UserId == userId);
 
