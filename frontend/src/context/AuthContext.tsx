@@ -68,14 +68,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         lastName: string,
         email: string,
         password: string,
-        role: "customer" | "restaurant_admin"
+        accountType: "customer" | "restaurant_admin"
     ) => {
         const response = await api.post<AuthResponse>("/auth/register", {
             firstName,
             lastName,
             email,
             password,
-            role,
+            accountType,
         });
         const data = response.data;
 

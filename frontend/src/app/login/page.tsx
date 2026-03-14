@@ -30,7 +30,7 @@ export default function LoginPage() {
 
     return (
         <div>
-            <div className="min-h-screen flex items-center justify-center px-4">
+            <div className="min-h-[calc(100vh-144px)] md:min-h-[calc(100vh-64px)] flex items-center justify-center px-4">
                 <div className="w-full max-w-md bg-bg-card rounded-2xl p-8">
                     <h1 className="text-2xl font-bold text-center mb-2"> Welcome Back</h1>
                     <p className="text-center text-text-secondary mb-8">Sign in to your account</p>
