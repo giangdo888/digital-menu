@@ -1,7 +1,7 @@
 "use client"
 
 import { useAuth } from "@/context/AuthContext";
-import api from "@/lib/api";
+import { mealLogService } from "@/services/mealLogService";
 import { MenuDish } from "@/types"
 import toast from "react-hot-toast";
 
@@ -16,7 +16,7 @@ export default function DishDetailModal({ dish, onClose, dailyCalorieTarget }: D
 
     const handleLogMeal = async () => {
         try {
-            await api.post("/meal-logs", { dishId: dish.id })
+            await mealLogService.create({ dishId: dish.id });
             toast.success("Meal logged! 🎉");
             onClose();
         } catch {
@@ -45,7 +45,7 @@ export default function DishDetailModal({ dish, onClose, dailyCalorieTarget }: D
                         )}
                         <button
                             onClick={onClose}
-                            className="absolute top-3 right-3 bg-black/50 text-white w-8 h-8 rounded-full flex items-center justify-center"
+                            className="absolute top-3 right-3 bg-black/50 text-white w-8 h-8 rounded-full cursor-pointer flex items-center justify-center"
                         >
                             ✕
                         </button>
@@ -72,29 +72,29 @@ export default function DishDetailModal({ dish, onClose, dailyCalorieTarget }: D
                                 </div>
                             ))}
                         </div>
+                        {/* Traffic Light Bar (only if user has a profile) */}
+                        {budgetPercentage !== null && (
+                            <div className="mt-4 bg-bg-elevated rounded-lg p-3">
+                                <div className="flex justify-between text-sm mb-2">
+                                    <span className="text-text-secondary">Daily calorie budget</span>
+                                    <span className={`font-medium ${budgetPercentage <= 30 ? "text-success" :
+                                        budgetPercentage <= 50 ? "text-warning" : "text-danger"
+                                        }`}>
+                                        {budgetPercentage}%
+                                    </span>
+                                </div>
+                                <div className="w-full bg-bg-primary rounded-full h-2">
+                                    <div
+                                        className={`h-2 rounded-full transition-all ${budgetPercentage <= 30 ? "bg-success" :
+                                            budgetPercentage <= 50 ? "bg-warning" : "bg-danger"
+                                            }`}
+                                        style={{ width: `${Math.min(budgetPercentage, 100)}%` }}
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </div>
 
-                    {/* Traffic Light Bar (only if user has a profile) */}
-                    {budgetPercentage !== null && (
-                        <div className="mt-4 bg-bg-elevated rounded-lg p-3">
-                            <div className="flex justify-between text-sm mb-2">
-                                <span className="text-text-secondary">Daily calorie budget</span>
-                                <span className={`font-medium ${budgetPercentage <= 30 ? "text-success" :
-                                    budgetPercentage <= 50 ? "text-warning" : "text-danger"
-                                    }`}>
-                                    {budgetPercentage}%
-                                </span>
-                            </div>
-                            <div className="w-full bg-bg-primary rounded-full h-2">
-                                <div
-                                    className={`h-2 rounded-full transition-all ${budgetPercentage <= 30 ? "bg-success" :
-                                        budgetPercentage <= 50 ? "bg-warning" : "bg-danger"
-                                        }`}
-                                    style={{ width: `${Math.min(budgetPercentage, 100)}%` }}
-                                />
-                            </div>
-                        </div>
-                    )}
 
                     {/* Ingredients */}
                     {dish.ingredients.length > 0 && (

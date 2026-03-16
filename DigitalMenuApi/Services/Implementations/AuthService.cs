@@ -32,39 +32,57 @@ public class AuthService : IAuthService
         _logger.LogInformation("Registration attempt for {Email}", request.Email);
 
         //1. Check if email exists
-        if (await _unitOfWork.Users.Query().AsNoTracking().AnyAsync(u => u.Email == request.Email)) {
+        if (await _unitOfWork.Users.Query().AsNoTracking().AnyAsync(u => u.Email.ToLower() == request.Email.ToLower()))
+        {
             _logger.LogWarning("Registration failed: Email {Email} already exists", request.Email);
             return Result<AuthResponse>.Failure("Email already registered", 400);
         }
 
         //2. Get RoleId
-        if (request.AccountType == "system_admin") {
+        if (request.AccountType == "system_admin")
+        {
             _logger.LogWarning("Registration failed: Attempted system_admin registration for {Email}", request.Email);
             return Result<AuthResponse>.Failure("Invalid account type", 400);
         }
         var role = await _unitOfWork.Roles.Query().AsNoTracking().FirstOrDefaultAsync(r => r.Name == request.AccountType);
-        if (role == null) {
+        if (role == null)
+        {
             _logger.LogWarning("Registration failed: Invalid account type {AccountType}", request.AccountType);
             return Result<AuthResponse>.Failure("Invalid account type", 400);
         }
 
-        //3. Create User
-        var user = new User {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Email = request.Email,
-            PasswordHash = BCrypt.HashPassword(request.Password),
-            RoleId = role.Id,
-            IsActive = true
-        };
+        try
+        {
+            await _unitOfWork.BeginTransactionAsync();
 
-        await _unitOfWork.Users.AddAsync(user);
-        await _unitOfWork.SaveChangesAsync();
+            //3. Create User
+            var user = new User
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = request.Email,
+                PasswordHash = BCrypt.HashPassword(request.Password),
+                RoleId = role.Id,
+                IsActive = true
+            };
 
-        _logger.LogInformation("User registered successfully: {UserId} ({Email})", user.Id, user.Email);
+            await _unitOfWork.Users.AddAsync(user);
+            await _unitOfWork.SaveChangesAsync();
 
-        //4. Generate token and return response
-        return Result<AuthResponse>.Success(await GenerateAuthResponse(user, role.Name));
+            //4. Generate token and return response
+            var responseData = await GenerateAuthResponse(user, role.Name);
+
+            await _unitOfWork.CommitTransactionAsync();
+
+            _logger.LogInformation("User registered successfully: {UserId} ({Email})", user.Id, user.Email);
+            return Result<AuthResponse>.Success(responseData);
+        }
+        catch (Exception ex)
+        {
+            await _unitOfWork.RollbackTransactionAsync();
+            _logger.LogError(ex, "Registration failed unexpected for {Email}", request.Email);
+            return Result<AuthResponse>.Failure("Registration failed due to a server error", 500);
+        }
     }
 
     public async Task<Result<AuthResponse>> LoginAsync(LoginRequest request)
@@ -76,20 +94,23 @@ public class AuthService : IAuthService
         .Query()
         .AsNoTracking()
         .Include(u => u.Role)
-        .FirstOrDefaultAsync(u => u.Email == request.Email);
-        if (user == null) {
+        .FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
+        if (user == null)
+        {
             _logger.LogWarning("Login failed: Email {Email} not found", request.Email);
             return Result<AuthResponse>.Failure("Invalid email or password", 400);
         }
 
         //2. Verify password
-        if (!BCrypt.Verify(request.Password, user.PasswordHash)) {
+        if (!BCrypt.Verify(request.Password, user.PasswordHash))
+        {
             _logger.LogWarning("Login failed: Invalid password for {Email}", request.Email);
             return Result<AuthResponse>.Failure("Invalid email or password", 400);
         }
 
         //3. Check active
-        if (!user.IsActive) {
+        if (!user.IsActive)
+        {
             _logger.LogWarning("Login failed: Account deactivated for {Email}", request.Email);
             return Result<AuthResponse>.Failure("Account is deactivated", 400);
         }
@@ -116,18 +137,23 @@ public class AuthService : IAuthService
             .ThenInclude(u => u.Role)
             .FirstOrDefaultAsync(rt => rt.Token == refreshToken);
 
-        if (storedToken == null) {
+        if (storedToken == null)
+        {
             _logger.LogWarning("Token refresh failed: Invalid token");
             return Result<AuthResponse>.Failure("Invalid refresh token", 400);
         }
 
         //2. Check if the token is active
-        if (!storedToken.IsActive) {
+        if (!storedToken.IsActive)
+        {
             //Security: someone is trying to use a revoked or expired token, revoke all user's tokens
-            if (storedToken.IsRevoked) {
+            if (storedToken.IsRevoked)
+            {
                 _logger.LogError("SECURITY: Attempted reuse of revoked token for UserId {UserId}", storedToken.UserId);
                 await RevokeAllUserTokensAsync(storedToken.UserId, "Attempted reuse of revoked token");
-            } else {
+            }
+            else
+            {
                 _logger.LogWarning("Token refresh failed: Token expired for UserId {UserId}", storedToken.UserId);
             }
 
@@ -135,7 +161,8 @@ public class AuthService : IAuthService
         }
 
         //3. Check user is still active
-        if (!storedToken.User.IsActive) {
+        if (!storedToken.User.IsActive)
+        {
             _logger.LogWarning("Token refresh failed: Account deactivated for UserId {UserId}", storedToken.UserId);
             return Result<AuthResponse>.Failure("Account is deactivated", 400);
         }
@@ -157,7 +184,8 @@ public class AuthService : IAuthService
         var jwtSettings = _configuration.GetSection("JwtSettings");
         var expireMinutes = int.Parse(jwtSettings["ExpiryInMinutes"] ?? "60");
 
-        return Result<AuthResponse>.Success(new AuthResponse {
+        return Result<AuthResponse>.Success(new AuthResponse
+        {
             UserId = user.Id,
             Email = user.Email,
             FirstName = user.FirstName,
@@ -179,13 +207,15 @@ public class AuthService : IAuthService
             .Query()
             .FirstOrDefaultAsync(rt => rt.Token == token);
 
-        if (storedToken == null) {
+        if (storedToken == null)
+        {
             _logger.LogWarning("Token revoke failed: Invalid token");
             return Result<bool>.Failure("Invalid token", 400);
         }
 
         //2. check if already revoked
-        if (storedToken.RevokedAt != null) {
+        if (storedToken.RevokedAt != null)
+        {
             _logger.LogWarning("Token revoke failed: Already revoked for UserId {UserId}", storedToken.UserId);
             return Result<bool>.Failure("Token already revoked", 400);
         }
@@ -206,7 +236,8 @@ public class AuthService : IAuthService
         var jwtSettings = _configuration.GetSection("JwtSettings");
         var expireMinutes = int.Parse(jwtSettings["ExpiryInMinutes"] ?? "60");
 
-        return new AuthResponse {
+        return new AuthResponse
+        {
             UserId = user.Id,
             Email = user.Email,
             FirstName = user.FirstName,
@@ -250,7 +281,8 @@ public class AuthService : IAuthService
     {
         var jwtSettings = _configuration.GetSection("JwtSettings");
         var refreshTokenExpiresDays = int.Parse(jwtSettings["RefreshTokenExpiresDays"] ?? "7");
-        var refreshToken = new RefreshToken {
+        var refreshToken = new RefreshToken
+        {
             UserId = userId,
             Token = GenerateSecureRandomToken(),
             ExpiresAt = DateTime.UtcNow.AddDays(refreshTokenExpiresDays)
@@ -275,7 +307,8 @@ public class AuthService : IAuthService
             .Where(rt => rt.UserId == userId && rt.RevokedAt == null)
             .ToListAsync();
 
-        foreach (var token in activeTokens) {
+        foreach (var token in activeTokens)
+        {
             token.RevokedAt = DateTime.UtcNow;
             _unitOfWork.RefreshTokens.Update(token);
         }

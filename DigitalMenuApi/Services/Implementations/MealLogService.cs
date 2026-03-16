@@ -113,7 +113,9 @@ public class MealLogService : IMealLogService
 
     public async Task<Result<MealLogResponse>> DeleteMealLogAsync(int userId, int mealLogId)
     {
-        var existingMealLog = await _unitOfWork.MealLogs.GetByIdAsync(mealLogId);
+        var existingMealLog = await _unitOfWork.MealLogs.Query()
+            .Include(m => m.Dish)
+            .FirstOrDefaultAsync(m => m.Id == mealLogId);
         if (existingMealLog == null)
         {
             return Result<MealLogResponse>.Failure("Meal log not found", 404);
@@ -143,7 +145,8 @@ public class MealLogService : IMealLogService
             ProteinG = mealLog.ProteinG.ToString(),
             CarbsG = mealLog.CarbsG.ToString(),
             FatG = mealLog.FatG.ToString(),
-            CreatedAt = mealLog.CreatedAt.ToString()
+            CreatedAt = mealLog.CreatedAt.ToString(),
+            DishName = mealLog.Dish.Name,
         };
     }
 

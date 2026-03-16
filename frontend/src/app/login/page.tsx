@@ -15,6 +15,7 @@ export default function LoginPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); // Prevent browser from refreshing the page
+        console.log("Login attempt...");
         setIsSubmitting(true);
 
         try {

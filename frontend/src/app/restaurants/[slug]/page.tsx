@@ -6,15 +6,19 @@ import { restaurantService } from "@/services/restaurantService";
 import { MenuDish, MenuResponse } from "@/types";
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { userService } from "@/services/userService";
 
 export default function MenuPage() {
     const params = useParams();
     const slug = params.slug as string;
+    const { user, isAuthenticated } = useAuth();
 
     const [isLoading, setIsLoading] = useState(true);
     const [menu, setMenu] = useState<MenuResponse | null>(null);
     const [activeCategory, setActiveCategory] = useState<number | null>(null);
     const [selectedDish, setSelectedDish] = useState<MenuDish | null>(null);
+    const [dailyCalorieTarget, setDailyCalorieTarget] = useState<number | undefined>(undefined);
 
     useEffect(() => {
         const fetchMenu = async () => {
@@ -35,6 +39,21 @@ export default function MenuPage() {
 
         fetchMenu();
     }, [slug]);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            if (isAuthenticated) {
+                try {
+                    const response = await userService.getProfile();
+                    setDailyCalorieTarget(response.data.dailyCaloriesTarget);
+                } catch (error) {
+                    console.error("Failed to load profile:", error);
+                }
+            }
+        };
+
+        fetchProfile();
+    }, [isAuthenticated]);
 
     if (isLoading) {
         return <div className="text-center text-text-secondary py-20">Loading menu...</div>;
@@ -83,6 +102,7 @@ export default function MenuPage() {
                         <DishCard
                             key={dish.id}
                             dish={dish}
+                            dailyCalorieTarget={dailyCalorieTarget}
                             onClick={() => setSelectedDish(dish)}
                         />
                     ))}
@@ -100,6 +120,7 @@ export default function MenuPage() {
             {selectedDish && (
                 <DishDetailModal
                     dish={selectedDish}
+                    dailyCalorieTarget={dailyCalorieTarget}
                     onClose={() => setSelectedDish(null)}
                 />
             )}

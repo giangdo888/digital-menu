@@ -2,11 +2,17 @@
 
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function NavBar() {
     const { user, isAuthenticated, logout } = useAuth();
     const pathName = usePathname();
+    const router = useRouter();
+
+    const handleLogout = () => {
+        logout();
+        router.push("/");
+    };
 
     const isActive = (path: string) => {
         return pathName === path ? "text-accent" : "text-text-secondary hover:text-text-primary";
@@ -44,7 +50,7 @@ export default function NavBar() {
                                 {user?.email}
                             </span>
                             <button
-                                onClick={logout}
+                                onClick={handleLogout}
                                 className="text-sm text-danger hover:text-red-400"
                             >
                                 Logout

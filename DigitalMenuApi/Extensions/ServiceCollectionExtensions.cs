@@ -92,6 +92,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAFCDItemService, AFCDItemService>();
         services.AddScoped<IAFCDImportService, AFCDImportService>();
         services.AddScoped<ISeedService, SeedService>();
+        services.AddScoped<IMealLogService, MealLogService>();
 
         // TODO: Add other services here as you build them:
         // - AWS S3 Storage Service

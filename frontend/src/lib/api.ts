@@ -1,6 +1,4 @@
 import axios from "axios";
-import { error } from "console";
-import { config } from "process";
 
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -63,7 +61,7 @@ api.interceptors.response.use(
                 //refresh failed - force logout
                 localStorage.removeItem("token");
                 localStorage.removeItem("refreshToken");
-                window.localStorage.href = "/login";
+                window.location.href = "/login";
                 return Promise.reject(error)
             }
         }

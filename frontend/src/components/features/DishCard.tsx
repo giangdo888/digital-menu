@@ -21,7 +21,7 @@ export default function DishCard({ dish, onClick, dailyCalorieTarget }: DishCard
 
     return (
         <button
-            className="bg-bg-card rounded-xl p-3 flex gap-3 text-left hover:ring-1 hover:ring-accent trasition-all w-full"
+            className="bg-bg-card rounded-xl p-3 flex gap-3 text-left hover:ring-1 hover:ring-accent cursor-pointer trasition-all w-full"
             onClick={onClick}
         >
             {/* Dish Image */}

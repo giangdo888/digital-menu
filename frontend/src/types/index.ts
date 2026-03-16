@@ -188,6 +188,7 @@ export interface MealLog {
     id: string;
     userId: string;
     dishId: string;
+    dishName: string;
     calories: string;
     proteinG: string;
     carbsG: string;
@@ -206,6 +207,9 @@ export interface WeightHistory {
     weightKg: number;
     recordedAt: string;
     changeFromPrevious?: number;
+}
+export interface LogWeightRequest {
+    weightKg: number;
 }
 // ═══════════════════════════════════════
 // AFCD ITEM (Nutrition Database)

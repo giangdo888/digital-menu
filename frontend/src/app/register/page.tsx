@@ -17,7 +17,8 @@ export default function RegisterPage() {
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault;
+        e.preventDefault();
+        console.log("Form submitted, preventing default...");
         setIsSubmitting(true);
 
         try {
