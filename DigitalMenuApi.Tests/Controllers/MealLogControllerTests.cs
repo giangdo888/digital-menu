@@ -46,6 +46,7 @@ public class MealLogControllerTests
             Id = "1",
             UserId = "100",
             DishId = "10",
+            DishName = "Fake Dish",
             Calories = "350",
             ProteinG = "40",
             CarbsG = "5",
@@ -94,7 +95,7 @@ public class MealLogControllerTests
         // Arrange
         var fakeData = new List<MealLogResponse>
         {
-            new MealLogResponse { Id = "1", UserId = "100", DishId = "10", Calories = "350", ProteinG = "40", CarbsG = "5", FatG = "15", CreatedAt = "2024-01-01" }
+            new MealLogResponse { Id = "1", UserId = "100", DishId = "10", DishName = "Fake Dish", Calories = "350", ProteinG = "40", CarbsG = "5", FatG = "15", CreatedAt = "2024-01-01" }
         };
 
         _mockMealLogService.Setup(s => s.GetMealLogsByUserIdAsync(100))
@@ -120,6 +121,7 @@ public class MealLogControllerTests
             Id = "1",
             UserId = "100",
             DishId = "11",
+            DishName = "Fake Dish",
             Calories = "200",
             ProteinG = "10",
             CarbsG = "10",
@@ -164,6 +166,7 @@ public class MealLogControllerTests
             Id = "1",
             UserId = "100",
             DishId = "10",
+            DishName = "Fake Dish",
             Calories = "350",
             ProteinG = "40",
             CarbsG = "5",
@@ -235,6 +238,7 @@ public class MealLogControllerTests
             Id = "1",
             UserId = "100",
             DishId = "10",
+            DishName = "Fake Dish",
             Calories = "350",
             ProteinG = "40",
             CarbsG = "5",

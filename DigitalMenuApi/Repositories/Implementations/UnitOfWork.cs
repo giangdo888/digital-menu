@@ -1,6 +1,7 @@
 using DigitalMenuApi.Data;
 using DigitalMenuApi.Models.Entities;
 using DigitalMenuApi.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DigitalMenuApi.Repositories.Implementations;
@@ -48,6 +49,10 @@ public class UnitOfWork : IUnitOfWork
 
     public async Task BeginTransactionAsync()
     {
+        if (_context.Database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory") 
+        {
+            return;
+        }
         _transaction = await _context.Database.BeginTransactionAsync();
     }
 
