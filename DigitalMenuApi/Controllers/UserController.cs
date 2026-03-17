@@ -131,6 +131,7 @@ public class UserController : ControllerBase
     /// Get current user's profile with nutrition calculations
     /// </summary>
     [HttpGet("me/profile")]
+    [Authorize(Roles = "customer")]
     public async Task<IActionResult> GetProfile()
     {
         var result = await _userService.GetProfileAsync(GetCurrentUserId());
@@ -145,6 +146,7 @@ public class UserController : ControllerBase
     /// Create profile for current user
     /// </summary>
     [HttpPost("me/profile")]
+    [Authorize(Roles = "customer")]
     public async Task<IActionResult> CreateProfile([FromBody] CreateProfileRequest request)
     {
         var result = await _userService.CreateProfileAsync(GetCurrentUserId(), request);
@@ -159,6 +161,7 @@ public class UserController : ControllerBase
     /// Update current user's profile
     /// </summary>
     [HttpPut("me/profile")]
+    [Authorize(Roles = "customer")]
     public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest request)
     {
         var result = await _userService.UpdateProfileAsync(GetCurrentUserId(), request);
@@ -177,6 +180,7 @@ public class UserController : ControllerBase
     /// Log a new weight entry
     /// </summary>
     [HttpPost("me/weight")]
+    [Authorize(Roles = "customer")]
     public async Task<IActionResult> LogWeight([FromBody] LogWeightRequest request)
     {
         var result = await _userService.LogWeightAsync(GetCurrentUserId(), request);
@@ -191,6 +195,7 @@ public class UserController : ControllerBase
     /// Get weight history
     /// </summary>
     [HttpGet("me/weight")]
+    [Authorize(Roles = "customer")]
     public async Task<IActionResult> GetWeightHistory([FromQuery] int limit = 30)
     {
         var result = await _userService.GetWeightHistoryAsync(GetCurrentUserId(), limit);
