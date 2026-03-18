@@ -15,7 +15,7 @@ public class CreateDishRequest
     [Range(0, 10000)]
     public required decimal Price { get; set; }
 
-    [MaxLength(255)]
+    [MaxLength(1000)]
     [Url]
     public string? ImageUrl { get; set; }
 

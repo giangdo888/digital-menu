@@ -7,7 +7,7 @@ import api from "@/lib/api";
 interface AuthContextType {
     user: AuthResponse | null; //null = not logged in
     isLoading: boolean;
-    login: (email: string, password: string) => Promise<void>;
+    login: (email: string, password: string) => Promise<AuthResponse>;
     logout: () => void;
     register: (firstName: string, lastName: string, email: string, password: string, role: "customer" | "restaurant_admin") => Promise<void>;
     isAuthenticated: boolean;
@@ -54,6 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem("refreshToken", data.refreshToken);
         localStorage.setItem("user", JSON.stringify(data));
         setUser(data);
+        return data;
     };
 
     const logout = () => {

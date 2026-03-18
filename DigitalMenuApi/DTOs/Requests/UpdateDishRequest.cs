@@ -10,7 +10,7 @@ public class UpdateDishRequest
     [Range(0, 10000)]
     public decimal? Price { get; set; }
 
-    [MaxLength(255)]
+    [MaxLength(1000)]
     [Url]
     public string? ImageUrl { get; set; }
 

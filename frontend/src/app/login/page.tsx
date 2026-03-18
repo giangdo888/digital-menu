@@ -19,9 +19,13 @@ export default function LoginPage() {
         setIsSubmitting(true);
 
         try {
-            await login(email, password);
+            const userData = await login(email, password);
             toast.success("Welcome back! 👋");
-            router.push("/");
+            if (userData.role === "restaurant_admin") {
+                router.push("/admin/restaurants");
+            } else {
+                router.push("/");
+            }
         } catch {
             toast.error("Invalid email or password");
         } finally {

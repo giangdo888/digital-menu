@@ -26,7 +26,7 @@ public class CreateRestaurantRequest
     [MaxLength(200)]
     public string? OpeningHours { get; set; }
 
-    [MaxLength(255)]
+    [MaxLength(1000)]
     [Url]
     public string? LogoUrl { get; set; }
 }

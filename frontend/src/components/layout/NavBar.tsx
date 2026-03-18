@@ -8,6 +8,8 @@ export default function NavBar() {
     const { user, isAuthenticated, logout } = useAuth();
     const pathName = usePathname();
     const router = useRouter();
+    const isCustomer = user?.role === "customer";
+    const isRestaurantAdmin = user?.role === "restaurant_admin";
 
     const handleLogout = () => {
         logout();
@@ -18,19 +20,74 @@ export default function NavBar() {
         return pathName === path ? "text-accent" : "text-text-secondary hover:text-text-primary";
     }
 
+    // ── Mobile bottom nav items (role-based) ──
+    let mobileNav;
+
+    if (!isAuthenticated) {
+        mobileNav = (
+            <>
+                <Link href="/" className={`flex flex-col items-center text-xs ${isActive("/")}`}>
+                    <span className="text-lg">🏠</span>
+                    <span>Home</span>
+                </Link>
+                <Link href="/login" className={`flex flex-col items-center text-xs ${isActive("/login")}`}>
+                    <span className="text-lg">🔑</span>
+                    <span>Login</span>
+                </Link>
+            </>
+        );
+    } else if (isCustomer) {
+        mobileNav = (
+            <>
+                <Link href="/" className={`flex flex-col items-center text-xs ${isActive("/")}`}>
+                    <span className="text-lg">🏠</span>
+                    <span>Home</span>
+                </Link>
+                <Link href="/dashboard/meals" className={`flex flex-col items-center text-xs ${isActive("/dashboard/meals")}`}>
+                    <span className="text-lg">🍽️</span>
+                    <span>My Meals</span>
+                </Link>
+                <Link href="/dashboard/summary" className={`flex flex-col items-center text-xs ${isActive("/dashboard/summary")}`}>
+                    <span className="text-lg">📊</span>
+                    <span>Summary</span>
+                </Link>
+                <Link href="/dashboard/profile" className={`flex flex-col items-center text-xs ${isActive("/dashboard/profile")}`}>
+                    <span className="text-lg">👤</span>
+                    <span>Profile</span>
+                </Link>
+            </>
+        );
+    } else if (isRestaurantAdmin) {
+        mobileNav = (
+            <>
+                <Link href="/admin/restaurants" className={`flex flex-col items-center text-xs ${isActive("/admin/restaurants")}`}>
+                    <span className="text-lg">🍽️</span>
+                    <span>Restaurants</span>
+                </Link>
+                <Link href="/admin/account" className={`flex flex-col items-center text-xs ${isActive("/admin/account")}`}>
+                    <span className="text-lg">👤</span>
+                    <span>Account</span>
+                </Link>
+            </>
+        );
+    }
+
     return (
         <>
             {/* ── Desktop Top Nav (hidden on mobile) ── */}
             <nav className="hidden md:flex fixed top-0 left-0 right-0 z-50 bg-bg-card border-b border-bg-elevated h-16 items-center px-8">
-                <Link href="/" className="text-accent font-bold text-xl mr-8">
+                <Link href={isRestaurantAdmin ? "/admin/restaurants" : "/"} className="text-accent font-bold text-xl mr-8">
                     Digital Menu
                 </Link>
 
                 <div className="flex gap-6 flex-1">
-                    <Link href="/" className={isActive("/")}>
-                        Home
-                    </Link>
-                    {isAuthenticated && (
+                    {/* Customer desktop links */}
+                    {(!isAuthenticated || isCustomer) && (
+                        <Link href="/" className={isActive("/")}>
+                            Home
+                        </Link>
+                    )}
+                    {isCustomer && (
                         <>
                             <Link href="/dashboard/meals" className={isActive("/dashboard/meals")}>
                                 My Meals
@@ -38,7 +95,17 @@ export default function NavBar() {
                             <Link href="/dashboard/summary" className={isActive("/dashboard/summary")}>
                                 Summary
                             </Link>
-
+                        </>
+                    )}
+                    {/* Restaurant admin desktop links */}
+                    {isRestaurantAdmin && (
+                        <>
+                            <Link href="/admin/restaurants" className={isActive("/admin/restaurants")}>
+                                Restaurants
+                            </Link>
+                            <Link href="/admin/account" className={isActive("/admin/account")}>
+                                Account
+                            </Link>
                         </>
                     )}
                 </div>
@@ -71,32 +138,8 @@ export default function NavBar() {
 
             {/* ── Mobile Bottom Nav (hidden on desktop) ── */}
             <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-bg-card border-t border-bg-elevated h-16 flex items-center justify-around px-4">
-                <Link href="/" className={`flex flex-col items-center text-xs ${isActive("/")}`}>
-                    <span className="text-lg">🏠</span>
-                    <span>Home</span>
-                </Link>
-                {isAuthenticated ? (
-                    <>
-                        <Link href="/dashboard/meals" className={`flex flex-col items-center text-xs ${isActive("/dashboard/meals")}`}>
-                            <span className="text-lg">🍽️</span>
-                            <span>My Meals</span>
-                        </Link>
-                        <Link href="/dashboard/summary" className={`flex flex-col items-center text-xs ${isActive("/dashboard/summary")}`}>
-                            <span className="text-lg">📊</span>
-                            <span>Summary</span>
-                        </Link>
-                        <Link href="/dashboard/profile" className={`flex flex-col items-center text-xs ${isActive("/dashboard/profile")}`}>
-                            <span className="text-lg">👤</span>
-                            <span>Profile</span>
-                        </Link>
-                    </>
-                ) : (
-                    <Link href="/login" className={`flex flex-col items-center text-xs ${isActive("/login")}`}>
-                        <span className="text-lg">🔑</span>
-                        <span>Login</span>
-                    </Link>
-                )}
+                {mobileNav}
             </nav>
         </>
     );
-}
+}
