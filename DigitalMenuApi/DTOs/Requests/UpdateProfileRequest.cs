@@ -13,7 +13,11 @@ public class UpdateProfileRequest
     public decimal? HeightCm { get; set; }
 
     [Range(18.5, 24.9, ErrorMessage = "Healthy BMI goal must be between 18.5 and 24.9")]
-    public decimal? BmiGoal { get; set; } = 20m; // 20 is the ideal Bmi
+    public decimal? BmiGoal { get; set; }
 
-    // Note: CurrentWeightKg is NOT here - weight is updated via LogWeight endpoint
+    [Range(20, 200, ErrorMessage = "Weight must be between 20 and 200 kg")]
+    public decimal? CurrentWeightKg { get; set; }
+
+    [RegularExpression("^(sedentary|lightly_active|moderately_active|very_active|extra_active)$", ErrorMessage = "Activity level must be a valid option")]
+    public string? ActivityLevel { get; set; }
 }

@@ -8,6 +8,7 @@ public class UserProfile : BaseEntity
     public required decimal HeightCm { get; set; }
     public required decimal CurrentWeightKg { get; set; }
     public decimal BmiGoal { get; set; } = 20m; // 20 is the ideal BMI
+    public string ActivityLevel { get; set; } = "sedentary";  // sedentary, lightly_active, moderately_active, very_active, extra_active
     public DateTime LastWeightUpdate { get; set; }
 
     // Navigation properties

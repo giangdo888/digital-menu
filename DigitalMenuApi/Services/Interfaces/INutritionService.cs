@@ -23,10 +23,9 @@ public interface INutritionService
     decimal CalculateBmr(string gender, decimal weightKg, decimal heightCm, int age);
 
     /// <summary>
-    /// Calculate Total Daily Energy Expenditure (TDEE)
-    /// Assumes sedentary lifestyle (BMR * 1.2) as base
+    /// Calculate Total Daily Energy Expenditure (TDEE) based on BMR and Activity Level
     /// </summary>
-    decimal CalculateTdee(decimal bmr);
+    decimal CalculateTdee(decimal bmr, string activityLevel);
 
     /// <summary>
     /// Calculate daily calorie target based on TDEE and dietary goal

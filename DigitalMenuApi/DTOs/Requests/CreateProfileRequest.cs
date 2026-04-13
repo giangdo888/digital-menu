@@ -21,4 +21,8 @@ public class CreateProfileRequest
 
     [Range(18.5, 24.9, ErrorMessage = "HealthyBMI goal must be between 18.5 and 24.9")]
     public decimal BmiGoal { get; set; } = 20m;
+
+    [Required]
+    [RegularExpression("^(sedentary|lightly_active|moderately_active|very_active|extra_active)$", ErrorMessage = "Activity level must be a valid option")]
+    public required string ActivityLevel { get; set; }
 }

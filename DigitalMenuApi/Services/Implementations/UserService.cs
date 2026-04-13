@@ -173,6 +173,7 @@ public class UserService : IUserService
             HeightCm = request.HeightCm,
             CurrentWeightKg = request.CurrentWeightKg,
             BmiGoal = request.BmiGoal,
+            ActivityLevel = request.ActivityLevel,
             LastWeightUpdate = DateTime.UtcNow
         };
 
@@ -216,6 +217,23 @@ public class UserService : IUserService
 
         if (request.BmiGoal.HasValue)
             profile.BmiGoal = request.BmiGoal.Value;
+
+        if (!string.IsNullOrEmpty(request.ActivityLevel))
+            profile.ActivityLevel = request.ActivityLevel;
+
+        if (request.CurrentWeightKg.HasValue)
+        {
+            profile.CurrentWeightKg = request.CurrentWeightKg.Value;
+            profile.LastWeightUpdate = DateTime.UtcNow;
+            
+            var weightEntry = new WeightHistory
+            {
+                UserId = userId,
+                WeightKg = request.CurrentWeightKg.Value,
+                RecordedAt = DateTime.UtcNow
+            };
+            await _unitOfWork.WeightHistories.AddAsync(weightEntry);
+        }
 
         _unitOfWork.UserProfiles.Update(profile);
         await _unitOfWork.SaveChangesAsync();
@@ -315,7 +333,7 @@ public class UserService : IUserService
         var age = _nutritionService.CalculateAge(profile.DateOfBirth);
         var bmi = _nutritionService.CalculateBmi(profile.HeightCm, profile.CurrentWeightKg);
         var bmr = _nutritionService.CalculateBmr(profile.Gender, profile.CurrentWeightKg, profile.HeightCm, age);
-        var tdee = _nutritionService.CalculateTdee(bmr);
+        var tdee = _nutritionService.CalculateTdee(bmr, profile.ActivityLevel);
 
         var weightGoal = _nutritionService.CalculateWeightFromBmi(profile.BmiGoal, profile.HeightCm);
         //maintain tolerance of 1kg
@@ -335,6 +353,7 @@ public class UserService : IUserService
             BmiGoal = profile.BmiGoal,
             WeightGoal = weightGoal,
             DietaryGoal = dietaryGoal,
+            ActivityLevel = profile.ActivityLevel,
             Bmi = bmi,
             BmiCategory = _nutritionService.GetBmiCategory(bmi),
             Bmr = bmr,

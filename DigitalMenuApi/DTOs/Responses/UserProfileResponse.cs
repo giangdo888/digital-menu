@@ -14,6 +14,7 @@ public class UserProfileResponse
     public decimal BmiGoal { get; set; }
     public decimal WeightGoal { get; set; }
     public string DietaryGoal { get; set; } = string.Empty;
+    public string ActivityLevel { get; set; } = string.Empty;
 
     // Calculated values
     public decimal Bmi { get; set; }

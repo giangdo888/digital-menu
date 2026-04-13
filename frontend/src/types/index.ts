@@ -160,6 +160,7 @@ export interface UserProfile {
     heightCm: number;
     currentWeightKg: number;
     bmiGoal: number;
+    activityLevel: string;
     weightGoal: number;
     dietaryGoal: string;
     bmi: number;

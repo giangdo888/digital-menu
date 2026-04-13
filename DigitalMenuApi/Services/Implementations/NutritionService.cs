@@ -57,11 +57,19 @@ public class NutritionService : INutritionService
 
     /// <summary>
     /// TDEE = BMR × Activity Factor
-    /// Using 1.2 (sedentary) as default - can be enhanced later with activity level
     /// </summary>
-    public decimal CalculateTdee(decimal bmr)
+    public decimal CalculateTdee(decimal bmr, string activityLevel)
     {
-        return Math.Round(bmr * 1.2m, 0);
+        var activityMultiplier = activityLevel.ToLower() switch
+        {
+            "lightly_active" => 1.375m,
+            "moderately_active" => 1.55m,
+            "very_active" => 1.725m,
+            "extra_active" => 1.9m,
+            _ => 1.2m // sedentary default
+        };
+
+        return Math.Round(bmr * activityMultiplier, 0);
     }
 
     /// <summary>

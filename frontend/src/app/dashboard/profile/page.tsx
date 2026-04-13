@@ -16,8 +16,16 @@ export default function ProfilePage() {
         heightCm: 170,
         currentWeightKg: 70,
         bmiGoal: 22,
-        activityLevel: "moderate",
+        activityLevel: "sedentary",
     });
+
+    const activityLevels = {
+        sedentary: "Sedentary",
+        lightly_active: "Light",
+        moderately_active: "Moderate",
+        very_active: "Active",
+        extra_active: "Extra",
+    };
 
     const { logout } = useAuth();
     const router = useRouter();
@@ -73,7 +81,11 @@ export default function ProfilePage() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                     {[
                         { label: "BMI", value: profile.bmi.toFixed(1), sub: profile.bmiCategory },
-                        { label: "BMR", value: `${Math.round(profile.bmr)} cal`, sub: "Base metabolic rate" },
+                        { 
+                            label: "Activity", 
+                            value: activityLevels[profile.activityLevel as keyof typeof activityLevels] || profile.activityLevel,
+                            sub: "Level" 
+                        },
                         { label: "TDEE", value: `${Math.round(profile.tdee)} cal`, sub: "Daily expenditure" },
                         { label: "Goal", value: profile.dietaryGoal, sub: `${profile.weightGoal} kg` },
                     ].map((stat) => (
@@ -159,11 +171,11 @@ export default function ProfilePage() {
                     <label className="text-sm text-text-secondary block mb-1">Activity Level</label>
                     <select value={form.activityLevel} onChange={(e) => updateField("activityLevel", e.target.value)}
                         className="w-full bg-bg-card border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent">
-                        <option value="sedentary">Sedentary (desk job, little exercise)</option>
-                        <option value="light">Light (exercise 1-3 days/week)</option>
-                        <option value="moderate">Moderate (exercise 3-5 days/week)</option>
-                        <option value="active">Active (exercise 6-7 days/week)</option>
-                        <option value="very_active">Very Active (athlete / physical job)</option>
+                        <option value="sedentary">Sedentary (Little exercise)</option>
+                        <option value="lightly_active">Lightly Active (1-3 days/week)</option>
+                        <option value="moderately_active">Moderately Active (3-5 days/week)</option>
+                        <option value="very_active">Very Active (6-7 days/week)</option>
+                        <option value="extra_active">Extra Active (Athlete / Physical job)</option>
                     </select>
                 </div>
                 <button type="submit" className="w-full bg-accent hover:bg-accent-hover text-white font-semibold py-3 rounded-xl">
