@@ -32,7 +32,7 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
             .IsRequired()
             .HasPrecision(5, 2);
 
-        builder.Property(up => up.BmiGoal)
+        builder.Property(up => up.WeeklyWeightGoal)
             .HasPrecision(5, 2);
 
         builder.Property(up => up.LastWeightUpdate)

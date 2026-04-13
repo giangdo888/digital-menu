@@ -172,7 +172,7 @@ public class UserService : IUserService
             DateOfBirth = request.DateOfBirth,
             HeightCm = request.HeightCm,
             CurrentWeightKg = request.CurrentWeightKg,
-            BmiGoal = request.BmiGoal,
+            WeeklyWeightGoal = request.WeeklyWeightGoal,
             ActivityLevel = request.ActivityLevel,
             LastWeightUpdate = DateTime.UtcNow
         };
@@ -215,8 +215,8 @@ public class UserService : IUserService
         if (request.HeightCm.HasValue)
             profile.HeightCm = request.HeightCm.Value;
 
-        if (request.BmiGoal.HasValue)
-            profile.BmiGoal = request.BmiGoal.Value;
+        if (request.WeeklyWeightGoal.HasValue)
+            profile.WeeklyWeightGoal = request.WeeklyWeightGoal.Value;
 
         if (!string.IsNullOrEmpty(request.ActivityLevel))
             profile.ActivityLevel = request.ActivityLevel;
@@ -335,12 +335,9 @@ public class UserService : IUserService
         var bmr = _nutritionService.CalculateBmr(profile.Gender, profile.CurrentWeightKg, profile.HeightCm, age);
         var tdee = _nutritionService.CalculateTdee(bmr, profile.ActivityLevel);
 
-        var weightGoal = _nutritionService.CalculateWeightFromBmi(profile.BmiGoal, profile.HeightCm);
-        //maintain tolerance of 1kg
-        var weightDifference = weightGoal - profile.CurrentWeightKg;
-        var dietaryGoal = weightDifference < -1 ? "lose" : weightDifference > 1 ? "gain" : "maintain";
-        var dailyCalories = _nutritionService.CalculateDailyCaloriesTarget(tdee, dietaryGoal);
-        var (proteinG, carbsG, fatG) = _nutritionService.CalculateMacros(dailyCalories, dietaryGoal);
+        var dietaryGoal = profile.WeeklyWeightGoal < 0 ? "lose" : profile.WeeklyWeightGoal > 0 ? "gain" : "maintain";
+        var dailyCalories = _nutritionService.CalculateDailyCaloriesTarget(tdee, profile.Gender, profile.WeeklyWeightGoal);
+        var (proteinG, carbsG, fatG) = _nutritionService.CalculateMacros(dailyCalories, profile.CurrentWeightKg, profile.WeeklyWeightGoal);
 
         return new UserProfileResponse
         {
@@ -350,8 +347,7 @@ public class UserService : IUserService
             Age = age,
             HeightCm = profile.HeightCm,
             CurrentWeightKg = profile.CurrentWeightKg,
-            BmiGoal = profile.BmiGoal,
-            WeightGoal = weightGoal,
+            WeeklyWeightGoal = profile.WeeklyWeightGoal,
             DietaryGoal = dietaryGoal,
             ActivityLevel = profile.ActivityLevel,
             Bmi = bmi,
@@ -362,7 +358,6 @@ public class UserService : IUserService
             DailyProteinG = proteinG,
             DailyCarbsG = carbsG,
             DailyFatG = fatG,
-            WeightToGoal = weightDifference,
             LastWeightUpdate = profile.LastWeightUpdate
         };
     }

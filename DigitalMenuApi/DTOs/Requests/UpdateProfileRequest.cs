@@ -12,8 +12,8 @@ public class UpdateProfileRequest
     [Range(50, 300, ErrorMessage = "Height must be between 50 and 300 cm")]
     public decimal? HeightCm { get; set; }
 
-    [Range(18.5, 24.9, ErrorMessage = "Healthy BMI goal must be between 18.5 and 24.9")]
-    public decimal? BmiGoal { get; set; }
+    [Range(-1.0, 1.0, ErrorMessage = "Weekly weight goal must be between -1.0 and 1.0 kg/week")]
+    public decimal? WeeklyWeightGoal { get; set; }
 
     [Range(20, 200, ErrorMessage = "Weight must be between 20 and 200 kg")]
     public decimal? CurrentWeightKg { get; set; }

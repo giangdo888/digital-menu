@@ -121,7 +121,7 @@ public class UserServiceTests
             DateOfBirth = new DateOnly(1990, 1, 1),
             HeightCm = 180,
             CurrentWeightKg = 80,
-            BmiGoal = 22,
+            WeeklyWeightGoal = -0.5m,
             ActivityLevel = "sedentary"
         };
 

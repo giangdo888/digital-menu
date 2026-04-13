@@ -11,8 +11,7 @@ public class UserProfileResponse
     // Measurements
     public decimal HeightCm { get; set; }
     public decimal CurrentWeightKg { get; set; }
-    public decimal BmiGoal { get; set; }
-    public decimal WeightGoal { get; set; }
+    public decimal WeeklyWeightGoal { get; set; }
     public string DietaryGoal { get; set; } = string.Empty;
     public string ActivityLevel { get; set; } = string.Empty;
 

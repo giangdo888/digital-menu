@@ -28,14 +28,14 @@ public interface INutritionService
     decimal CalculateTdee(decimal bmr, string activityLevel);
 
     /// <summary>
-    /// Calculate daily calorie target based on TDEE and dietary goal
+    /// Calculate daily calorie target based on TDEE, gender, and weekly weight goal
     /// </summary>
-    decimal CalculateDailyCaloriesTarget(decimal tdee, string dietaryGoal);
+    decimal CalculateDailyCaloriesTarget(decimal tdee, string gender, decimal targetWeightChangeKgPerWeek);
 
     /// <summary>
-    /// Calculate macronutrient targets based on calories and goal
+    /// Calculate macronutrient targets based on calories, weight, and targeted weight change
     /// </summary>
-    (decimal proteinG, decimal carbsG, decimal fatG) CalculateMacros(decimal dailyCalories, string dietaryGoal);
+    (decimal proteinG, decimal carbsG, decimal fatG) CalculateMacros(decimal dailyCalories, decimal weightKg, decimal targetWeightChangeKgPerWeek);
 
     /// <summary>
     /// Calculate age from date of birth

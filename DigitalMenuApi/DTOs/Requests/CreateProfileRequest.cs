@@ -19,8 +19,8 @@ public class CreateProfileRequest
     [Range(20, 200, ErrorMessage = "Weight must be between 20 and 200 kg")]
     public required decimal CurrentWeightKg { get; set; }
 
-    [Range(18.5, 24.9, ErrorMessage = "HealthyBMI goal must be between 18.5 and 24.9")]
-    public decimal BmiGoal { get; set; } = 20m;
+    [Range(-1.0, 1.0, ErrorMessage = "Weekly weight goal must be between -1.0 and 1.0 kg/week")]
+    public decimal WeeklyWeightGoal { get; set; } = 0m;
 
     [Required]
     [RegularExpression("^(sedentary|lightly_active|moderately_active|very_active|extra_active)$", ErrorMessage = "Activity level must be a valid option")]

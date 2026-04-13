@@ -107,32 +107,28 @@ public class NutritionServiceTests
     // Crucially, this test also ensures we NEVER recommend someone eat less than 1200 calories a day,
     // because that's fundamentally unsafe.
     [Theory]
-    [InlineData(2000, "lose", 1500)]
-    [InlineData(2000, "maintain", 2000)]
-    [InlineData(2000, "gain", 2300)]
-    [InlineData(1500, "lose", 1200)] // Boundary check: Should not drop below 1200
-    [InlineData(1200, "lose", 1200)] // Boundary check: Exactly 1200
-    public void CalculateDailyCaloriesTarget_ShouldAdjustCorrectlyBasedOnGoal(decimal tdee, string goal, decimal expectedCalories)
+    [InlineData(2000, "male", -0.5, 1500)]     // 2000 - 550 = 1450, hits floor 1500
+    [InlineData(2000, "female", 0, 2000)]      // maintain = 2000
+    [InlineData(2000, "male", 0.25, 2275)]     // 2000 + 275 = 2275
+    [InlineData(1500, "female", -0.5, 1200)]   // Boundary check: Should catch floor 1200 for women
+    [InlineData(1200, "male", -0.5, 1500)]     // Boundary check: Men floor 1500
+    public void CalculateDailyCaloriesTarget_ShouldAdjustCorrectlyBasedOnGoal(decimal tdee, string gender, decimal weeklyWeightGoal, decimal expectedCalories)
     {
         // Act
-        var result = _sut.CalculateDailyCaloriesTarget(tdee, goal);
+        var result = _sut.CalculateDailyCaloriesTarget(tdee, gender, weeklyWeightGoal);
 
         // Assert
         result.Should().Be(expectedCalories);
     }
 
-    // Once we know how many calories a user should eat, we split that into Protein, Carbs, and Fats.
-    // E.g., if you want to gain muscle, you get slightly different ratios than someone losing weight.
-    // This test feeds in a calorie goal and makes sure the grams of protein, carbs, and fat add up right
-    // based on how many calories are in 1g of each (Protein = 4, Carbs = 4, Fat = 9).
     [Theory]
-    [InlineData(2000, "lose", 200, 150, 67)]   // 40% P (800c/4), 30% C (600c/4), 30% F (600c/9)
-    [InlineData(2000, "maintain", 150, 200, 67)] // 30% P (600c/4), 40% C (800c/4), 30% F (600c/9)
-    [InlineData(2000, "gain", 150, 225, 56)]    // 30% P (600c/4), 45% C (900c/4), 25% F (500c/9)
-    public void CalculateMacros_ShouldReturnCorrectGramDistributionForGoal(decimal dailyCalories, string goal, decimal expectedProtein, decimal expectedCarbs, decimal expectedFat)
+    [InlineData(2000, 80, -0.5, 150, 200, 67)]     // Lose: 30% P = 150. Min P = 1.6*80 = 128. Since 150 > 128, use 150. Carbs 40% = 200, Fat 30% = 67.
+    [InlineData(2000, 80, 0, 128, 248, 55)]        // Maintain: 25% P = 125. Min P = 128. Clamped to 128. Remaining cals = 1488. Carbs ratio = 2/3 -> 992/4 = 248. Fat ratio = 1/3 -> 496/9 = 55.
+    [InlineData(2000, 80, 0.25, 128, 273, 44)]     // Gain: 25% P = 125. Min P = 128. Clamped to 128. Remaining cals = 1488. Carbs 55%, Fat 20%. Ratio C=55/75, F=20/75. C=1091.2/4=273, F=396.8/9=44.
+    public void CalculateMacros_ShouldReturnCorrectGramDistributionForGoal(decimal dailyCalories, decimal weightKg, decimal weeklyWeightGoal, decimal expectedProtein, decimal expectedCarbs, decimal expectedFat)
     {
         // Act
-        var result = _sut.CalculateMacros(dailyCalories, goal);
+        var result = _sut.CalculateMacros(dailyCalories, weightKg, weeklyWeightGoal);
 
         // Assert
         result.proteinG.Should().Be(expectedProtein);
