@@ -96,7 +96,7 @@ public class NutritionServiceTests
         var expectedTdee = Math.Round(bmr * 1.2m, 0);
 
         // Act
-        var result = _sut.CalculateTdee(bmr);
+        var result = _sut.CalculateTdee(bmr, "sedentary");
 
         // Assert
         result.Should().Be(expectedTdee);

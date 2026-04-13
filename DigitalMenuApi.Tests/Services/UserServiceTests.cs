@@ -121,7 +121,8 @@ public class UserServiceTests
             DateOfBirth = new DateOnly(1990, 1, 1),
             HeightCm = 180,
             CurrentWeightKg = 80,
-            BmiGoal = 22
+            BmiGoal = 22,
+            ActivityLevel = "sedentary"
         };
 
         var result = await sut.CreateProfileAsync(10, request);
@@ -143,7 +144,7 @@ public class UserServiceTests
         await SeedUserAsync(uow, 10);
         var sut = new UserService(uow, _nutritionService, _mockLogger.Object);
 
-        var request = new CreateProfileRequest { Gender = "male", DateOfBirth = new DateOnly(1990, 1, 1), HeightCm = 180, CurrentWeightKg = 80 };
+        var request = new CreateProfileRequest { Gender = "male", DateOfBirth = new DateOnly(1990, 1, 1), HeightCm = 180, CurrentWeightKg = 80, ActivityLevel = "sedentary" };
         await sut.CreateProfileAsync(10, request);
 
         // Second attempt
@@ -160,7 +161,7 @@ public class UserServiceTests
         await SeedUserAsync(uow, 10);
         var sut = new UserService(uow, _nutritionService, _mockLogger.Object);
 
-        await sut.CreateProfileAsync(10, new CreateProfileRequest { Gender = "male", DateOfBirth = new DateOnly(1990, 1, 1), HeightCm = 180, CurrentWeightKg = 80 });
+        await sut.CreateProfileAsync(10, new CreateProfileRequest { Gender = "male", DateOfBirth = new DateOnly(1990, 1, 1), HeightCm = 180, CurrentWeightKg = 80, ActivityLevel = "sedentary" });
 
         var result = await sut.LogWeightAsync(10, new LogWeightRequest { WeightKg = 78.5M });
 

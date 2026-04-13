@@ -96,7 +96,7 @@ public class UserControllerTests
     [Fact]
     public async Task CreateProfile_ShouldReturnOk_WhenServiceSucceeds()
     {
-        var request = new CreateProfileRequest { Gender = "male", DateOfBirth = new DateOnly(1990, 1, 1), HeightCm = 180, CurrentWeightKg = 80 };
+        var request = new CreateProfileRequest { Gender = "male", DateOfBirth = new DateOnly(1990, 1, 1), HeightCm = 180, CurrentWeightKg = 80, ActivityLevel = "sedentary" };
         var fakeResponse = new UserProfileResponse { Gender = "male", CurrentWeightKg = 80 };
 
         _mockUserService.Setup(s => s.CreateProfileAsync(10, request))
