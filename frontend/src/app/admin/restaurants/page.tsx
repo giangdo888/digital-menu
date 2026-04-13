@@ -79,13 +79,11 @@ export default function MyRestaurantsPage() {
                     {restaurants.map((r) => (
                         <Link key={r.id} href={`/admin/restaurants/${r.id}`}
                             className="bg-bg-card rounded-xl p-5 flex items-center gap-4 hover:ring-1 hover:ring-accent transition-all block">
-                            {r.logoUrl ? (
-                                <img src={r.logoUrl} alt={r.name} className="w-12 h-12 rounded-lg object-cover flex-shrink-0" />
-                            ) : (
-                                <div className="w-12 h-12 rounded-lg bg-bg-elevated flex items-center justify-center text-xl flex-shrink-0">
-                                    🍽️
-                                </div>
-                            )}
+                            <img 
+                                src={r.logoUrl || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80"} 
+                                alt={r.name} 
+                                className="w-12 h-12 rounded-lg object-cover flex-shrink-0" 
+                            />
                             <div className="flex-1 min-w-0">
                                 <h3 className="font-semibold">{r.name}</h3>
                                 <p className="text-sm text-text-secondary">{r.address}</p>

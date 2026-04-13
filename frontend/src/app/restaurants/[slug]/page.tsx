@@ -8,6 +8,8 @@ import { useParams } from "next/navigation"
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { userService } from "@/services/userService";
+import { mealLogService } from "@/services/mealLogService";
+import { UserProfile, MealLog } from "@/types";
 
 export default function MenuPage() {
     const params = useParams();
@@ -18,7 +20,8 @@ export default function MenuPage() {
     const [menu, setMenu] = useState<MenuResponse | null>(null);
     const [activeCategory, setActiveCategory] = useState<number | null>(null);
     const [selectedDish, setSelectedDish] = useState<MenuDish | null>(null);
-    const [dailyCalorieTarget, setDailyCalorieTarget] = useState<number | undefined>(undefined);
+    const [profile, setProfile] = useState<UserProfile | null>(null);
+    const [meals, setMeals] = useState<MealLog[]>([]);
 
     useEffect(() => {
         const fetchMenu = async () => {
@@ -41,18 +44,22 @@ export default function MenuPage() {
     }, [slug]);
 
     useEffect(() => {
-        const fetchProfile = async () => {
+        const fetchUserData = async () => {
             if (isAuthenticated) {
                 try {
-                    const response = await userService.getProfile();
-                    setDailyCalorieTarget(response.data.dailyCaloriesTarget);
+                    const [profileRes, mealsRes] = await Promise.all([
+                        userService.getProfile(),
+                        mealLogService.getMyLogs()
+                    ]);
+                    setProfile(profileRes.data);
+                    setMeals(mealsRes.data);
                 } catch (error) {
-                    console.error("Failed to load profile:", error);
+                    console.error("Failed to load user data:", error);
                 }
             }
         };
 
-        fetchProfile();
+        fetchUserData();
     }, [isAuthenticated]);
 
     if (isLoading) {
@@ -66,16 +73,45 @@ export default function MenuPage() {
     //get dishes from active category
     const currentCategory = menu.categories.find((c) => c.id === activeCategory);
 
+    // Calculate daily accumulator
+    const accumulator = meals.reduce(
+        (acc, meal) => ({
+            calories: acc.calories + parseFloat(meal.calories as any),
+            protein: acc.protein + parseFloat(meal.proteinG as any),
+            carbs: acc.carbs + parseFloat(meal.carbsG as any),
+            fat: acc.fat + parseFloat(meal.fatG as any),
+        }),
+        { calories: 0, protein: 0, carbs: 0, fat: 0 }
+    );
+
     return (
         <div>
-            {/* Hero Banner */}
-            <div className="bg-bg-card py-8 px-4 mb-6">
-                <div className="max-w-6xl mx-auto">
-                    <h1 className="text-3xl font-bold">{menu.restaurant.name}</h1>
-                    <p className="text-text-secondary mt-2">{menu.restaurant.address}</p>
-                    {menu.restaurant.description && (
-                        <p className="text-text-secondary mt-1 text-sm">{menu.restaurant.description}</p>
-                    )}
+            {/* Hero Banner with Background Image */}
+            <div 
+                className="relative py-12 px-4 mb-6 bg-cover bg-center overflow-hidden"
+                style={{ 
+                    backgroundImage: `url(${menu.restaurant.logoUrl || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80"})` 
+                }}
+            >
+                {/* Dark Overlay for Readability */}
+                <div className="absolute inset-0 bg-black/60" />
+
+                <div className="max-w-6xl mx-auto relative z-10">
+                    <h1 className="text-4xl font-extrabold text-white drop-shadow-md">{menu.restaurant.name}</h1>
+                    <div className="flex flex-col gap-1 mt-3">
+                        <p className="text-gray-200 font-medium flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-accent">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg>
+                            {menu.restaurant.address}
+                        </p>
+                        {menu.restaurant.description && (
+                            <p className="text-gray-300 text-sm max-w-2xl leading-relaxed">
+                                {menu.restaurant.description}
+                            </p>
+                        )}
+                    </div>
                 </div>
             </div>
 
@@ -102,7 +138,8 @@ export default function MenuPage() {
                         <DishCard
                             key={dish.id}
                             dish={dish}
-                            dailyCalorieTarget={dailyCalorieTarget}
+                            profile={profile}
+                            accumulator={accumulator}
                             onClick={() => setSelectedDish(dish)}
                         />
                     ))}
@@ -120,7 +157,8 @@ export default function MenuPage() {
             {selectedDish && (
                 <DishDetailModal
                     dish={selectedDish}
-                    dailyCalorieTarget={dailyCalorieTarget}
+                    profile={profile}
+                    accumulator={accumulator}
                     onClose={() => setSelectedDish(null)}
                 />
             )}

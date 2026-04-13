@@ -63,17 +63,11 @@ export default function HomePage() {
           >
             {/* Restaurant Image */}
             <div className="aspect-video bg-bg-elevated relative overflow-hidden">
-              {restaurant.logoUrl ? (
                 <img
-                  src={restaurant.logoUrl}
+                  src={restaurant.logoUrl || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80"}
                   alt={restaurant.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                 />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-4xl">
-                  🍽️
-                </div>
-              )}
             </div>
 
             {/* Restaurant Info */}

@@ -92,13 +92,11 @@ export default function RestaurantDetailPage() {
                 <div className="bg-bg-card rounded-xl p-5 mb-6">
                     <div className="flex justify-between items-start mb-4">
                         <div className="flex gap-4 items-center">
-                            {restaurant.logoUrl ? (
-                                <img src={restaurant.logoUrl} alt={restaurant.name} className="w-16 h-16 rounded-lg object-cover" />
-                            ) : (
-                                <div className="w-16 h-16 rounded-lg bg-bg-elevated flex items-center justify-center text-2xl">
-                                    🍽️
-                                </div>
-                            )}
+                            <img 
+                                src={restaurant.logoUrl || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80"} 
+                                alt={restaurant.name} 
+                                className="w-16 h-16 rounded-lg object-cover" 
+                            />
                             <div>
                                 <h1 className="text-2xl font-bold">{restaurant.name}</h1>
                                 <p className="text-text-secondary">{restaurant.address}</p>

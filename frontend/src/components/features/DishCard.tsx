@@ -1,20 +1,26 @@
-import { MenuDish } from "@/types";
+import { MenuDish, UserProfile } from "@/types";
 
 interface DishCardProps {
     dish: MenuDish;
     onClick: () => void;
-
-    //optional: daily calorie target for traffic light system
-    dailyCalorieTarget?: number;
+    profile?: UserProfile | null;
+    accumulator?: { calories: number; protein: number; carbs: number; fat: number };
 }
 
-export default function DishCard({ dish, onClick, dailyCalorieTarget }: DishCardProps) {
+export default function DishCard({ dish, onClick, profile, accumulator }: DishCardProps) {
     const getTrafficLight = () => {
-        if (!dailyCalorieTarget) return null;
-        const percentage = (dish.calories / dailyCalorieTarget) * 100;
-        if (percentage <= 30) return "bg-success";      //Green
-        if (percentage <= 50) return "bg-warning";      //Yellow
-        return "bg-danger";                             //Red
+        if (!profile || !accumulator) return null;
+        
+        const pCal = ((accumulator.calories + dish.calories) / profile.dailyCaloriesTarget) * 100;
+        const pPro = ((accumulator.protein + dish.proteinG) / profile.dailyProteinG) * 100;
+        const pCarb = ((accumulator.carbs + dish.carbsG) / profile.dailyCarbsG) * 100;
+        const pFat = ((accumulator.fat + dish.fatG) / profile.dailyFatG) * 100;
+        
+        const maxP = Math.max(pCal, pPro, pCarb, pFat);
+        
+        if (maxP <= 80) return "bg-success";
+        if (maxP <= 100) return "bg-warning";
+        return "bg-danger";
     }
 
     const trafficLight = getTrafficLight();
@@ -26,15 +32,11 @@ export default function DishCard({ dish, onClick, dailyCalorieTarget }: DishCard
         >
             {/* Dish Image */}
             <div className="w-20 h-20 md:w-24 md:h-24 bg-bg-elevated rounded-lg flex-shrink-0 relative overflow-hidden">
-                {dish.imageUrl ? (
                     <img
-                        src={dish.imageUrl}
+                        src={dish.imageUrl || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80"}
                         alt={dish.name}
                         className="w-full h-full object-cover"
                     />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center text-2xl">🍛</div>
-                )}
 
                 {/* Traffic Light Dot */}
                 {trafficLight && (

@@ -2,16 +2,17 @@
 
 import { useAuth } from "@/context/AuthContext";
 import { mealLogService } from "@/services/mealLogService";
-import { MenuDish } from "@/types"
+import { MenuDish, UserProfile } from "@/types"
 import toast from "react-hot-toast";
 
 interface DishDetailModalProps {
     dish: MenuDish;
-    onClose: () => void
-    dailyCalorieTarget?: number;
+    onClose: () => void;
+    profile?: UserProfile | null;
+    accumulator?: { calories: number; protein: number; carbs: number; fat: number };
 }
 
-export default function DishDetailModal({ dish, onClose, dailyCalorieTarget }: DishDetailModalProps) {
+export default function DishDetailModal({ dish, onClose, profile, accumulator }: DishDetailModalProps) {
     const { isAuthenticated, isCustomer } = useAuth();
 
     const handleLogMeal = async () => {
@@ -24,10 +25,6 @@ export default function DishDetailModal({ dish, onClose, dailyCalorieTarget }: D
         }
     };
 
-    const budgetPercentage = dailyCalorieTarget
-        ? Math.round((dish.calories / dailyCalorieTarget) * 100)
-        : null;
-
     return (
         <>
             {/* Backdrop */}
@@ -38,11 +35,11 @@ export default function DishDetailModal({ dish, onClose, dailyCalorieTarget }: D
                 <div className="bg-bg-card rounded-t-2xl md:rounded-2xl max-h-[85vh] overflow-y-auto w-full md:max-w-lg">
                     {/* Hero Image */}
                     <div className="aspect-video bg-bg-elevated relative">
-                        {dish.imageUrl ? (
-                            <img src={dish.imageUrl} alt={dish.name} className="w-full h-full object-cover" />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center text-6xl">🍛</div>
-                        )}
+                        <img 
+                            src={dish.imageUrl || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80"} 
+                            alt={dish.name} 
+                            className="w-full h-full object-cover" 
+                        />
                         <button
                             onClick={onClose}
                             className="absolute top-3 right-3 bg-black/50 text-white w-8 h-8 rounded-full cursor-pointer flex items-center justify-center"
@@ -72,25 +69,39 @@ export default function DishDetailModal({ dish, onClose, dailyCalorieTarget }: D
                                 </div>
                             ))}
                         </div>
-                        {/* Traffic Light Bar (only if user has a profile) */}
-                        {budgetPercentage !== null && (
-                            <div className="mt-4 bg-bg-elevated rounded-lg p-3">
-                                <div className="flex justify-between text-sm mb-2">
-                                    <span className="text-text-secondary">Daily calorie budget</span>
-                                    <span className={`font-medium ${budgetPercentage <= 30 ? "text-success" :
-                                        budgetPercentage <= 50 ? "text-warning" : "text-danger"
-                                        }`}>
-                                        {budgetPercentage}%
-                                    </span>
-                                </div>
-                                <div className="w-full bg-bg-primary rounded-full h-2">
-                                    <div
-                                        className={`h-2 rounded-full transition-all ${budgetPercentage <= 30 ? "bg-success" :
-                                            budgetPercentage <= 50 ? "bg-warning" : "bg-danger"
-                                            }`}
-                                        style={{ width: `${Math.min(budgetPercentage, 100)}%` }}
-                                    />
-                                </div>
+                        {/* Traffic Light Bars (only if user has a profile) */}
+                        {profile && accumulator && (
+                            <div className="mt-4 bg-bg-elevated rounded-lg p-3 space-y-3">
+                                <h3 className="text-sm font-semibold text-text-secondary">Projected Daily Totals (if eaten)</h3>
+                                {[
+                                    { label: "Calories", cur: accumulator.calories + dish.calories, tgt: profile.dailyCaloriesTarget },
+                                    { label: "Protein", cur: accumulator.protein + dish.proteinG, tgt: profile.dailyProteinG },
+                                    { label: "Carbs", cur: accumulator.carbs + dish.carbsG, tgt: profile.dailyCarbsG },
+                                    { label: "Fat", cur: accumulator.fat + dish.fatG, tgt: profile.dailyFatG },
+                                ].map(macro => {
+                                    const pct = Math.round((macro.cur / macro.tgt) * 100);
+                                    let colorCls = "bg-success";
+                                    let textCls = "text-success";
+                                    if (pct > 80 && pct <= 100) { colorCls = "bg-warning"; textCls = "text-warning"; }
+                                    else if (pct > 100) { colorCls = "bg-danger"; textCls = "text-danger"; }
+
+                                    return (
+                                        <div key={macro.label}>
+                                            <div className="flex justify-between text-sm mb-1">
+                                                <span className="text-text-secondary">{macro.label}</span>
+                                                <span className={`font-medium ${textCls}`}>
+                                                    {Math.round(macro.cur)} / {Math.round(macro.tgt)} ({pct}%)
+                                                </span>
+                                            </div>
+                                            <div className="w-full bg-bg-primary rounded-full h-2">
+                                                <div
+                                                    className={`h-2 rounded-full transition-all ${colorCls}`}
+                                                    style={{ width: `${Math.min(pct, 100)}%` }}
+                                                />
+                                            </div>
+                                        </div>
+                                    )
+                                })}
                             </div>
                         )}
                     </div>

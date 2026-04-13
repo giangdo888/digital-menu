@@ -24,7 +24,7 @@ public class MealLogService : IMealLogService
         var mealLogs = await _unitOfWork.MealLogs.Query()
             .AsNoTracking()
             .Include(m => m.Dish)
-            .Where(m => m.UserId == userId)
+            .Where(m => m.UserId == userId && m.CreatedAt.Date == DateTime.Today)
             .ToListAsync();
 
         return Result<List<MealLogResponse>>.Success(mealLogs.Select(MapToResponse).ToList());
