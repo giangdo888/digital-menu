@@ -28,6 +28,5 @@ public class UserProfileResponse
     public decimal DailyFatG { get; set; }
 
     // Progress
-    public decimal WeightToGoal { get; set; }  // Positive = need to lose, Negative = need to gain
     public DateTime LastWeightUpdate { get; set; }
 }

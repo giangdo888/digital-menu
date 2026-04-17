@@ -15,7 +15,7 @@ export default function ProfilePage() {
         dateOfBirth: "2000-01-01",
         heightCm: 170,
         currentWeightKg: 70,
-        bmiGoal: 22,
+        weeklyWeightGoal: 0,
         activityLevel: "sedentary",
     });
 
@@ -34,6 +34,20 @@ export default function ProfilePage() {
         await logout();
         toast.success("Logged out successfully");
         router.push("/login");
+    };
+
+    const handleEdit = () => {
+        if (profile) {
+            setForm({
+                gender: profile.gender,
+                dateOfBirth: profile.dateOfBirth,
+                heightCm: profile.heightCm,
+                currentWeightKg: profile.currentWeightKg,
+                weeklyWeightGoal: profile.weeklyWeightGoal,
+                activityLevel: profile.activityLevel,
+            });
+        }
+        setIsEditing(true);
     };
 
     useEffect(() => {
@@ -70,6 +84,10 @@ export default function ProfilePage() {
         }
     }
 
+    const handleClose = () => {
+        setIsEditing(false);
+    }
+
     if (isLoading) return <div className="text-center py-20 text-text-secondary">Loading...</div>;
 
     // ── Display Profile ──
@@ -81,13 +99,13 @@ export default function ProfilePage() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                     {[
                         { label: "BMI", value: profile.bmi.toFixed(1), sub: profile.bmiCategory },
-                        { 
-                            label: "Activity", 
+                        {
+                            label: "Activity",
                             value: activityLevels[profile.activityLevel as keyof typeof activityLevels] || profile.activityLevel,
-                            sub: "Level" 
+                            sub: "Level"
                         },
                         { label: "TDEE", value: `${Math.round(profile.tdee)} cal`, sub: "Daily expenditure" },
-                        { label: "Goal", value: profile.dietaryGoal, sub: `${profile.weightGoal} kg` },
+                        { label: "Goal", value: profile.dietaryGoal, sub: `${profile.weeklyWeightGoal > 0 ? "+" : ""}${profile.weeklyWeightGoal} kg/week` },
                     ].map((stat) => (
                         <div key={stat.label} className="bg-bg-card rounded-xl p-4 text-center">
                             <p className="text-2xl font-bold text-accent">{stat.value}</p>
@@ -116,7 +134,7 @@ export default function ProfilePage() {
 
                 {/* Action butttons */}
                 <div className="grid grid-cols-2 gap-5">
-                    <button onClick={() => setIsEditing(true)} className="bg-accent hover:bg-accent-hover text-white px-6 py-2 rounded-lg">
+                    <button onClick={handleEdit} className="bg-accent hover:bg-accent-hover text-white px-6 py-2 rounded-lg">
                         Edit Profile
                     </button>
                     <button onClick={handleLogout} className="bg-danger hover:bg-red-400 text-white px-6 py-2 rounded-lg">
@@ -162,10 +180,19 @@ export default function ProfilePage() {
                     </div>
                 </div>
                 <div>
-                    <label className="text-sm text-text-secondary block mb-1">Target BMI</label>
-                    <input type="number" step="0.1" value={form.bmiGoal} onChange={(e) => updateField("bmiGoal", +e.target.value)}
-                        className="w-full bg-bg-card border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
-                    <p className="text-xs text-text-secondary mt-1">Normal BMI range: 18.5 – 24.9</p>
+                    <label className="text-sm text-text-secondary block mb-1">Weekly Weight Goal (kg/week)</label>
+                    <select value={form.weeklyWeightGoal} onChange={(e) => updateField("weeklyWeightGoal", +e.target.value)}
+                        className="w-full bg-bg-card border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent">
+                        <option value="-1">lose 1kg/week</option>
+                        <option value="-0.75">lose 0.75kg/week</option>
+                        <option value="-0.5">lose 0.5kg/week</option>
+                        <option value="-0.25">lose 0.25kg/week</option>
+                        <option value="0">maintain weight</option>
+                        <option value="0.25">gain 0.25kg/week</option>
+                        <option value="0.5">gain 0.5kg/week</option>
+                        <option value="0.75">gain 0.75kg/week</option>
+                        <option value="1">gain 1kg/week</option>
+                    </select>
                 </div>
                 <div>
                     <label className="text-sm text-text-secondary block mb-1">Activity Level</label>
@@ -178,9 +205,14 @@ export default function ProfilePage() {
                         <option value="extra_active">Extra Active (Athlete / Physical job)</option>
                     </select>
                 </div>
-                <button type="submit" className="w-full bg-accent hover:bg-accent-hover text-white font-semibold py-3 rounded-xl">
-                    Save Profile
-                </button>
+                <div className="grid grid-cols-2 gap-4">
+                    <button type="submit" className="w-full bg-accent hover:bg-accent-hover text-white font-semibold py-3 rounded-xl">
+                        Save Profile
+                    </button>
+                    <button type="button" onClick={handleClose} className="w-full bg-danger hover:bg-red-400 text-white font-semibold py-3 rounded-xl">
+                        Cancel
+                    </button>
+                </div>
             </form>
         </div>
     );

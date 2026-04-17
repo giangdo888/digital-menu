@@ -159,9 +159,8 @@ export interface UserProfile {
     age: number;
     heightCm: number;
     currentWeightKg: number;
-    bmiGoal: number;
+    weeklyWeightGoal: number;
     activityLevel: string;
-    weightGoal: number;
     dietaryGoal: string;
     bmi: number;
     bmiCategory: string;
@@ -171,7 +170,6 @@ export interface UserProfile {
     dailyProteinG: number;
     dailyCarbsG: number;
     dailyFatG: number;
-    weightToGoal: number;
     lastWeightUpdate: string;
 }
 export interface CreateProfileRequest {
@@ -179,7 +177,7 @@ export interface CreateProfileRequest {
     dateOfBirth: string;
     heightCm: number;
     currentWeightKg: number;
-    bmiGoal: number;
+    weeklyWeightGoal: number;
     activityLevel: string;
 }
 // ═══════════════════════════════════════

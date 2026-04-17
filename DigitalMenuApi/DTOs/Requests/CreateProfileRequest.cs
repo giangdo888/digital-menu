@@ -23,6 +23,6 @@ public class CreateProfileRequest
     public decimal WeeklyWeightGoal { get; set; } = 0m;
 
     [Required]
-    [RegularExpression("^(sedentary|lightly_active|moderately_active|very_active|extra_active)$", ErrorMessage = "Activity level must be a valid option")]
+    [RegularExpression("^(sedentary|lightly_active|moderately_active|very_active|extra_active)$", ErrorMessage = "Activity level must be a valid optio within sedentary|lightly_active|moderately_active|very_active|extra_active")]
     public required string ActivityLevel { get; set; }
 }

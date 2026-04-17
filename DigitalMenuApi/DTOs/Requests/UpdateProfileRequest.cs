@@ -18,6 +18,6 @@ public class UpdateProfileRequest
     [Range(20, 200, ErrorMessage = "Weight must be between 20 and 200 kg")]
     public decimal? CurrentWeightKg { get; set; }
 
-    [RegularExpression("^(sedentary|lightly_active|moderately_active|very_active|extra_active)$", ErrorMessage = "Activity level must be a valid option")]
+    [RegularExpression("^(sedentary|lightly_active|moderately_active|very_active|extra_active)$", ErrorMessage = "Activity level must be a valid option within sedentary|lightly_active|moderately_active|very_active|extra_active")]
     public string? ActivityLevel { get; set; }
 }
