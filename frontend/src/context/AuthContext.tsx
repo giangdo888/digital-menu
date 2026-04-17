@@ -14,6 +14,7 @@ interface AuthContextType {
     isRestaurantAdmin: boolean;
     isCustomer: boolean;
     isSystemAdmin: boolean;
+    updateUserInfo: (updatedInfo: { firstName?: string; lastName?: string; email?: string }) => void;
 }
 
 //create context with default value
@@ -86,6 +87,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(data);
     }
 
+    const updateUserInfo = (updatedInfo: { firstName?: string; lastName?: string; email?: string }) => {
+        if (!user) return;
+        const updatedUser = { ...user, ...updatedInfo };
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        setUser(updatedUser);
+    }
+
     //convenience booleans to show/hide elements
     const isAuthenticated = !!user;
     const isRestaurantAdmin = user?.role === "restaurant_admin";
@@ -103,6 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             isRestaurantAdmin,
             isCustomer,
             isSystemAdmin,
+            updateUserInfo,
         }}
         >
             {children}

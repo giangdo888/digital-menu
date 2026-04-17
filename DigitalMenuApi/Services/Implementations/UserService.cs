@@ -257,14 +257,30 @@ public class UserService : IUserService
             return Result<UserProfileResponse>.NotFound("Profile not found. Please create a profile first.");
         }
 
-        // Create weight history entry
-        var weightEntry = new WeightHistory
+        // Check if weight already logged today (UTC date)
+        var today = DateTime.UtcNow.Date;
+        var existingEntry = await _unitOfWork.WeightHistories.Query()
+            .FirstOrDefaultAsync(w => w.UserId == userId && w.RecordedAt >= today && w.RecordedAt < today.AddDays(1));
+
+        if (existingEntry != null)
         {
-            UserId = userId,
-            WeightKg = request.WeightKg,
-            RecordedAt = DateTime.UtcNow
-        };
-        await _unitOfWork.WeightHistories.AddAsync(weightEntry);
+            existingEntry.WeightKg = request.WeightKg;
+            existingEntry.RecordedAt = DateTime.UtcNow; // Update time as well
+            _unitOfWork.WeightHistories.Update(existingEntry);
+            _logger.LogInformation("Weight updated for user {UserId}: {Weight}kg (already logged today)", userId, request.WeightKg);
+        }
+        else
+        {
+            // Create new weight history entry
+            var weightEntry = new WeightHistory
+            {
+                UserId = userId,
+                WeightKg = request.WeightKg,
+                RecordedAt = DateTime.UtcNow
+            };
+            await _unitOfWork.WeightHistories.AddAsync(weightEntry);
+            _logger.LogInformation("Weight logged for user {UserId}: {Weight}kg", userId, request.WeightKg);
+        }
 
         // Update current weight in profile
         profile.CurrentWeightKg = request.WeightKg;
@@ -273,7 +289,6 @@ public class UserService : IUserService
 
         await _unitOfWork.SaveChangesAsync();
 
-        _logger.LogInformation("Weight logged for user {UserId}: {Weight}kg", userId, request.WeightKg);
         return Result<UserProfileResponse>.Success(MapToProfileResponse(profile));
     }
 

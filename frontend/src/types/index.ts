@@ -29,6 +29,23 @@ export interface AuthResponse {
     refreshTokenExpiresAt: string;
 }
 
+export interface UserResponse {
+    id: number;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+    isActive: boolean;
+    hasProfile: boolean;
+    createdAt: string;
+}
+
+export interface UpdateUserRequest {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+}
+
 // ═══════════════════════════════════════
 // RESTAURANT (Public)
 // ═══════════════════════════════════════

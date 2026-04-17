@@ -1,5 +1,5 @@
 import api from "@/lib/api";
-import { UserProfile, CreateProfileRequest, WeightHistory, LogWeightRequest } from "@/types";
+import { UserProfile, CreateProfileRequest, WeightHistory, LogWeightRequest, UserResponse, UpdateUserRequest } from "@/types";
 
 export const userService = {
     getProfile: () =>
@@ -10,6 +10,9 @@ export const userService = {
 
     updateProfile: (request: Partial<CreateProfileRequest>) =>
         api.put<UserProfile>("/users/me/profile", request),
+
+    updateAccount: (request: UpdateUserRequest) =>
+        api.put<UserResponse>("/users/me", request),
 
     getWeightHistory: (limit: number = 30) =>
         api.get<WeightHistory[]>(`/users/me/weight?limit=${limit}`),

@@ -52,6 +52,17 @@ export default function RestaurantDetailPage() {
         }
     };
 
+    const handleDeleteCategory = async (catId: number, catName: string) => {
+        if (!window.confirm(`Delete "${catName}"? This will also delete all dishes in this category.`)) return;
+        try {
+            await categoryService.delete(catId);
+            setCategories((prev) => prev.filter((c) => c.id !== catId));
+            toast.success("Category deleted!");
+        } catch {
+            toast.error("Failed to delete category");
+        }
+    };
+
     const openEditForm = () => {
         if (!restaurant) return;
         setEditForm({
@@ -92,10 +103,10 @@ export default function RestaurantDetailPage() {
                 <div className="bg-bg-card rounded-xl p-5 mb-6">
                     <div className="flex justify-between items-start mb-4">
                         <div className="flex gap-4 items-center">
-                            <img 
-                                src={restaurant.logoUrl || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80"} 
-                                alt={restaurant.name} 
-                                className="w-16 h-16 rounded-lg object-cover" 
+                            <img
+                                src={restaurant.logoUrl || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80"}
+                                alt={restaurant.name}
+                                className="w-16 h-16 rounded-lg object-cover"
                             />
                             <div>
                                 <h1 className="text-2xl font-bold">{restaurant.name}</h1>
@@ -227,14 +238,19 @@ export default function RestaurantDetailPage() {
 
                 <div className="space-y-3">
                     {categories.map((cat) => (
-                        <Link key={cat.id} href={`/admin/restaurants/${id}/categories/${cat.id}`}
-                            className="bg-bg-card rounded-xl p-4 flex justify-between items-center hover:ring-1 hover:ring-accent block">
-                            <div>
+                        <div key={cat.id} className="bg-bg-card rounded-xl p-4 flex justify-between items-center hover:ring-1 hover:ring-accent transition-all">
+                            <Link href={`/admin/restaurants/${id}/categories/${cat.id}`} className="flex-1 min-w-0">
                                 <h3 className="font-medium">{cat.name}</h3>
                                 <p className="text-sm text-text-secondary">{cat.dishCount} dishes • {cat.type}</p>
+                            </Link>
+                            <div className="flex items-center gap-3 ml-3">
+                                <button onClick={() => handleDeleteCategory(cat.id, cat.name)} className="text-danger hover:text-red-500 transition-colors p-1" title="Remove category">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                    </svg>
+                                </button>
                             </div>
-                            <span className="text-text-secondary text-sm">→</span>
-                        </Link>
+                        </div>
                     ))}
                 </div>
             </div>

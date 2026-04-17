@@ -79,6 +79,17 @@ export default function CategoryDetailPage() {
         }
     };
 
+    const handleDelete = async (id: number) => {
+        if (!window.confirm("Are you sure you want to delete this dish?")) return;
+        try {
+            await dishService.delete(id);
+            setDishes((prev) => prev.filter((d) => d.id !== id));
+            toast.success("Dish deleted!");
+        } catch {
+            toast.error("Failed to delete dish");
+        }
+    };
+
     // ── Open Dish Modal ──
     const openDishModal = async (dish: Dish) => {
         setEditingDish(dish);
@@ -194,7 +205,7 @@ export default function CategoryDetailPage() {
                     {dishes.map((dish) => (
                         <button key={dish.id} onClick={() => openDishModal(dish)}
                             className="w-full text-left bg-bg-card rounded-xl p-4 hover:ring-1 hover:ring-accent transition-all">
-                            <div className="flex gap-4 items-start">
+                            <div className="flex gap-4 items-center">
                                 {/* Dish Image */}
                                 {dish.imageUrl ? (
                                     <img src={dish.imageUrl} alt={dish.name}
@@ -221,6 +232,18 @@ export default function CategoryDetailPage() {
                                         <span>F {Math.round(dish.fatG)}g</span>
                                     </div>
                                 </div>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDelete(dish.id);
+                                    }}
+                                    className="text-danger justify-end hover:text-red-500 transition-colors p-1"
+                                    title="Remove dish"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                    </svg>
+                                </button>
                             </div>
                         </button>
                     ))}
@@ -235,7 +258,7 @@ export default function CategoryDetailPage() {
                 <>
                     <div className="fixed inset-0 bg-black/60 z-50" onClick={() => setEditingDish(null)} />
                     <div className="fixed z-50 inset-x-0 bottom-0 md:inset-0 md:flex md:items-center md:justify-center">
-                        <div className="bg-bg-card rounded-t-2xl md:rounded-2xl max-h-[85vh] overflow-y-auto w-full md:max-w-lg p-5">
+                        <div className="bg-bg-card rounded-t-2xl md:rounded-2xl max-h-[85vh] overflow-y-auto w-full md:max-w-xl p-5 shadow-2xl transition-all duration-300">
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-lg font-bold">{editingDish.name}</h2>
                                 <button onClick={() => setEditingDish(null)} className="text-text-secondary hover:text-text-primary text-xl">✕</button>
@@ -270,7 +293,7 @@ export default function CategoryDetailPage() {
 
                             {/* Search Results */}
                             {searchResults.length > 0 && (
-                                <div className="bg-bg-elevated rounded-lg mb-4 max-h-40 overflow-y-auto">
+                                <div className="bg-bg-elevated rounded-lg mb-4 max-h-[32rem] overflow-y-auto border border-accent/20">
                                     {searchResults.map((item) => (
                                         <button key={item.id} onClick={() => addIngredient(item)}
                                             className="w-full text-left px-3 py-2 hover:bg-bg-card text-sm border-b border-bg-card last:border-0">

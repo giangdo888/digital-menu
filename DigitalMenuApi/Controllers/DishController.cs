@@ -121,6 +121,21 @@ public class DishController : ControllerBase
         return Ok(new { message = "Dish deactivated successfully" });
     }
 
+    /// <summary>
+    /// Delete dish
+    /// </summary>
+    [HttpDelete("{id:int}")]
+    [Authorize(Roles = "restaurant_admin,system_admin")]
+    public async Task<IActionResult> DeleteDish(int id)
+    {
+        var result = await _dishService.DeleteDishAsync(id, GetCurrentUserId(), GetCurrentUserRole());
+
+        if (result.IsFailure)
+            return StatusCode(result.StatusCode, new { error = result.Error });
+
+        return Ok(new { message = "Dish deleted successfully" });
+    }
+
     #endregion
 
     #region Ingredients

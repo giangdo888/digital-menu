@@ -20,6 +20,9 @@ export const dishService = {
     updateIngredients: (dishId: number, ingredients: { afcdItemId: number; amountInGrams: number }[]) =>
         api.put(`/dishes/${dishId}/ingredients`, { ingredients }),
 
+    delete: (id: number) =>
+        api.delete(`/dishes/${id}`),
+
     // AFCD search
     searchAFCD: (query: string) =>
         api.get<AFCDItem[]>(`/afcd-items?search=${query}`),

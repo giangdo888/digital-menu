@@ -200,6 +200,30 @@ public class DishService : IDishService
         return Result.Success();
     }
 
+    public async Task<Result> DeleteDishAsync(int dishId, int userId, string userRole)
+    {
+        var dish = await _unitOfWork.Dishes.Query()
+            .Include(d => d.Category)
+                .ThenInclude(c => c.Restaurant)
+            .FirstOrDefaultAsync(d => d.Id == dishId);
+
+        if (dish == null)
+        {
+            return Result.NotFound("Dish not found");
+        }
+
+        if (userRole != "system_admin" && dish.Category.Restaurant.UserId != userId)
+        {
+            return Result.Forbidden("You don't have permission to delete this dish");
+        }
+
+        _unitOfWork.Dishes.Delete(dish);
+        await _unitOfWork.SaveChangesAsync();
+
+        _logger.LogInformation("Dish deleted: {DishId}", dishId);
+        return Result.Success();
+    }
+
     #endregion
 
     #region Ingredients Management

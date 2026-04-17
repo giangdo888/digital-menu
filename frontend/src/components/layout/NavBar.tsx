@@ -95,6 +95,9 @@ export default function NavBar() {
                             <Link href="/dashboard/summary" className={isActive("/dashboard/summary")}>
                                 Summary
                             </Link>
+                            <Link href="/dashboard/profile" className={isActive("/dashboard/profile")}>
+                                Profile
+                            </Link>
                         </>
                     )}
                     {/* Restaurant admin desktop links */}

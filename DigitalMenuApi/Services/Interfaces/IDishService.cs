@@ -12,6 +12,7 @@ public interface IDishService
     Task<Result<DishResponse>> UpdateDishAsync(int dishId, int userId, string userRole, UpdateDishRequest request);
     Task<Result> ActivateDishAsync(int dishId, int userId, string userRole);
     Task<Result> DeactivateDishAsync(int dishId, int userId, string userRole);
+    Task<Result> DeleteDishAsync(int dishId, int userId, string userRole);
 
     // Ingredients management
     Task<Result<IEnumerable<DishIngredientResponse>>> GetDishIngredientsAsync(int dishId, int userId, string userRole);

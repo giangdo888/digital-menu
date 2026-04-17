@@ -31,15 +31,27 @@ public class AFCDItemService : IAFCDItemService
                 .Where(a =>
                 a.Name.ToLower().Contains(searchTerm) ||
                 (a.Variant != null && a.Variant.ToLower().Contains(searchTerm)));
+
+            // Rank: name starts with > name contains > variant only match
+            var items = await itemsQuery
+                .OrderBy(a =>
+                    a.Name.ToLower().StartsWith(searchTerm) ? 0 :
+                    a.Name.ToLower().Contains(searchTerm) ? 1 : 2)
+                .ThenBy(a => a.Name)
+                .ThenBy(a => a.Variant)
+                .Take(limit)
+                .ToListAsync();
+
+            return Result<IEnumerable<AFCDItemResponse>>.Success(items.Select(MapToResponse));
         }
 
-        var items = await itemsQuery
+        var allItems = await itemsQuery
             .OrderBy(a => a.Name)
             .ThenBy(a => a.Variant)
             .Take(limit)
             .ToListAsync();
 
-        return Result<IEnumerable<AFCDItemResponse>>.Success(items.Select(MapToResponse));
+        return Result<IEnumerable<AFCDItemResponse>>.Success(allItems.Select(MapToResponse));
     }
 
     public async Task<Result<AFCDItemResponse>> GetByIdAsync(int id)

@@ -27,7 +27,7 @@ export default function ProfilePage() {
         extra_active: "Extra",
     };
 
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
     const router = useRouter();
 
     const handleLogout = async () => {
@@ -94,9 +94,10 @@ export default function ProfilePage() {
     if (profile && !isEditing) {
         return (
             <div className="max-w-2xl mx-auto px-4 py-8">
-                <h1 className="text-2xl font-bold mb-6">My Profile</h1>
+                <h1 className="text-2xl font-bold">My Profile</h1>
+                <p className="text-text-secondary mb-6">{user?.firstName} {user?.lastName}</p>
                 {/* Calculated Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                <div className="grid grid-cols-3 gap-3 mb-6">
                     {[
                         { label: "BMI", value: profile.bmi.toFixed(1), sub: profile.bmiCategory },
                         {
@@ -104,15 +105,21 @@ export default function ProfilePage() {
                             value: activityLevels[profile.activityLevel as keyof typeof activityLevels] || profile.activityLevel,
                             sub: "Level"
                         },
-                        { label: "TDEE", value: `${Math.round(profile.tdee)} cal`, sub: "Daily expenditure" },
                         { label: "Goal", value: profile.dietaryGoal, sub: `${profile.weeklyWeightGoal > 0 ? "+" : ""}${profile.weeklyWeightGoal} kg/week` },
-                    ].map((stat) => (
-                        <div key={stat.label} className="bg-bg-card rounded-xl p-4 text-center">
-                            <p className="text-2xl font-bold text-accent">{stat.value}</p>
-                            <p className="text-xs text-text-secondary mt-1">{stat.label}</p>
-                            <p className="text-xs text-text-secondary">{stat.sub}</p>
-                        </div>
-                    ))}
+                    ].map((stat) => {
+                        const valStr = stat.value.toString();
+                        const fontSize = valStr.length > 12 ? "text-[10px]" : valStr.length > 8 ? "text-sm" : "text-lg";
+                        
+                        return (
+                            <div key={stat.label} className="bg-bg-card rounded-xl p-3 text-center flex flex-col justify-center min-w-0">
+                                <p className={`font-bold text-accent leading-tight ${fontSize} transition-all duration-200`} title={valStr}>
+                                    {stat.value}
+                                </p>
+                                <p className="text-[10px] text-text-secondary uppercase mt-1 truncate">{stat.label}</p>
+                                <p className="text-[9px] text-text-secondary line-clamp-1">{stat.sub}</p>
+                            </div>
+                        );
+                    })}
                 </div>
                 {/* Daily Targets */}
                 <div className="bg-bg-card rounded-xl p-5 mb-6">

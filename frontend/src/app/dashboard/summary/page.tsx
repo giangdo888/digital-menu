@@ -27,10 +27,23 @@ export default function SummaryPage() {
 
     const handleLogWeight = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!newWeight) return;
+        const weightValue = parseFloat(newWeight);
+        if (!newWeight || isNaN(weightValue)) return;
+
+        // Check if already logged today
+        const todayStr = new Date().toISOString().split("T")[0];
+        const loggedToday = weightData.find(w => w.recordedAt.split("T")[0] === todayStr);
+
+        if (loggedToday) {
+            const confirmOverride = window.confirm(
+                `Already logged weight today, do you want to override?`
+            );
+            if (!confirmOverride) return;
+        }
+
         try {
-            await userService.logWeight({ weightKg: parseFloat(newWeight) });
-            toast.success("Weight logged! 📊");
+            await userService.logWeight({ weightKg: weightValue });
+            toast.success(loggedToday ? "Weight updated! 📈" : "Weight logged! 📊");
             // Refresh data
             const res = await userService.getWeightHistory(30);
             setWeightData(res.data);
