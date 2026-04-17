@@ -169,7 +169,28 @@ public class UserServiceTests
         result.Data!.CurrentWeightKg.Should().Be(78.5M);
 
         var weightLogs = await sut.GetWeightHistoryAsync(10, 10);
-        weightLogs.Data.Should().HaveCount(2); // Initial (80) + New (78.5)
+        weightLogs.Data.Should().HaveCount(1); // Updated today's record (78.5) instead of creating a second one
+    }
+
+    [Fact]
+    public async Task LogWeightAsync_ShouldUpdateExistingRecord_WhenLoggedTwiceOnSameDay()
+    {
+        using var uow = CreateUnitOfWork();
+        await SeedUserAsync(uow, 10);
+        var sut = new UserService(uow, _nutritionService, _mockLogger.Object);
+
+        await sut.CreateProfileAsync(10, new CreateProfileRequest { Gender = "male", DateOfBirth = new DateOnly(1990, 1, 1), HeightCm = 180, CurrentWeightKg = 80, ActivityLevel = "sedentary" });
+
+        // Log twice
+        await sut.LogWeightAsync(10, new LogWeightRequest { WeightKg = 79.0M });
+        var result = await sut.LogWeightAsync(10, new LogWeightRequest { WeightKg = 78.0M });
+
+        result.IsSuccess.Should().BeTrue();
+        result.Data!.CurrentWeightKg.Should().Be(78.0M);
+
+        var weightLogs = await sut.GetWeightHistoryAsync(10, 10);
+        weightLogs.Data.Should().HaveCount(1); // Still only 1 record
+        weightLogs.Data!.First().WeightKg.Should().Be(78.0M);
     }
 
     [Fact]
