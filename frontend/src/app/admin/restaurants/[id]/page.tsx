@@ -100,13 +100,13 @@ export default function RestaurantDetailPage() {
                 ]} />
 
                 {/* Restaurant Info */}
-                <div className="bg-bg-card rounded-xl p-5 mb-6">
+                <div className="bg-bg-card border border-border rounded-sm p-5 mb-6">
                     <div className="flex justify-between items-start mb-4">
                         <div className="flex gap-4 items-center">
                             <img
                                 src={restaurant.logoUrl || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80"}
                                 alt={restaurant.name}
-                                className="w-16 h-16 rounded-lg object-cover"
+                                className="w-16 h-16 rounded-sm object-cover border border-border"
                             />
                             <div>
                                 <h1 className="text-2xl font-bold">{restaurant.name}</h1>
@@ -149,9 +149,9 @@ export default function RestaurantDetailPage() {
                 {/* Edit Info Modal */}
                 {isEditingInfo && (
                     <>
-                        <div className="fixed inset-0 bg-black/60 z-50" onClick={() => setIsEditingInfo(false)} />
+                        <div className="fixed inset-0 bg-stone-900/40 z-50" onClick={() => setIsEditingInfo(false)} />
                         <div className="fixed z-50 inset-x-0 bottom-0 md:inset-0 md:flex md:items-center md:justify-center">
-                            <div className="bg-bg-card rounded-t-2xl md:rounded-2xl max-h-[85vh] overflow-y-auto w-full md:max-w-lg p-5">
+                            <div className="bg-bg-card border border-border rounded-t-sm md:rounded-sm max-h-[85vh] overflow-y-auto w-full md:max-w-lg p-5">
                                 <div className="flex justify-between items-center mb-4">
                                     <h2 className="text-lg font-bold">Edit Restaurant</h2>
                                     <button onClick={() => setIsEditingInfo(false)} className="text-text-secondary hover:text-text-primary text-xl">✕</button>
@@ -160,45 +160,45 @@ export default function RestaurantDetailPage() {
                                     <div>
                                         <label className="text-xs text-text-secondary">Name *</label>
                                         <input value={editForm.name} required onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                                            className="w-full bg-bg-elevated rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none" />
+                                            className="w-full bg-bg-primary border border-border rounded-sm px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent" />
                                     </div>
                                     <div>
                                         <label className="text-xs text-text-secondary">Address *</label>
                                         <input value={editForm.address} required onChange={(e) => setEditForm({ ...editForm, address: e.target.value })}
-                                            className="w-full bg-bg-elevated rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none" />
+                                            className="w-full bg-bg-primary border border-border rounded-sm px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent" />
                                     </div>
                                     <div className="grid grid-cols-2 gap-3">
                                         <div>
                                             <label className="text-xs text-text-secondary">Phone</label>
                                             <input value={editForm.phone || ""} onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                                                className="w-full bg-bg-elevated rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none" />
+                                                className="w-full bg-bg-primary border border-border rounded-sm px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent" />
                                         </div>
                                         <div>
                                             <label className="text-xs text-text-secondary">Email</label>
                                             <input value={editForm.email || ""} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                                                className="w-full bg-bg-elevated rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none" />
+                                                className="w-full bg-bg-primary border border-border rounded-sm px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent" />
                                         </div>
                                     </div>
                                     <div>
                                         <label className="text-xs text-text-secondary">Logo URL</label>
                                         <input value={editForm.logoUrl || ""} onChange={(e) => setEditForm({ ...editForm, logoUrl: e.target.value })}
-                                            className="w-full bg-bg-elevated rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none" />
+                                            className="w-full bg-bg-primary border border-border rounded-sm px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent" />
                                         {editForm.logoUrl && (
-                                            <img src={editForm.logoUrl} alt="Preview" className="mt-2 w-16 h-16 rounded-lg object-cover" />
+                                            <img src={editForm.logoUrl} alt="Preview" className="mt-2 w-16 h-16 rounded-sm object-cover border border-border" />
                                         )}
                                     </div>
                                     <div>
                                         <label className="text-xs text-text-secondary">Opening Hours</label>
                                         <input value={editForm.openingHours || ""} onChange={(e) => setEditForm({ ...editForm, openingHours: e.target.value })}
                                             placeholder="e.g., Mon-Fri 9am-9pm"
-                                            className="w-full bg-bg-elevated rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none" />
+                                            className="w-full bg-bg-primary border border-border rounded-sm px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent" />
                                     </div>
                                     <div>
                                         <label className="text-xs text-text-secondary">Description</label>
                                         <textarea value={editForm.description || ""} onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                                            className="w-full bg-bg-elevated rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none h-20" />
+                                            className="w-full bg-bg-primary border border-border rounded-sm px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent h-20" />
                                     </div>
-                                    <button type="submit" className="w-full bg-accent hover:bg-accent-hover text-white font-semibold py-3 rounded-xl">
+                                    <button type="submit" className="w-full bg-accent hover:bg-accent-hover text-white font-semibold py-3 rounded-sm">
                                         Save Changes
                                     </button>
                                 </form>
@@ -211,34 +211,34 @@ export default function RestaurantDetailPage() {
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-semibold">Categories</h2>
                     <button onClick={() => setShowCatForm(!showCatForm)}
-                        className="bg-accent hover:bg-accent-hover text-white px-3 py-1.5 rounded-lg text-sm">
+                        className="bg-accent hover:bg-accent-hover text-white px-3 py-1.5 rounded-sm text-sm">
                         + Add Category
                     </button>
                 </div>
 
                 {showCatForm && (
-                    <form onSubmit={handleCreateCategory} className="bg-bg-card rounded-xl p-4 mb-4 flex gap-3 items-end">
+                    <form onSubmit={handleCreateCategory} className="bg-bg-card border border-border rounded-sm p-4 mb-4 flex gap-3 items-end">
                         <div className="flex-1">
                             <label className="text-xs text-text-secondary">Name</label>
                             <input value={catForm.name} onChange={(e) => setCatForm({ ...catForm, name: e.target.value })}
                                 required placeholder="e.g., Mains"
-                                className="w-full bg-bg-elevated rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent" />
+                                className="w-full bg-bg-primary border border-border rounded-sm px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent" />
                         </div>
                         <div>
                             <label className="text-xs text-text-secondary">Type</label>
                             <select value={catForm.type} onChange={(e) => setCatForm({ ...catForm, type: e.target.value })}
-                                className="bg-bg-elevated rounded-lg px-3 py-2 text-sm text-text-primary">
+                                className="bg-bg-primary border border-border rounded-sm px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent">
                                 <option value="food">Food</option>
                                 <option value="drink">Drink</option>
                             </select>
                         </div>
-                        <button type="submit" className="bg-accent text-white px-4 py-2 rounded-lg text-sm">Add</button>
+                        <button type="submit" className="bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-sm text-sm border border-transparent hover:border-accent transition-colors">Add</button>
                     </form>
                 )}
 
                 <div className="space-y-3">
                     {categories.map((cat) => (
-                        <div key={cat.id} className="bg-bg-card rounded-xl p-4 flex justify-between items-center hover:ring-1 hover:ring-accent transition-all">
+                        <div key={cat.id} className="bg-bg-card border border-border rounded-sm p-4 flex justify-between items-center hover:border-accent transition-all">
                             <Link href={`/admin/restaurants/${id}/categories/${cat.id}`} className="flex-1 min-w-0">
                                 <h3 className="font-medium">{cat.name}</h3>
                                 <p className="text-sm text-text-secondary">{cat.dishCount} dishes • {cat.type}</p>

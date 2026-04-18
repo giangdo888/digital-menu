@@ -30,11 +30,11 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
     return (
         <>
             {/* Backdrop */}
-            <div className="fixed inset-0 bg-black/60 z-50" onClick={onClose} />
+            <div className="fixed inset-0 bg-stone-900/40 z-50" onClick={onClose} />
 
             {/* Modal — bottom-sheet on mobile, centered on desktop */}
             <div className="fixed z-50 inset-x-0 bottom-0 md:inset-0 md:flex md:items-center md:justify-center">
-                <div className="bg-bg-card rounded-t-2xl md:rounded-2xl max-h-[85vh] overflow-y-auto w-full md:max-w-lg">
+                <div className="bg-bg-card border border-border rounded-t-sm md:rounded-sm max-h-[85vh] overflow-y-auto w-full md:max-w-lg">
                     {/* Hero Image */}
                     <div className="aspect-video bg-bg-elevated relative">
                         <img 
@@ -44,7 +44,7 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
                         />
                         <button
                             onClick={onClose}
-                            className="absolute top-3 right-3 bg-black/50 text-white w-8 h-8 rounded-full cursor-pointer flex items-center justify-center"
+                            className="absolute top-3 right-3 bg-stone-900/50 text-white w-8 h-8 rounded-sm cursor-pointer flex items-center justify-center"
                         >
                             ✕
                         </button>
@@ -62,7 +62,7 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
                                 { label: "Carbs", value: Math.round(dish.carbsG), unit: "g" },
                                 { label: "Fat", value: Math.round(dish.fatG), unit: "g" },
                             ].map((item) => (
-                                <div key={item.label} className="bg-bg-elevated rounded-lg p-3 text-center">
+                                <div key={item.label} className="bg-bg-elevated rounded-sm p-3 text-center">
                                     <p className="text-lg font-bold text-accent">
                                         {item.value}
                                         <span className="text-xs text-text-secondary ml-0.5">{item.unit}</span>
@@ -73,7 +73,7 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
                         </div>
                         {/* Traffic Light Bars (only if user has a profile) */}
                         {profile && accumulator && (
-                            <div className="mt-4 bg-bg-elevated rounded-lg p-3 space-y-3">
+                            <div className="mt-4 bg-bg-elevated rounded-sm p-3 space-y-3">
                                 <h3 className="text-sm font-semibold text-text-secondary">Projected Daily Totals (if eaten)</h3>
                                 {[
                                     { label: "Calories", base: accumulator.calories, added: dish.calories, tgt: profile.dailyCaloriesTarget },
@@ -117,8 +117,8 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
                                                     {Math.round(totalVal)} / {Math.round(macro.tgt)} ({Math.round((totalVal / macro.tgt) * 100)}%)
                                                 </span>
                                             </div>
-                                            <div className="w-full bg-bg-primary rounded-full h-2 flex overflow-hidden">
-                                                <div className="h-full bg-blue-500 transition-all" style={{ width: `${basePct}%` }} />
+                                            <div className="w-full bg-border rounded-full h-2 flex overflow-hidden">
+                                                <div className="h-full bg-accent transition-all" style={{ width: `${basePct}%` }} />
                                                 <div className={`h-full ${addedColor} transition-all`} style={{ width: `${addedPct}%` }} />
                                             </div>
                                         </div>
@@ -135,7 +135,7 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
                             <h3 className="text-sm font-semibold text-text-secondary mb-2">Ingredients</h3>
                             <div className="flex flex-wrap gap-1.5">
                                 {dish.ingredients.map((ing, i) => (
-                                    <span key={i} className="text-xs bg-bg-elevated px-2 py-1 rounded text-text-secondary">
+                                    <span key={i} className="text-xs bg-bg-elevated px-2 py-1 rounded-sm text-text-secondary">
                                         {ing.name} ({ing.amountInGrams}g)
                                     </span>
                                 ))}
@@ -148,7 +148,7 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
                         {isAuthenticated && isCustomer && (
                             <button
                                 onClick={handleLogMeal}
-                                className="flex-1 bg-accent hover:bg-accent-hover text-white font-semibold py-3 rounded-xl transition-colors"
+                                className="flex-1 bg-accent hover:bg-accent-hover text-white font-semibold py-3 rounded-sm transition-colors tracking-wide"
                             >
                                 Log This Meal
                             </button>

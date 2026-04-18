@@ -112,7 +112,7 @@ export default function ProfilePage() {
                         const fontSize = valStr.length > 12 ? "text-[10px]" : valStr.length > 8 ? "text-sm" : "text-lg";
                         
                         return (
-                            <div key={stat.label} className="bg-bg-card rounded-xl p-3 text-center flex flex-col justify-center min-w-0">
+                            <div key={stat.label} className="bg-bg-card rounded-sm p-3 text-center flex flex-col justify-center min-w-0">
                                 <p className={`font-bold text-accent leading-tight ${fontSize} transition-all duration-200`} title={valStr}>
                                     {stat.value}
                                 </p>
@@ -123,7 +123,7 @@ export default function ProfilePage() {
                     })}
                 </div>
                 {/* Daily Targets */}
-                <div className="bg-bg-card rounded-xl p-5 mb-6">
+                <div className="bg-bg-card rounded-sm p-5 mb-6">
                     <h2 className="font-semibold mb-3">Daily Nutrition Targets</h2>
                     <div className="grid grid-cols-4 gap-3">
                         {[
@@ -142,10 +142,10 @@ export default function ProfilePage() {
 
                 {/* Action butttons */}
                 <div className="grid grid-cols-2 gap-5">
-                    <button onClick={handleEdit} className="bg-accent hover:bg-accent-hover text-white px-6 py-2 rounded-lg">
+                    <button onClick={handleEdit} className="bg-accent hover:bg-accent-hover text-white px-6 py-2 rounded-sm">
                         Edit Profile
                     </button>
-                    <button onClick={handleLogout} className="bg-danger hover:bg-red-400 text-white px-6 py-2 rounded-lg">
+                    <button onClick={handleLogout} className="bg-danger hover:opacity-80 text-white px-6 py-2 rounded-sm">
                         Logout
                     </button>
                 </div>
@@ -164,7 +164,7 @@ export default function ProfilePage() {
                     <div>
                         <label className="text-sm text-text-secondary block mb-1">Gender</label>
                         <select value={form.gender} onChange={(e) => updateField("gender", e.target.value)}
-                            className="w-full bg-bg-card border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent">
+                            className="w-full bg-bg-card border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent">
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                         </select>
@@ -172,25 +172,25 @@ export default function ProfilePage() {
                     <div>
                         <label className="text-sm text-text-secondary block mb-1">Date of Birth</label>
                         <input type="date" value={form.dateOfBirth} onChange={(e) => updateField("dateOfBirth", e.target.value)}
-                            className="w-full bg-bg-card border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
+                            className="w-full bg-bg-card border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                     <div>
                         <label className="text-sm text-text-secondary block mb-1">Height (cm)</label>
                         <input type="number" value={form.heightCm} onChange={(e) => updateField("heightCm", +e.target.value)}
-                            className="w-full bg-bg-card border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
+                            className="w-full bg-bg-card border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
                     </div>
                     <div>
                         <label className="text-sm text-text-secondary block mb-1">Current Weight (kg)</label>
                         <input type="number" value={form.currentWeightKg} onChange={(e) => updateField("currentWeightKg", +e.target.value)}
-                            className="w-full bg-bg-card border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
+                            className="w-full bg-bg-card border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
                     </div>
                 </div>
                 <div>
                     <label className="text-sm text-text-secondary block mb-1">Weekly Weight Goal (kg/week)</label>
                     <select value={form.weeklyWeightGoal} onChange={(e) => updateField("weeklyWeightGoal", +e.target.value)}
-                        className="w-full bg-bg-card border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent">
+                        className="w-full bg-bg-card border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent">
                         <option value="-1">lose 1kg/week</option>
                         <option value="-0.75">lose 0.75kg/week</option>
                         <option value="-0.5">lose 0.5kg/week</option>
@@ -205,7 +205,7 @@ export default function ProfilePage() {
                 <div>
                     <label className="text-sm text-text-secondary block mb-1">Activity Level</label>
                     <select value={form.activityLevel} onChange={(e) => updateField("activityLevel", e.target.value)}
-                        className="w-full bg-bg-card border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent">
+                        className="w-full bg-bg-card border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent">
                         <option value="sedentary">Sedentary (Little exercise)</option>
                         <option value="lightly_active">Lightly Active (1-3 days/week)</option>
                         <option value="moderately_active">Moderately Active (3-5 days/week)</option>
@@ -214,10 +214,10 @@ export default function ProfilePage() {
                     </select>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                    <button type="submit" className="w-full bg-accent hover:bg-accent-hover text-white font-semibold py-3 rounded-xl">
+                    <button type="submit" className="w-full bg-accent hover:bg-accent-hover text-white font-semibold py-3 rounded-sm">
                         Save Profile
                     </button>
-                    <button type="button" onClick={handleClose} className="w-full bg-danger hover:bg-red-400 text-white font-semibold py-3 rounded-xl">
+                    <button type="button" onClick={handleClose} className="w-full bg-danger hover:opacity-80 text-white font-semibold py-3 rounded-sm">
                         Cancel
                     </button>
                 </div>
@@ -225,3 +225,4 @@ export default function ProfilePage() {
         </div>
     );
 }
+

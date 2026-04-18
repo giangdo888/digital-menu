@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Digital Menu - Personalised Nutrittion",
+  title: "Digital Menu - Personalised Nutrition",
   description: "Digital Restaurant Menus with Personalised Nutrition Feedback",
 };
 
@@ -26,25 +26,38 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const globalBgImage = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80";
+
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-accent/30`}
       >
         <AuthProvider>
+          {/* Global Immersive Background Layer */}
+          <div className="fixed inset-0 -z-50 w-full h-full overflow-hidden pointer-events-none">
+            <div
+              className="absolute inset-0 bg-cover bg-center brightness-[0.9]"
+              style={{ backgroundImage: `url(${globalBgImage})` }}
+            />
+            {/* Luxury Overlay: Slightly lighter than restaurant page to keep the "Light" luxury feel */}
+            <div className="absolute inset-0 bg-bg-primary/85 backdrop-blur-[2px]" />
+          </div>
+
           <NavBar />
-          <main className="min-h-screen pb-20 md:pb-0">
+          <main className="min-h-screen pb-20 md:pb-0 relative z-10">
             <ProfileGuard>
               {children}
             </ProfileGuard>
           </main>
+
           <Toaster
             position="top-right"
             toastOptions={{
               style: {
-                background: "#1A1D27",
-                color: "#F9FAFB",
-                border: "1px solid #252836",
+                background: "#FFFFFF",
+                color: "#1C1917",
+                border: "1px solid #C1B8A8",
               },
             }}
           />

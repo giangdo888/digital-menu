@@ -39,11 +39,11 @@ export default function HomePage() {
           placeholder="Search restaurants..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full md:max-w-xl md:mx-auto md:block bg-bg-card border border-bg-elevated rounded-xl px-5 py-3 text-text-primary placeholder-text-secondary focus:outline-none focus:border-accent text-lg"
+          className="w-full md:max-w-xl md:mx-auto md:block bg-bg-card border border-border rounded-sm px-5 py-3 text-text-primary placeholder-text-secondary focus:outline-none focus:border-accent text-lg"
         />
       </div>
       {/* Section Title */}
-      <h2 className="text-2xl font-bold mb-6">Popular Restaurants</h2>
+      <h2 className="text-2xl font-bold mb-6 tracking-wide">Popular Restaurants</h2>
 
       {/* Loading State */}
       {isLoading && (
@@ -59,7 +59,7 @@ export default function HomePage() {
           <Link
             key={restaurant.slug}
             href={(`/restaurants/${restaurant.slug}`)}
-            className="bg-bg-card rounded-xl overflow-hidden hover:ring-2 hover:ring-accent transition-all group"
+            className="bg-bg-card border border-border rounded-sm overflow-hidden hover:border-accent transition-all group"
           >
             {/* Restaurant Image */}
             <div className="aspect-video bg-bg-elevated relative overflow-hidden">

@@ -176,27 +176,27 @@ export default function CategoryDetailPage() {
                         <p className="text-text-secondary text-sm">{category.type} • {dishes.length} dishes</p>
                     </div>
                     <button onClick={() => setShowDishForm(!showDishForm)}
-                        className="bg-accent hover:bg-accent-hover text-white px-3 py-1.5 rounded-lg text-sm">
+                        className="bg-accent hover:bg-accent-hover text-white px-3 py-1.5 rounded-sm text-sm">
                         + Add Dish
                     </button>
                 </div>
 
                 {/* Add Dish Form */}
                 {showDishForm && (
-                    <form onSubmit={handleCreateDish} className="bg-bg-card rounded-xl p-4 mb-4 flex gap-3 items-end">
+                    <form onSubmit={handleCreateDish} className="bg-bg-card border border-border rounded-sm p-4 mb-4 flex gap-3 items-end">
                         <div className="flex-1">
                             <label className="text-xs text-text-secondary">Name</label>
                             <input value={dishForm.name} onChange={(e) => setDishForm({ ...dishForm, name: e.target.value })}
                                 required placeholder="e.g., Grilled Chicken"
-                                className="w-full bg-bg-elevated rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none" />
+                                className="w-full bg-bg-primary border border-border rounded-sm px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent" />
                         </div>
                         <div className="w-24">
                             <label className="text-xs text-text-secondary">Price ($)</label>
                             <input type="number" step="0.01" value={dishForm.price} onChange={(e) => setDishForm({ ...dishForm, price: +e.target.value })}
                                 required
-                                className="w-full bg-bg-elevated rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none" />
+                                className="w-full bg-bg-primary border border-border rounded-sm px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent" />
                         </div>
-                        <button type="submit" className="bg-accent text-white px-4 py-2 rounded-lg text-sm">Add</button>
+                        <button type="submit" className="bg-accent text-white px-4 py-2 rounded-sm text-sm">Add</button>
                     </form>
                 )}
 
@@ -204,14 +204,14 @@ export default function CategoryDetailPage() {
                 <div className="space-y-3">
                     {dishes.map((dish) => (
                         <button key={dish.id} onClick={() => openDishModal(dish)}
-                            className="w-full text-left bg-bg-card rounded-xl p-4 hover:ring-1 hover:ring-accent transition-all">
+                            className="w-full text-left bg-bg-card border border-border rounded-sm p-4 hover:border-accent transition-all">
                             <div className="flex gap-4 items-center">
                                 {/* Dish Image */}
                                 {dish.imageUrl ? (
                                     <img src={dish.imageUrl} alt={dish.name}
-                                        className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
+                                        className="w-16 h-16 rounded-sm border border-border object-cover flex-shrink-0" />
                                 ) : (
-                                    <div className="w-16 h-16 rounded-lg bg-bg-elevated flex items-center justify-center text-2xl flex-shrink-0">
+                                    <div className="w-16 h-16 rounded-sm border border-border bg-bg-elevated flex items-center justify-center text-2xl flex-shrink-0">
                                         🥘
                                     </div>
                                 )}
@@ -256,9 +256,9 @@ export default function CategoryDetailPage() {
             {/* ── Dish Detail Modal ── */}
             {editingDish && (
                 <>
-                    <div className="fixed inset-0 bg-black/60 z-50" onClick={() => setEditingDish(null)} />
+                    <div className="fixed inset-0 bg-stone-900/40 z-50" onClick={() => setEditingDish(null)} />
                     <div className="fixed z-50 inset-x-0 bottom-0 md:inset-0 md:flex md:items-center md:justify-center">
-                        <div className="bg-bg-card rounded-t-2xl md:rounded-2xl max-h-[85vh] overflow-y-auto w-full md:max-w-xl p-5 shadow-2xl transition-all duration-300">
+                        <div className="bg-bg-card border border-border rounded-t-sm md:rounded-sm max-h-[85vh] overflow-y-auto w-full md:max-w-xl p-5 shadow-2xl transition-all duration-300">
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-lg font-bold">{editingDish.name}</h2>
                                 <button onClick={() => setEditingDish(null)} className="text-text-secondary hover:text-text-primary text-xl">✕</button>
@@ -269,9 +269,9 @@ export default function CategoryDetailPage() {
                                 <label className="text-xs text-text-secondary block mb-1">Dish Image URL</label>
                                 <input value={dishImageUrl} onChange={(e) => setDishImageUrl(e.target.value)}
                                     placeholder="https://example.com/dish.jpg"
-                                    className="w-full bg-bg-elevated rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none" />
+                                    className="w-full bg-bg-primary border border-border rounded-sm px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent" />
                                 {dishImageUrl && (
-                                    <img src={dishImageUrl} alt="Preview" className="mt-2 w-full h-32 object-cover rounded-lg" />
+                                    <img src={dishImageUrl} alt="Preview" className="mt-2 w-full h-32 object-cover rounded-sm border border-border" />
                                 )}
                             </div>
 
@@ -283,20 +283,20 @@ export default function CategoryDetailPage() {
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleSearch())}
                                     placeholder="Search ingredients (e.g. chicken breast)"
-                                    className="flex-1 bg-bg-elevated rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none"
+                                    className="flex-1 bg-bg-primary border border-border rounded-sm px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent"
                                 />
                                 <button onClick={handleSearch} disabled={isSearching}
-                                    className="bg-accent text-white px-3 py-2 rounded-lg text-sm">
+                                    className="bg-accent text-white px-3 py-2 rounded-sm text-sm">
                                     {isSearching ? "..." : "Search"}
                                 </button>
                             </div>
 
                             {/* Search Results */}
                             {searchResults.length > 0 && (
-                                <div className="bg-bg-elevated rounded-lg mb-4 max-h-[32rem] overflow-y-auto border border-accent/20">
+                                <div className="bg-bg-card border border-border rounded-sm mb-4 max-h-[32rem] overflow-y-auto border border-accent/20">
                                     {searchResults.map((item) => (
                                         <button key={item.id} onClick={() => addIngredient(item)}
-                                            className="w-full text-left px-3 py-2 hover:bg-bg-card text-sm border-b border-bg-card last:border-0">
+                                            className="w-full text-left px-3 py-2 hover:bg-bg-elevated text-sm border-b border-border last:border-0">
                                             <span className="font-medium">{item.name}</span>
                                             {item.variant && <span className="text-text-secondary ml-1">({item.variant})</span>}
                                             <span className="text-text-secondary ml-2">• {item.calories} cal/100g</span>
@@ -311,13 +311,13 @@ export default function CategoryDetailPage() {
                                     <p className="text-text-secondary text-sm text-center py-4">No ingredients yet. Search and add above.</p>
                                 )}
                                 {ingredients.map((ing) => (
-                                    <div key={ing.afcdItemId} className="flex items-center gap-2 bg-bg-elevated rounded-lg px-3 py-2">
+                                    <div key={ing.afcdItemId} className="flex items-center gap-2 bg-bg-card border border-border rounded-sm px-3 py-2">
                                         <span className="flex-1 text-sm">{ing.name}</span>
                                         <input
                                             type="number"
                                             value={ing.amountInGrams}
                                             onChange={(e) => updateAmount(ing.afcdItemId, +e.target.value)}
-                                            className="w-20 bg-bg-card rounded px-2 py-1 text-sm text-center text-text-primary focus:outline-none"
+                                            className="w-20 bg-bg-primary border border-border rounded-sm px-2 py-1 text-sm text-center text-text-primary focus:outline-none focus:border-accent"
                                         />
                                         <span className="text-xs text-text-secondary">g</span>
                                         <button onClick={() => removeIngredient(ing.afcdItemId)} className="text-danger text-sm hover:text-red-400">✕</button>
@@ -327,7 +327,7 @@ export default function CategoryDetailPage() {
 
                             {/* Save */}
                             <button onClick={saveDish}
-                                className="w-full bg-accent hover:bg-accent-hover text-white font-semibold py-3 rounded-xl">
+                                className="w-full bg-accent hover:bg-accent-hover text-white font-semibold py-3 rounded-sm">
                                 Save
                             </button>
                         </div>

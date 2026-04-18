@@ -27,11 +27,11 @@ export default function DishCard({ dish, onClick, profile, accumulator }: DishCa
 
     return (
         <button
-            className="bg-bg-card rounded-xl p-3 flex gap-3 text-left hover:ring-1 hover:ring-accent cursor-pointer trasition-all w-full"
+            className="bg-bg-card border border-border rounded-sm p-3 flex gap-3 text-left hover:border-accent cursor-pointer transition-all w-full"
             onClick={onClick}
         >
             {/* Dish Image */}
-            <div className="w-20 h-20 md:w-24 md:h-24 bg-bg-elevated rounded-lg flex-shrink-0 relative overflow-hidden">
+            <div className="w-20 h-20 md:w-24 md:h-24 bg-bg-elevated rounded-sm flex-shrink-0 relative overflow-hidden">
                     <img
                         src={dish.imageUrl || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80"}
                         alt={dish.name}
@@ -55,16 +55,16 @@ export default function DishCard({ dish, onClick, profile, accumulator }: DishCa
 
                 {/* Compact Nutrition Badges */}
                 <div className="flex gap-2 mt-2 flex-wrap">
-                    <span className="text-xs bg-bg-elevated px-2 py-0.5 rounded text-text-secondary">
+                    <span className="text-xs bg-bg-elevated px-2 py-0.5 rounded-sm text-text-secondary">
                         {Math.round(dish.calories)} cal
                     </span>
-                    <span className="text-xs bg-bg-elevated px-2 py-0.5 rounded text-text-secondary">
+                    <span className="text-xs bg-bg-elevated px-2 py-0.5 rounded-sm text-text-secondary">
                         {Math.round(dish.proteinG)} P
                     </span>
-                    <span className="text-xs bg-bg-elevated px-2 py-0.5 rounded text-text-secondary">
+                    <span className="text-xs bg-bg-elevated px-2 py-0.5 rounded-sm text-text-secondary">
                         {Math.round(dish.carbsG)} C
                     </span>
-                    <span className="text-xs bg-bg-elevated px-2 py-0.5 rounded text-text-secondary">
+                    <span className="text-xs bg-bg-elevated px-2 py-0.5 rounded-sm text-text-secondary">
                         {Math.round(dish.fatG)} F
                     </span>
                 </div>

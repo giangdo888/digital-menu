@@ -17,7 +17,7 @@ export default function NavBar() {
     };
 
     const isActive = (path: string) => {
-        return pathName === path ? "text-accent" : "text-text-secondary hover:text-text-primary";
+        return pathName === path ? "text-accent font-semibold" : "text-text-secondary hover:text-text-primary";
     }
 
     // ── Mobile bottom nav items (role-based) ──
@@ -75,8 +75,8 @@ export default function NavBar() {
     return (
         <>
             {/* ── Desktop Top Nav (hidden on mobile) ── */}
-            <nav className="hidden md:flex sticky top-0 left-0 right-0 z-50 bg-bg-card border-b border-bg-elevated h-16 items-center px-8">
-                <Link href={isRestaurantAdmin ? "/admin/restaurants" : "/"} className="text-accent font-bold text-xl mr-8">
+            <nav className="hidden md:flex sticky top-0 left-0 right-0 z-50 bg-bg-nav/80 backdrop-blur-md border-b border-border h-16 items-center px-8 shadow-sm">
+                <Link href={isRestaurantAdmin ? "/admin/restaurants" : "/"} className="text-accent font-bold text-xl mr-8 tracking-wide">
                     Digital Menu
                 </Link>
 
@@ -121,7 +121,7 @@ export default function NavBar() {
                             </span>
                             <button
                                 onClick={handleLogout}
-                                className="text-sm text-danger hover:text-red-400"
+                                className="text-sm text-danger hover:opacity-80"
                             >
                                 Logout
                             </button>
@@ -131,7 +131,7 @@ export default function NavBar() {
                             <Link href="/login" className={isActive("/login")}>
                                 Login
                             </Link>
-                            <Link href="/register" className="bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-lg text-sm">
+                            <Link href="/register" className="bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-sm text-sm tracking-wide">
                                 Sign up
                             </Link>
                         </>
@@ -140,9 +140,9 @@ export default function NavBar() {
             </nav>
 
             {/* ── Mobile Bottom Nav (hidden on desktop) ── */}
-            <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-bg-card border-t border-bg-elevated h-16 flex items-center justify-around px-4">
+            <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-bg-nav/80 backdrop-blur-md border-t border-border h-16 flex items-center justify-around px-4 shadow-lg">
                 {mobileNav}
             </nav>
         </>
     );
-}
+}

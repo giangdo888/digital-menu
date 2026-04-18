@@ -34,7 +34,7 @@ export default function RegisterPage() {
     return (
         <div>
             <div className="min-h-[calc(100vh-144px)] md:min-h-[calc(100vh-64px)] flex items-center justify-center px-4">
-                <div className="w-full max-w-md bg-bg-card rounded-2xl p-8">
+                <div className="w-full max-w-md bg-bg-card border border-border rounded-sm p-8">
                     <h1 className="text-2xl font-bold text-center mb-2">Create Account</h1>
                     <p className="text-text-secondary text-center mb-8">Start tracking your nutrition</p>
 
@@ -47,7 +47,7 @@ export default function RegisterPage() {
                                     value={firstName}
                                     onChange={(e) => setFirstName(e.target.value)}
                                     required
-                                    className="w-full bg-bg-elevated border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent"
+                                    className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent"
                                     placeholder="First name"
                                 />
                             </div>
@@ -58,7 +58,7 @@ export default function RegisterPage() {
                                     value={lastName}
                                     onChange={(e) => setLastName(e.target.value)}
                                     required
-                                    className="w-full bg-bg-elevated border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent"
+                                    className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent"
                                     placeholder="Last name"
                                 />
                             </div>
@@ -71,7 +71,7 @@ export default function RegisterPage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                className="w-full bg-bg-elevated border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent"
+                                className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent"
                                 placeholder="you@example.com"
                             />
                         </div>
@@ -84,7 +84,7 @@ export default function RegisterPage() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
                                 minLength={6}
-                                className="w-full bg-bg-elevated border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent"
+                                className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent"
                                 placeholder="Min 6 characters"
                             />
                         </div>
@@ -101,8 +101,8 @@ export default function RegisterPage() {
                                         setAccountType("customer");
                                     }
                                 }}
-                                className="w-full bg-bg-elevated border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent">
-                                <option value="customer">Customer - Browse menus & track meals</option>
+                                className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent">
+                                <option value="customer">Customer - Browse menus &amp; track meals</option>
                                 <option value="restaurant_admin">Restaurant Owner - Manage my menu</option>
                             </select>
                         </div>
@@ -110,7 +110,7 @@ export default function RegisterPage() {
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full bg-accent hover:bg-accent-hover disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-colors">
+                            className="w-full bg-accent hover:bg-accent-hover disabled:opacity-50 text-white font-semibold py-3 rounded-sm transition-colors tracking-wide">
                             {isSubmitting ? "Creating Account..." : "Create Account"}
                         </button>
                     </form>

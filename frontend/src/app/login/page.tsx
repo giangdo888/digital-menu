@@ -36,7 +36,7 @@ export default function LoginPage() {
     return (
         <div>
             <div className="min-h-[calc(100vh-144px)] md:min-h-[calc(100vh-64px)] flex items-center justify-center px-4">
-                <div className="w-full max-w-md bg-bg-card rounded-2xl p-8">
+                <div className="w-full max-w-md bg-bg-card border border-border rounded-sm p-8">
                     <h1 className="text-2xl font-bold text-center mb-2"> Welcome Back</h1>
                     <p className="text-center text-text-secondary mb-8">Sign in to your account</p>
 
@@ -50,7 +50,7 @@ export default function LoginPage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                className="w-full bg-bg-elevated border border-bg-elevated rounded-lg px-4 py-3 mb-5 text-text-primary focus:outline-none focus:border-accent"
+                                className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 mb-5 text-text-primary focus:outline-none focus:border-accent"
                                 placeholder="you@example.com"
                             />
 
@@ -62,7 +62,7 @@ export default function LoginPage() {
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full bg-bg-elevated border border-bg-elevated rounded-lg px-4 py-3 mb-10 text-text-primary focus:outline-none focus:border-accent"
+                                    className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 mb-10 text-text-primary focus:outline-none focus:border-accent"
                                     placeholder="your password"
                                 />
                             </div>
@@ -70,7 +70,7 @@ export default function LoginPage() {
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="w-full bg-accent hover:bg-accent-hover disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-colors"
+                                className="w-full bg-accent hover:bg-accent-hover disabled:opacity-50 text-white font-semibold py-3 rounded-sm transition-colors tracking-wide"
                             >
                                 {isSubmitting ? "Logging in..." : "Log In"}
                             </button>

@@ -37,38 +37,38 @@ export default function MyRestaurantsPage() {
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold">My Restaurants</h1>
                     <button onClick={() => setShowForm(!showForm)}
-                        className="bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-lg text-sm">
+                        className="bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-sm text-sm">
                         + New Restaurant
                     </button>
                 </div>
 
                 {/* Create Form (toggleable) */}
                 {showForm && (
-                    <form onSubmit={handleCreate} className="bg-bg-card rounded-xl p-5 mb-6 space-y-3">
+                    <form onSubmit={handleCreate} className="bg-bg-card border border-border rounded-sm p-5 mb-6 space-y-3">
                         <input placeholder="Restaurant Name *" value={form.name} required
                             onChange={(e) => setForm({ ...form, name: e.target.value })}
-                            className="w-full bg-bg-elevated border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
+                            className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
                         <input placeholder="Address *" value={form.address} required
                             onChange={(e) => setForm({ ...form, address: e.target.value })}
-                            className="w-full bg-bg-elevated border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
+                            className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
                         <div className="grid grid-cols-2 gap-3">
                             <input placeholder="Phone" value={form.phone || ""}
                                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                                className="w-full bg-bg-elevated border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
+                                className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
                             <input placeholder="Email" value={form.email || ""}
                                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                                className="w-full bg-bg-elevated border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
+                                className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
                         </div>
                         <input placeholder="Logo URL" value={form.logoUrl || ""}
                             onChange={(e) => setForm({ ...form, logoUrl: e.target.value })}
-                            className="w-full bg-bg-elevated border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
+                            className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
                         <input placeholder="Opening Hours (e.g., Mon-Fri 9am-9pm)" value={form.openingHours || ""}
                             onChange={(e) => setForm({ ...form, openingHours: e.target.value })}
-                            className="w-full bg-bg-elevated border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
+                            className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
                         <textarea placeholder="Description" value={form.description || ""}
                             onChange={(e) => setForm({ ...form, description: e.target.value })}
-                            className="w-full bg-bg-elevated border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent h-20" />
-                        <button type="submit" className="bg-accent hover:bg-accent-hover text-white px-6 py-2 rounded-lg">
+                            className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent h-20" />
+                        <button type="submit" className="bg-accent hover:bg-accent-hover text-white px-6 py-2 rounded-sm">
                             Create
                         </button>
                     </form>
@@ -78,11 +78,11 @@ export default function MyRestaurantsPage() {
                 <div className="space-y-3">
                     {restaurants.map((r) => (
                         <Link key={r.id} href={`/admin/restaurants/${r.id}`}
-                            className="bg-bg-card rounded-xl p-5 flex items-center gap-4 hover:ring-1 hover:ring-accent transition-all block">
+                            className="bg-bg-card border border-border rounded-sm p-5 flex items-center gap-4 hover:border-accent transition-all block">
                             <img 
                                 src={r.logoUrl || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80"} 
                                 alt={r.name} 
-                                className="w-12 h-12 rounded-lg object-cover flex-shrink-0" 
+                                className="w-12 h-12 rounded-sm object-cover flex-shrink-0" 
                             />
                             <div className="flex-1 min-w-0">
                                 <h3 className="font-semibold">{r.name}</h3>
@@ -99,3 +99,4 @@ export default function MyRestaurantsPage() {
         </ProtectedRoute>
     );
 }
+

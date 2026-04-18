@@ -130,13 +130,13 @@ export default function SummaryPage() {
         <div className="max-w-4xl mx-auto px-4 py-8">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                 <h1 className="text-2xl font-bold">Time-Period Summary</h1>
-                <div className="flex items-center gap-2 bg-bg-card p-2 rounded-lg">
+                <div className="flex items-center gap-2 bg-bg-card border border-border p-2 rounded-sm">
                     <input 
                         type="date" 
                         value={startDate} 
                         max={todayString}
                         onChange={(e) => handleStartDateChange(e.target.value)}
-                        className="bg-bg-elevated border-none rounded px-2 py-1 text-sm focus:outline-none"
+                        className="bg-bg-elevated border border-border rounded-sm px-2 py-1 text-sm focus:outline-none"
                     />
                     <span className="text-text-secondary">to</span>
                     <input 
@@ -144,13 +144,13 @@ export default function SummaryPage() {
                         value={endDate}
                         max={todayString}
                         onChange={(e) => handleEndDateChange(e.target.value)}
-                        className="bg-bg-elevated border-none rounded px-2 py-1 text-sm focus:outline-none"
+                        className="bg-bg-elevated border border-border rounded-sm px-2 py-1 text-sm focus:outline-none"
                     />
                 </div>
             </div>
 
             {/* Weight Chart */}
-            <div className="bg-bg-card rounded-xl p-5 mb-6">
+            <div className="bg-bg-card border border-border rounded-sm p-5 mb-6">
                 <h2 className="font-semibold mb-4">Weight History</h2>
 
                 {chartData.length > 1 ? (
@@ -162,15 +162,15 @@ export default function SummaryPage() {
                                 domain={['dataMin', 'dataMax']} 
                                 scale="time"
                                 tickFormatter={(tick) => new Date(tick).toLocaleDateString("en-AU", { day: "numeric", month: "short" })} 
-                                tick={{ fill: "#9CA3AF", fontSize: 12 }} 
+                                tick={{ fill: "#78716C", fontSize: 12 }} 
                                 axisLine={false} 
                             />
-                            <YAxis domain={["auto", "auto"]} tick={{ fill: "#9CA3AF", fontSize: 12 }} axisLine={false} />
+                            <YAxis domain={["auto", "auto"]} tick={{ fill: "#78716C", fontSize: 12 }} axisLine={false} />
                             <Tooltip
                                 labelFormatter={(label) => new Date(label).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })}
-                                contentStyle={{ backgroundColor: "#252836", border: "none", borderRadius: "8px", color: "#F9FAFB" }}
+                                contentStyle={{ backgroundColor: "#FFFFFF", border: "1px solid #E8E2D9", borderRadius: "4px", color: "#1C1917" }}
                             />
-                            <Line type="monotone" dataKey="weight" stroke="#10B981" strokeWidth={2} dot={{ fill: "#10B981", r: 4 }} />
+                            <Line type="monotone" dataKey="weight" stroke="#B8943F" strokeWidth={2} dot={{ fill: "#B8943F", r: 4 }} />
                         </LineChart>
                     </ResponsiveContainer>
                 ) : (
@@ -179,7 +179,7 @@ export default function SummaryPage() {
 
                 {/* Current weight info */}
                 {currentWeight && (
-                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-bg-elevated">
+                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
                         <div>
                             <p className="text-sm text-text-secondary">Current Weight</p>
                             <p className="text-xl font-bold">{currentWeight} kg</p>
@@ -196,7 +196,7 @@ export default function SummaryPage() {
             {/* Bottom Actions */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Log Weight Form */}
-                <div className="bg-bg-card rounded-xl p-5">
+                <div className="bg-bg-card border border-border rounded-sm p-5">
                     <h2 className="font-semibold mb-3">Log New Weight</h2>
                     <form onSubmit={handleLogWeight} className="flex gap-3">
                         <input
@@ -205,21 +205,21 @@ export default function SummaryPage() {
                             value={newWeight}
                             onChange={(e) => setNewWeight(e.target.value)}
                             placeholder="e.g., 76.5"
-                            className="flex-1 bg-bg-elevated border border-bg-elevated rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent"
+                            className="flex-1 bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent"
                         />
-                        <button type="submit" className="bg-accent hover:bg-accent-hover text-white px-6 py-3 rounded-lg font-medium">
+                        <button type="submit" className="bg-accent hover:bg-accent-hover text-white px-6 py-3 rounded-sm font-medium">
                             Log
                         </button>
                     </form>
                 </div>
 
                 {/* Nutrition Summary Action */}
-                <div className="bg-bg-card rounded-xl p-5 flex flex-col justify-center items-center text-center">
+                <div className="bg-bg-card border border-border rounded-sm p-5 flex flex-col justify-center items-center text-center">
                     <h2 className="font-semibold mb-2">Nutrition Intake</h2>
                     <p className="text-sm text-text-secondary mb-4">View your day-by-day nutritional breakdown for the selected time period.</p>
                     <button 
                         onClick={openNutritionModal}
-                        className="bg-bg-elevated hover:bg-bg-hover text-text-primary px-6 py-3 rounded-lg font-medium border border-border w-full transition-colors"
+                        className="bg-bg-elevated hover:bg-bg-hover text-text-primary px-6 py-3 rounded-sm font-medium border border-border w-full transition-colors"
                     >
                         View Nutrition Intake for Period
                     </button>
@@ -228,9 +228,9 @@ export default function SummaryPage() {
 
             {/* Nutrition Modal */}
             {isModalOpen && profile && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}>
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}>
                     <div 
-                        className="bg-bg-card border border-border rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col shadow-2xl"
+                        className="bg-bg-card border border-border rounded-sm w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col shadow-2xl"
                         onClick={e => e.stopPropagation()}
                     >
                         <div className="p-5 border-b border-border flex justify-between items-center">
@@ -265,7 +265,7 @@ export default function SummaryPage() {
                                         };
 
                                         return (
-                                            <div key={day.date} className="bg-bg-elevated rounded-lg p-4 flex flex-col sm:flex-row gap-4 items-center justify-between">
+                                            <div key={day.date} className="bg-bg-elevated rounded-sm p-4 flex flex-col sm:flex-row gap-4 items-center justify-between">
                                                 <div className="font-medium text-text-primary w-24">
                                                     {new Date(day.date).toLocaleDateString("en-AU", { weekday: 'short', month: 'short', day: 'numeric' })}
                                                 </div>
