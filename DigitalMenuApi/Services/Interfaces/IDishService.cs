@@ -17,4 +17,5 @@ public interface IDishService
     // Ingredients management
     Task<Result<IEnumerable<DishIngredientResponse>>> GetDishIngredientsAsync(int dishId, int userId, string userRole);
     Task<Result<IEnumerable<DishIngredientResponse>>> UpdateDishIngredientsAsync(int dishId, int userId, string userRole, UpdateDishIngredientsRequest request);
+    Task<Result> RecalculateAllDishNutritionAsync();
 }

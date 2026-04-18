@@ -43,22 +43,22 @@ export default function MenuPage() {
         fetchMenu();
     }, [slug]);
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            if (isAuthenticated) {
-                try {
-                    const [profileRes, mealsRes] = await Promise.all([
-                        userService.getProfile(),
-                        mealLogService.getMyLogs()
-                    ]);
-                    setProfile(profileRes.data);
-                    setMeals(mealsRes.data);
-                } catch (error) {
-                    console.error("Failed to load user data:", error);
-                }
+    const fetchUserData = async () => {
+        if (isAuthenticated) {
+            try {
+                const [profileRes, mealsRes] = await Promise.all([
+                    userService.getProfile(),
+                    mealLogService.getMyLogs()
+                ]);
+                setProfile(profileRes.data);
+                setMeals(mealsRes.data);
+            } catch (error) {
+                console.error("Failed to load user data:", error);
             }
-        };
+        }
+    };
 
+    useEffect(() => {
         fetchUserData();
     }, [isAuthenticated]);
 
@@ -160,6 +160,7 @@ export default function MenuPage() {
                     profile={profile}
                     accumulator={accumulator}
                     onClose={() => setSelectedDish(null)}
+                    onMealLogged={fetchUserData}
                 />
             )}
         </div>

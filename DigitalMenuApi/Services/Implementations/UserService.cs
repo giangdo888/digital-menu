@@ -292,11 +292,22 @@ public class UserService : IUserService
         return Result<UserProfileResponse>.Success(MapToProfileResponse(profile));
     }
 
-    public async Task<Result<IEnumerable<WeightHistoryResponse>>> GetWeightHistoryAsync(int userId, int limit = 30)
+    public async Task<Result<IEnumerable<WeightHistoryResponse>>> GetWeightHistoryAsync(int userId, int limit = 30, DateTime? startDate = null, DateTime? endDate = null)
     {
-        var history = await _unitOfWork.WeightHistories.Query()
+        var query = _unitOfWork.WeightHistories.Query()
             .AsNoTracking()
-            .Where(w => w.UserId == userId)
+            .Where(w => w.UserId == userId);
+
+        if (startDate.HasValue)
+            query = query.Where(w => w.RecordedAt >= startDate.Value.Date);
+            
+        if (endDate.HasValue)
+        {
+            var endOfDay = endDate.Value.Date.AddDays(1).AddTicks(-1);
+            query = query.Where(w => w.RecordedAt <= endOfDay);
+        }
+
+        var history = await query
             .OrderByDescending(w => w.RecordedAt)
             .Take(limit)
             .ToListAsync();

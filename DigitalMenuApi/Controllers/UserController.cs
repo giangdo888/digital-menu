@@ -196,9 +196,9 @@ public class UserController : ControllerBase
     /// </summary>
     [HttpGet("me/weight")]
     [Authorize(Roles = "customer")]
-    public async Task<IActionResult> GetWeightHistory([FromQuery] int limit = 30)
+    public async Task<IActionResult> GetWeightHistory([FromQuery] int limit = 30, [FromQuery] DateTime? startDate = null, [FromQuery] DateTime? endDate = null)
     {
-        var result = await _userService.GetWeightHistoryAsync(GetCurrentUserId(), limit);
+        var result = await _userService.GetWeightHistoryAsync(GetCurrentUserId(), limit, startDate, endDate);
 
         if (result.IsFailure)
             return StatusCode(result.StatusCode, new { error = result.Error });

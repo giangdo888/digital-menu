@@ -134,6 +134,56 @@ public class MealLogService : IMealLogService
         return Result<MealLogResponse>.Success(MapToResponse(existingMealLog));
     }
 
+    public async Task<Result<List<DailyNutritionSummaryResponse>>> GetMealLogSummaryAsync(int userId, DateTime startDate, DateTime endDate)
+    {
+        // Adjust end date to include the full day
+        var endOfDay = endDate.Date.AddDays(1).AddTicks(-1);
+        var startOfDay = startDate.Date;
+
+        var mealLogs = await _unitOfWork.MealLogs.Query()
+            .AsNoTracking()
+            .Where(m => m.UserId == userId && m.CreatedAt >= startOfDay && m.CreatedAt <= endOfDay)
+            .ToListAsync();
+
+        var summary = mealLogs
+            .GroupBy(m => m.CreatedAt.Date)
+            .Select(g => new DailyNutritionSummaryResponse
+            {
+                Date = g.Key.ToString("yyyy-MM-dd"),
+                Calories = g.Sum(m => m.Calories),
+                ProteinG = g.Sum(m => m.ProteinG),
+                CarbsG = g.Sum(m => m.CarbsG),
+                FatG = g.Sum(m => m.FatG)
+            })
+            .OrderBy(s => s.Date)
+            .ToList();
+
+        // Fill in missing dates with zero values
+        var resultList = new List<DailyNutritionSummaryResponse>();
+        for (var date = startOfDay; date <= endOfDay.Date; date = date.AddDays(1))
+        {
+            var dateStr = date.ToString("yyyy-MM-dd");
+            var existing = summary.FirstOrDefault(s => s.Date == dateStr);
+            if (existing != null)
+            {
+                resultList.Add(existing);
+            }
+            else
+            {
+                resultList.Add(new DailyNutritionSummaryResponse
+                {
+                    Date = dateStr,
+                    Calories = 0,
+                    ProteinG = 0,
+                    CarbsG = 0,
+                    FatG = 0
+                });
+            }
+        }
+
+        return Result<List<DailyNutritionSummaryResponse>>.Success(resultList);
+    }
+
     private MealLogResponse MapToResponse(MealLog mealLog)
     {
         return new MealLogResponse

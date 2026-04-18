@@ -21,5 +21,5 @@ public interface IUserService
 
     // Weight tracking
     Task<Result<UserProfileResponse>> LogWeightAsync(int userId, LogWeightRequest request);
-    Task<Result<IEnumerable<WeightHistoryResponse>>> GetWeightHistoryAsync(int userId, int limit = 30);
+    Task<Result<IEnumerable<WeightHistoryResponse>>> GetWeightHistoryAsync(int userId, int limit = 30, DateTime? startDate = null, DateTime? endDate = null);
 }

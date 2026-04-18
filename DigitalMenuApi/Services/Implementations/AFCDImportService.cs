@@ -20,7 +20,7 @@ public class AFCDImportService : IAFCDImportService
     private const int ColEnergyKJ = 5;       // E
     private const int ColProtein = 8;        // H
     private const int ColFat = 10;           // J
-    private const int ColCarbs = 36;         // AJ
+    private const int ColCarbs = 39;         // AM
 
     private const decimal KJtoKcalFactor = 4.184m;
     private const int BatchSize = 100;
@@ -165,6 +165,122 @@ public class AFCDImportService : IAFCDImportService
         {
             _logger.LogError(ex, "Error importing AFCD data from {FilePath}", filePath);
             return Result<AFCDImportResult>.Failure($"Import failed: {ex.Message}");
+        }
+    }
+
+    public async Task<Result<AFCDImportResult>> FixCarbsFromExcelAsync(string filePath)
+    {
+        var result = new AFCDImportResult();
+
+        if (!File.Exists(filePath))
+        {
+            return Result<AFCDImportResult>.Failure($"File not found: {filePath}");
+        }
+
+        try
+        {
+            using var workbook = new XLWorkbook(filePath);
+            var worksheet = workbook.Worksheet("All solids & liquids per 100 g");
+
+            if (worksheet == null)
+            {
+                return Result<AFCDImportResult>.Failure("Worksheet 'All solids & liquids per 100 g' not found");
+            }
+
+            // Get header row for JSON field names
+            var headerRow = worksheet.Row(1);
+            var headers = new List<string>();
+            var lastColumn = worksheet.LastColumnUsed()?.ColumnNumber() ?? 272;
+            for (int col = 1; col <= lastColumn; col++)
+            {
+                headers.Add(headerRow.Cell(col).GetString());
+            }
+
+            var lastRow = worksheet.LastRowUsed()?.RowNumber() ?? 1;
+            result.TotalRows = lastRow - 1;
+
+            // Process row by row to fix carbs
+            for (int rowNum = 2; rowNum <= lastRow; rowNum++)
+            {
+                try
+                {
+                    var row = worksheet.Row(rowNum);
+                    var publicFoodKey = row.Cell(ColPublicFoodKey).GetString()?.Trim();
+
+                    if (string.IsNullOrEmpty(publicFoodKey)) continue;
+
+                    var item = await _unitOfWork.AFCDItems.Query()
+                        .FirstOrDefaultAsync(a => a.PublicFoodKey == publicFoodKey);
+
+                    if (item == null)
+                    {
+                        result.Skipped++;
+                        continue;
+                    }
+
+                    var carbs = ParseDecimal(row.Cell(ColCarbs));
+                    var roundedCarbs = Math.Round(carbs, 2);
+
+                    // Update JSON too since it was wrong
+                    var fullNutrition = new Dictionary<string, object?>();
+                    for (int col = 1; col <= lastColumn; col++)
+                    {
+                        var headerName = headers[col - 1];
+                        if (!string.IsNullOrEmpty(headerName))
+                        {
+                            var cellValue = row.Cell(col).Value;
+                            fullNutrition[headerName] = cellValue.IsBlank ? null : cellValue.ToString();
+                        }
+                    }
+
+                    bool changed = false;
+                    if (item.CarbsG != roundedCarbs)
+                    {
+                        item.CarbsG = roundedCarbs;
+                        changed = true;
+                    }
+
+                    var newJson = JsonSerializer.Serialize(fullNutrition);
+                    if (item.FullNutritionJson != newJson)
+                    {
+                        item.FullNutritionJson = newJson;
+                        changed = true;
+                    }
+
+                    if (changed)
+                    {
+                        _unitOfWork.AFCDItems.Update(item);
+                        result.Imported++; // Using results.Imported to count "Updated"
+                    }
+                    else
+                    {
+                        result.Skipped++;
+                    }
+
+                    // Save every BatchSize or so
+                    if (result.Imported % BatchSize == 0 && changed)
+                    {
+                        await _unitOfWork.SaveChangesAsync();
+                        _logger.LogInformation("Fixed {Count} carbohydrate values so far...", result.Imported);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result.Failed++;
+                    result.Errors.Add($"Row {rowNum}: {ex.Message}");
+                }
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+            _logger.LogInformation("Fix Carbs completed: {Updated} updated, {Skipped} skipped, {Failed} failed",
+                result.Imported, result.Skipped, result.Failed);
+
+            return Result<AFCDImportResult>.Success(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fixing carbs in AFCD data from {FilePath}", filePath);
+            return Result<AFCDImportResult>.Failure($"Fix failed: {ex.Message}");
         }
     }
 

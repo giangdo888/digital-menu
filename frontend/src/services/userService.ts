@@ -14,8 +14,12 @@ export const userService = {
     updateAccount: (request: UpdateUserRequest) =>
         api.put<UserResponse>("/users/me", request),
 
-    getWeightHistory: (limit: number = 30) =>
-        api.get<WeightHistory[]>(`/users/me/weight?limit=${limit}`),
+    getWeightHistory: (limit: number = 30, startDate?: string, endDate?: string) => {
+        let url = `/users/me/weight?limit=${limit}`;
+        if (startDate) url += `&startDate=${startDate}`;
+        if (endDate) url += `&endDate=${endDate}`;
+        return api.get<WeightHistory[]>(url);
+    },
 
     logWeight: (request: LogWeightRequest) =>
         api.post("/users/me/weight", request),

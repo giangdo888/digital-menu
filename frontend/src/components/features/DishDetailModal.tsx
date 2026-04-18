@@ -10,15 +10,17 @@ interface DishDetailModalProps {
     onClose: () => void;
     profile?: UserProfile | null;
     accumulator?: { calories: number; protein: number; carbs: number; fat: number };
+    onMealLogged?: () => void;
 }
 
-export default function DishDetailModal({ dish, onClose, profile, accumulator }: DishDetailModalProps) {
+export default function DishDetailModal({ dish, onClose, profile, accumulator, onMealLogged }: DishDetailModalProps) {
     const { isAuthenticated, isCustomer } = useAuth();
 
     const handleLogMeal = async () => {
         try {
             await mealLogService.create({ dishId: dish.id });
             toast.success("Meal logged! 🎉");
+            onMealLogged?.();
             onClose();
         } catch {
             toast.error("Failed to log meal");
@@ -74,30 +76,50 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator }:
                             <div className="mt-4 bg-bg-elevated rounded-lg p-3 space-y-3">
                                 <h3 className="text-sm font-semibold text-text-secondary">Projected Daily Totals (if eaten)</h3>
                                 {[
-                                    { label: "Calories", cur: accumulator.calories + dish.calories, tgt: profile.dailyCaloriesTarget },
-                                    { label: "Protein", cur: accumulator.protein + dish.proteinG, tgt: profile.dailyProteinG },
-                                    { label: "Carbs", cur: accumulator.carbs + dish.carbsG, tgt: profile.dailyCarbsG },
-                                    { label: "Fat", cur: accumulator.fat + dish.fatG, tgt: profile.dailyFatG },
+                                    { label: "Calories", base: accumulator.calories, added: dish.calories, tgt: profile.dailyCaloriesTarget },
+                                    { label: "Protein", base: accumulator.protein, added: dish.proteinG, tgt: profile.dailyProteinG },
+                                    { label: "Carbs", base: accumulator.carbs, added: dish.carbsG, tgt: profile.dailyCarbsG },
+                                    { label: "Fat", base: accumulator.fat, added: dish.fatG, tgt: profile.dailyFatG },
                                 ].map(macro => {
-                                    const pct = Math.round((macro.cur / macro.tgt) * 100);
-                                    let colorCls = "bg-success";
-                                    let textCls = "text-success";
-                                    if (pct > 80 && pct <= 100) { colorCls = "bg-warning"; textCls = "text-warning"; }
-                                    else if (pct > 100) { colorCls = "bg-danger"; textCls = "text-danger"; }
+                                    const totalVal = macro.base + macro.added;
+                                    const isZero = macro.added === 0;
+                                    
+                                    // Calculate range based on user's weight goal
+                                    let minGreen = 90;
+                                    let maxGreen = 105;
+                                    if (profile.weeklyWeightGoal < 0) { // Lose 
+                                        minGreen = 85; maxGreen = 100;
+                                    } else if (profile.weeklyWeightGoal > 0) { // Gain
+                                        minGreen = 95; maxGreen = 110;
+                                    }
+
+                                    const totalOverallPct = (totalVal / macro.tgt) * 100;
+                                    const isOverLimit = totalOverallPct > maxGreen;
+                                    const isSweetSpot = totalOverallPct >= minGreen && !isOverLimit;
+                                    
+                                    const basePct = Math.min((macro.base / macro.tgt) * 100, 100);
+                                    // To calculate the added percentage without overflowing 100%
+                                    const totalBarPct = Math.min((totalVal / macro.tgt) * 100, 100);
+                                    const addedPct = totalBarPct - basePct;
+
+                                    let addedColor = "bg-success"; // Green progress by default
+                                    if (isZero) addedColor = "bg-text-secondary"; // Gray if doesn't contain macro
+                                    else if (isOverLimit) addedColor = "bg-danger"; // Red if goes too far
+
+                                    // Text Color remains standard
+                                    let textColor = "text-text-primary";
 
                                     return (
                                         <div key={macro.label}>
                                             <div className="flex justify-between text-sm mb-1">
                                                 <span className="text-text-secondary">{macro.label}</span>
-                                                <span className={`font-medium ${textCls}`}>
-                                                    {Math.round(macro.cur)} / {Math.round(macro.tgt)} ({pct}%)
+                                                <span className={`font-medium ${textColor}`}>
+                                                    {Math.round(totalVal)} / {Math.round(macro.tgt)} ({Math.round((totalVal / macro.tgt) * 100)}%)
                                                 </span>
                                             </div>
-                                            <div className="w-full bg-bg-primary rounded-full h-2">
-                                                <div
-                                                    className={`h-2 rounded-full transition-all ${colorCls}`}
-                                                    style={{ width: `${Math.min(pct, 100)}%` }}
-                                                />
+                                            <div className="w-full bg-bg-primary rounded-full h-2 flex overflow-hidden">
+                                                <div className="h-full bg-blue-500 transition-all" style={{ width: `${basePct}%` }} />
+                                                <div className={`h-full ${addedColor} transition-all`} style={{ width: `${addedPct}%` }} />
                                             </div>
                                         </div>
                                     )

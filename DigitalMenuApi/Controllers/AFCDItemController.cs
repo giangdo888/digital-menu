@@ -118,4 +118,24 @@ public class AFCDItemController : ControllerBase
 
         return Ok(result.Data);
     }
+
+    /// <summary>
+    /// Fix carbohydrate values from Excel file (System Admin only)
+    /// </summary>
+    [HttpPost("fix-carbs")]
+    [Authorize(Roles = "system_admin")]
+    public async Task<IActionResult> FixCarbs()
+    {
+        var filePath = _configuration["AFCDImport:FilePath"];
+
+        if (string.IsNullOrEmpty(filePath))
+            return BadRequest(new { error = "AFCDImport:FilePath not configured" });
+
+        var result = await _afcdImportService.FixCarbsFromExcelAsync(filePath);
+
+        if (result.IsFailure)
+            return StatusCode(result.StatusCode, new { error = result.Error });
+
+        return Ok(result.Data);
+    }
 }

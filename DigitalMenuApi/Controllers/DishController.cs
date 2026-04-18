@@ -170,5 +170,20 @@ public class DishController : ControllerBase
         return Ok(result.Data);
     }
 
+    /// <summary>
+    /// Recalculate nutrition for all dishes (System Admin only)
+    /// </summary>
+    [HttpPost("recalculate-all-nutrition")]
+    [Authorize(Roles = "system_admin")]
+    public async Task<IActionResult> RecalculateAllNutrition()
+    {
+        var result = await _dishService.RecalculateAllDishNutritionAsync();
+
+        if (result.IsFailure)
+            return StatusCode(result.StatusCode, new { error = result.Error });
+
+        return Ok(new { message = "All dish nutrition recalculated successfully" });
+    }
+
     #endregion
 }

@@ -344,9 +344,50 @@ public class DishService : IDishService
         dish.FatG = Math.Round(totalFat, 1);
     }
 
+    public async Task<Result> RecalculateAllDishNutritionAsync()
+    {
+        var dishes = await _unitOfWork.Dishes.Query()
+            .Include(d => d.DishIngredients)
+                .ThenInclude(di => di.AfcdItem)
+            .ToListAsync();
+
+        foreach (var dish in dishes)
+        {
+            RecalculateDishNutritionFromLoadedIngredients(dish);
+            _unitOfWork.Dishes.Update(dish);
+        }
+
+        await _unitOfWork.SaveChangesAsync();
+        _logger.LogInformation("Recalculated nutrition for {Count} dishes", dishes.Count);
+        return Result.Success();
+    }
+
+    private void RecalculateDishNutritionFromLoadedIngredients(Dish dish)
+    {
+        decimal totalCalories = 0;
+        decimal totalProtein = 0;
+        decimal totalCarbs = 0;
+        decimal totalFat = 0;
+
+        foreach (var di in dish.DishIngredients)
+        {
+            if (di.AfcdItem == null) continue;
+            var multiplier = di.Amount / 100m;
+            totalCalories += di.AfcdItem.Calories * multiplier;
+            totalProtein += di.AfcdItem.ProteinG * multiplier;
+            totalCarbs += di.AfcdItem.CarbsG * multiplier;
+            totalFat += di.AfcdItem.FatG * multiplier;
+        }
+
+        dish.Calories = Math.Round(totalCalories, 1);
+        dish.ProteinG = Math.Round(totalProtein, 1);
+        dish.CarbsG = Math.Round(totalCarbs, 1);
+        dish.FatG = Math.Round(totalFat, 1);
+    }
+
     #endregion
 
-    #region Mappers
+    #region Helpers
 
     private static DishResponse MapToResponse(Dish dish)
     {

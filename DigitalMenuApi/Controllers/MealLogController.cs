@@ -51,6 +51,16 @@ public class MealLogController : ControllerBase
         return Ok(result.Data);
     }
 
+    [HttpGet("summary")]
+    [Authorize(Roles = "customer")]
+    public async Task<IActionResult> GetMealLogSummary([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+    {
+        var result = await _mealLogService.GetMealLogSummaryAsync(GetCurrentUserId(), startDate, endDate);
+        if (result.IsFailure)
+            return StatusCode(result.StatusCode, new { error = result.Error });
+        return Ok(result.Data);
+    }
+
     [HttpGet("{id:int}")]
     [Authorize(Roles = "customer")]
     public async Task<IActionResult> GetMealLogById(int id)
