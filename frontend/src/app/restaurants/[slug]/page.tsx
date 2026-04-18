@@ -23,6 +23,9 @@ export default function MenuPage() {
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [meals, setMeals] = useState<MealLog[]>([]);
 
+    type SortFilterType = "default" | "high_protein" | "low_cal" | "low_carb" | "low_fat";
+    const [sortFilter, setSortFilter] = useState<SortFilterType>("default");
+
     useEffect(() => {
         const fetchMenu = async () => {
             try {
@@ -73,6 +76,18 @@ export default function MenuPage() {
     //get dishes from active category
     const currentCategory = menu.categories.find((c) => c.id === activeCategory);
 
+    // Filter / Sort dishes
+    let displayDishes = currentCategory?.dishes ? [...currentCategory.dishes] : [];
+    if (sortFilter === "high_protein") {
+        displayDishes.sort((a, b) => b.proteinG - a.proteinG);
+    } else if (sortFilter === "low_cal") {
+        displayDishes.sort((a, b) => a.calories - b.calories);
+    } else if (sortFilter === "low_carb") {
+        displayDishes.sort((a, b) => a.carbsG - b.carbsG);
+    } else if (sortFilter === "low_fat") {
+        displayDishes.sort((a, b) => a.fatG - b.fatG);
+    }
+
     // Calculate daily accumulator
     const accumulator = meals.reduce(
         (acc, meal) => ({
@@ -117,7 +132,7 @@ export default function MenuPage() {
 
             <div className="max-w-6xl mx-auto px-4">
                 {/* Category Tabs */}
-                <div className="flex gap-2 overflow-x-auto pb-4 mb-6 scrollbar-hide">
+                <div className="flex gap-2 overflow-x-auto pb-2 mb-2 scrollbar-hide">
                     {menu.categories.map((category) => (
                         <button
                             key={category.id}
@@ -132,9 +147,32 @@ export default function MenuPage() {
                     ))}
                 </div>
 
+                {/* Nutritional Filters */}
+                <div className="flex gap-2 overflow-x-auto pb-4 mb-6 scrollbar-hide items-center">
+                    <span className="text-sm text-text-secondary whitespace-nowrap ml-1 mr-1">Sort by:</span>
+                    {[
+                        { id: "default", label: "Default" },
+                        { id: "high_protein", label: "High Protein" },
+                        { id: "low_cal", label: "Low Calorie" },
+                        { id: "low_carb", label: "Low Carb" },
+                        { id: "low_fat", label: "Low Fat" }
+                    ].map((filter) => (
+                        <button
+                            key={filter.id}
+                            onClick={() => setSortFilter(filter.id as SortFilterType)}
+                            className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${sortFilter === filter.id
+                                ? "bg-bg-elevated border-accent text-accent"
+                                : "bg-bg-card border-transparent text-text-secondary hover:text-text-primary hover:bg-bg-elevated"
+                                } border`}
+                        >
+                            {filter.label}
+                        </button>
+                    ))}
+                </div>
+
                 {/* Dishes */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {currentCategory?.dishes.map((dish) => (
+                    {displayDishes.map((dish) => (
                         <DishCard
                             key={dish.id}
                             dish={dish}
