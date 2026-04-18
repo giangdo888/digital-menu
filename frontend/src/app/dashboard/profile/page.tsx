@@ -27,7 +27,7 @@ export default function ProfilePage() {
         extra_active: "Extra",
     };
 
-    const { user, logout } = useAuth();
+    const { user, logout, updateUserInfo } = useAuth();
     const router = useRouter();
 
     const handleLogout = async () => {
@@ -77,6 +77,7 @@ export default function ProfilePage() {
                 ? await userService.updateProfile(form)
                 : await userService.createProfile(form);
             setProfile(response.data);
+            updateUserInfo({ hasProfile: true });
             setIsEditing(false);
             toast.success("Profile saved! ✅");
         } catch {

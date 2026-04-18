@@ -11,4 +11,5 @@ public class AuthResponse
     public string RefreshToken { get; set; } = string.Empty;
     public DateTime TokenExpiresAt { get; set; }
     public DateTime RefreshTokenExpiresAt { get; set; }
+    public bool HasProfile { get; set; }
 }

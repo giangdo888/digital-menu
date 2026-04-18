@@ -27,6 +27,7 @@ export interface AuthResponse {
     role: string;
     tokenExpiresAt: string;
     refreshTokenExpiresAt: string;
+    hasProfile: boolean;
 }
 
 export interface UserResponse {

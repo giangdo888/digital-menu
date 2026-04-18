@@ -94,6 +94,7 @@ public class AuthService : IAuthService
         .Query()
         .AsNoTracking()
         .Include(u => u.Role)
+        .Include(u => u.UserProfile)
         .FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
         if (user == null)
         {
@@ -184,6 +185,10 @@ public class AuthService : IAuthService
         var jwtSettings = _configuration.GetSection("JwtSettings");
         var expireMinutes = int.Parse(jwtSettings["ExpiryInMinutes"] ?? "60");
 
+        var hasProfile = await _unitOfWork.UserProfiles.Query()
+            .AsNoTracking()
+            .AnyAsync(up => up.UserId == user.Id);
+
         return Result<AuthResponse>.Success(new AuthResponse
         {
             UserId = user.Id,
@@ -194,7 +199,8 @@ public class AuthService : IAuthService
             Token = accessToken,
             RefreshToken = newRefreshToken.Token,
             TokenExpiresAt = DateTime.UtcNow.AddMinutes(expireMinutes),
-            RefreshTokenExpiresAt = newRefreshToken.ExpiresAt
+            RefreshTokenExpiresAt = newRefreshToken.ExpiresAt,
+            HasProfile = hasProfile
         });
     }
 
@@ -246,7 +252,8 @@ public class AuthService : IAuthService
             Token = token,
             RefreshToken = refreshToken.Token,
             TokenExpiresAt = DateTime.UtcNow.AddMinutes(expireMinutes),
-            RefreshTokenExpiresAt = refreshToken.ExpiresAt
+            RefreshTokenExpiresAt = refreshToken.ExpiresAt,
+            HasProfile = user.UserProfile != null
         };
     }
 
