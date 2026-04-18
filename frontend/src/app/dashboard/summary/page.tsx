@@ -114,6 +114,18 @@ export default function SummaryPage() {
     const currentWeight = weightData[0]?.weightKg;
     const change = weightData[0]?.changeFromPrevious;
 
+    const getWeightChangeColor = () => {
+        if (change === 0 || change === undefined || change === null) return "text-text-secondary";
+        if (!profile) return change < 0 ? "text-success" : "text-danger";
+        
+        if (profile.weeklyWeightGoal < 0) { // Goal: Lose weight
+            return change < 0 ? "text-success" : "text-danger";
+        } else if (profile.weeklyWeightGoal > 0) { // Goal: Gain weight
+            return change > 0 ? "text-success" : "text-danger";
+        }
+        return "text-text-secondary"; // Maintenance
+    };
+
     const openNutritionModal = async () => {
         setIsModalOpen(true);
         try {
@@ -185,7 +197,7 @@ export default function SummaryPage() {
                             <p className="text-xl font-bold">{currentWeight} kg</p>
                         </div>
                         {change !== null && change !== undefined && (
-                            <p className={`text-sm font-medium ${change < 0 ? "text-success" : change > 0 ? "text-danger" : "text-text-secondary"}`}>
+                            <p className={`text-sm font-medium ${getWeightChangeColor()}`}>
                                 {change > 0 ? "+" : ""}{change.toFixed(1)} kg from last
                             </p>
                         )}

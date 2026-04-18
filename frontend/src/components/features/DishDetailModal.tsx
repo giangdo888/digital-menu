@@ -34,13 +34,13 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
 
             {/* Modal — bottom-sheet on mobile, centered on desktop */}
             <div className="fixed z-50 inset-x-0 bottom-0 md:inset-0 md:flex md:items-center md:justify-center">
-                <div className="bg-bg-card border border-border rounded-t-sm md:rounded-sm max-h-[85vh] overflow-y-auto w-full md:max-w-lg">
+                <div className="bg-bg-card border border-border rounded-t-sm md:rounded-sm max-h-[85vh] overflow-y-auto w-full md:max-w-lg pb-20 md:pb-0">
                     {/* Hero Image */}
                     <div className="aspect-video bg-bg-elevated relative">
-                        <img 
-                            src={dish.imageUrl || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80"} 
-                            alt={dish.name} 
-                            className="w-full h-full object-cover" 
+                        <img
+                            src={dish.imageUrl || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80"}
+                            alt={dish.name}
+                            className="w-full h-full object-cover"
                         />
                         <button
                             onClick={onClose}
@@ -83,7 +83,7 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
                                 ].map(macro => {
                                     const totalVal = macro.base + macro.added;
                                     const isZero = macro.added === 0;
-                                    
+
                                     // Calculate range based on user's weight goal
                                     let minGreen = 90;
                                     let maxGreen = 105;
@@ -96,7 +96,7 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
                                     const totalOverallPct = (totalVal / macro.tgt) * 100;
                                     const isOverLimit = totalOverallPct > maxGreen;
                                     const isSweetSpot = totalOverallPct >= minGreen && !isOverLimit;
-                                    
+
                                     const basePct = Math.min((macro.base / macro.tgt) * 100, 100);
                                     // To calculate the added percentage without overflowing 100%
                                     const totalBarPct = Math.min((totalVal / macro.tgt) * 100, 100);
