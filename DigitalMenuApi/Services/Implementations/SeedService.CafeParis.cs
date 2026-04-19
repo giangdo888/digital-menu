@@ -7,8 +7,9 @@ public partial class SeedService
         OwnerEmail = "jean@restaurant.com", OwnerFirstName = "Jean", OwnerLastName = "Dupont",
         RestaurantName = "Café Paris",
         Address = "789 French Quarter, Brisbane QLD 4000", Phone = "+61 7 9345 6789",
-        Description = "Experience the charm of Parisian cuisine in the heart of Brisbane.",
-        OpeningHours = "Wed-Mon 7:00am-10:00pm",
+        Description = "Charming French bistro with classic pastries and coffee.",
+        OpeningHours = "Mon-Sat 8:00am-9:00pm",
+        LogoUrl = "https://images.unsplash.com/photo-1543007630-9710e4a00a20?auto=format&fit=crop&w=1200&q=80",
         Categories = new()
         {
             new() { Name = "Entrées", Type = "food", Dishes = new()

@@ -81,6 +81,7 @@ public partial class SeedService : ISeedService
                     Email = data.OwnerEmail,
                     Description = data.Description,
                     OpeningHours = data.OpeningHours,
+                    LogoUrl = data.LogoUrl,
                     IsActive = true
                 };
 

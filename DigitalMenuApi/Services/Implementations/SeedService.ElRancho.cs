@@ -7,8 +7,9 @@ public partial class SeedService
         OwnerEmail = "carlos@restaurant.com", OwnerFirstName = "Carlos", OwnerLastName = "Garcia",
         RestaurantName = "El Rancho",
         Address = "321 Mexico Street, Perth WA 6000", Phone = "+61 8 9456 7890",
-        Description = "Vibrant Mexican flavors and authentic recipes from Oaxaca.",
-        OpeningHours = "Mon-Sun 11:30am-11:00pm",
+        Description = "Authentic Mexican flavors and premium tequila selection.",
+        OpeningHours = "Mon-Sun 12:00pm-11:00pm",
+        LogoUrl = "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1200&q=80",
         Categories = new()
         {
             new() { Name = "Aperitivos", Type = "food", Dishes = new()

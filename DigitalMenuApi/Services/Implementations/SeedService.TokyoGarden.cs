@@ -4,11 +4,15 @@ public partial class SeedService
 {
     private static RestaurantSeedData GetTokyoGarden() => new()
     {
-        OwnerEmail = "sakura@restaurant.com", OwnerFirstName = "Sakura", OwnerLastName = "Tanaka",
+        OwnerEmail = "sakura@restaurant.com",
+        OwnerFirstName = "Sakura",
+        OwnerLastName = "Tanaka",
         RestaurantName = "Tokyo Garden",
-        Address = "456 Japan Way, Sydney NSW 2000", Phone = "+61 2 9234 5678",
+        Address = "456 Japan Way, Sydney NSW 2000",
+        Phone = "+61 2 9234 5678",
         Description = "Traditional Japanese dishes prepared by master chefs.",
         OpeningHours = "Tue-Sun 12:00pm-9:30pm",
+        LogoUrl = "https://images.unsplash.com/photo-1568018508399-e53bc8babdde?auto=format&fit=crop&w=1200&q=80",
         Categories = new()
         {
             new() { Name = "Starters", Type = "food", Dishes = new()

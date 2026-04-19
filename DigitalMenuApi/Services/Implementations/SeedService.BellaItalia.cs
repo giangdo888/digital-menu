@@ -7,8 +7,9 @@ public partial class SeedService
         OwnerEmail = "mario@restaurant.com", OwnerFirstName = "Mario", OwnerLastName = "Rossi",
         RestaurantName = "Bella Italia",
         Address = "123 Little Italy Street, Melbourne VIC 3000", Phone = "+61 3 9123 4567",
-        Description = "Authentic Italian cuisine with recipes passed down through generations.",
-        OpeningHours = "Mon-Sun 11:00am-10:00pm",
+        Description = "Authentic Italian cuisine in the heart of the city.",
+        OpeningHours = "Tue-Sun 12pm-10pm",
+        LogoUrl = "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1200&q=80",
         Categories = new()
         {
             new() { Name = "Antipasti", Type = "food", Dishes = new()

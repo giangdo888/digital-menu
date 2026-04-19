@@ -26,6 +26,7 @@ public partial class SeedService
         public string? Phone { get; set; }
         public string? Description { get; set; }
         public string? OpeningHours { get; set; }
+        public string? LogoUrl { get; set; }
         public List<CategorySeedData> Categories { get; set; } = new();
     }
 

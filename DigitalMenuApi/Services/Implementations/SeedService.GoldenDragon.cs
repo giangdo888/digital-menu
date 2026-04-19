@@ -7,8 +7,9 @@ public partial class SeedService
         OwnerEmail = "ming@restaurant.com", OwnerFirstName = "Ming", OwnerLastName = "Chen",
         RestaurantName = "Golden Dragon",
         Address = "555 Chinatown Lane, Adelaide SA 5000", Phone = "+61 8 9567 8901",
-        Description = "Authentic Cantonese and Sichuan cuisine in a traditional setting.",
-        OpeningHours = "Mon-Sun 11:00am-10:30pm",
+        Description = "Opulent Chinese dining hall featuring premium Dim Sum and seafood.",
+        OpeningHours = "Mon-Sun 11:00am-10:00pm",
+        LogoUrl = "https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&w=1200&q=80",
         Categories = new()
         {
             new() { Name = "Dim Sum & Starters", Type = "food", Dishes = new()
