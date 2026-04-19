@@ -162,7 +162,7 @@ export default function SummaryPage() {
             </div>
 
             {/* Weight Chart */}
-            <div className="bg-bg-card border border-border rounded-sm p-5 mb-6">
+            <div className="bg-bg-card border border-border rounded-sm p-5 mb-6 shadow-luxury">
                 <h2 className="font-semibold mb-4">Weight History</h2>
 
                 {chartData.length > 1 ? (
@@ -208,7 +208,7 @@ export default function SummaryPage() {
             {/* Bottom Actions */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Log Weight Form */}
-                <div className="bg-bg-card border border-border rounded-sm p-5">
+                <div className="bg-bg-card border border-border rounded-sm p-5 shadow-luxury">
                     <h2 className="font-semibold mb-3">Log New Weight</h2>
                     <form onSubmit={handleLogWeight} className="flex gap-3">
                         <input
@@ -226,7 +226,7 @@ export default function SummaryPage() {
                 </div>
 
                 {/* Nutrition Summary Action */}
-                <div className="bg-bg-card border border-border rounded-sm p-5 flex flex-col justify-center items-center text-center">
+                <div className="bg-bg-card border border-border rounded-sm p-5 flex flex-col justify-center items-center text-center shadow-luxury">
                     <h2 className="font-semibold mb-2">Nutrition Intake</h2>
                     <p className="text-sm text-text-secondary mb-4">View your day-by-day nutritional breakdown for the selected time period.</p>
                     <button 
@@ -240,7 +240,7 @@ export default function SummaryPage() {
 
             {/* Nutrition Modal */}
             {isModalOpen && profile && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}>
+                <div className="fixed top-16 bottom-0 left-0 right-0 z-[100] flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}>
                     <div 
                         className="bg-bg-card border border-border rounded-sm w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col shadow-2xl"
                         onClick={e => e.stopPropagation()}

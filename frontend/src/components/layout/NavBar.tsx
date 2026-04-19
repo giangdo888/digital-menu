@@ -76,7 +76,7 @@ export default function NavBar() {
         <>
             {/* ── Desktop Top Nav (hidden on mobile) ── */}
             <nav className="hidden md:flex sticky top-0 left-0 right-0 z-50 bg-bg-nav/80 backdrop-blur-md border-b border-border h-16 items-center px-8 shadow-sm">
-                <Link href={isRestaurantAdmin ? "/admin/restaurants" : "/"} className="text-accent font-bold text-xl mr-8 tracking-wide">
+                <Link href={isRestaurantAdmin ? "/admin/restaurants" : "/"} className="text-accent font-serif font-bold text-2xl mr-8 tracking-tight">
                     Digital Menu
                 </Link>
 

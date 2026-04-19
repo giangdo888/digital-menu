@@ -30,11 +30,17 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
     return (
         <>
             {/* Backdrop */}
-            <div className="fixed inset-0 bg-stone-900/40 z-50" onClick={onClose} />
+            <div className="fixed inset-0 bg-stone-900/40 z-[100]" onClick={onClose} />
 
             {/* Modal — bottom-sheet on mobile, centered on desktop */}
-            <div className="fixed z-50 inset-x-0 bottom-0 md:inset-0 md:flex md:items-center md:justify-center">
-                <div className="bg-bg-card border border-border rounded-t-sm md:rounded-sm max-h-[85vh] overflow-y-auto w-full md:max-w-lg pb-20 md:pb-0">
+            <div
+                className="fixed z-[101] inset-x-0 bottom-0 md:top-16 md:bottom-0 md:left-0 md:right-0 md:flex md:items-center md:justify-center md:py-8"
+                onClick={onClose}
+            >
+                <div
+                    className="bg-bg-card border border-border rounded-t-sm md:rounded-sm max-h-[85vh] overflow-y-auto w-full md:max-w-lg pb-20 md:pb-0 animate-fade-in-up"
+                    onClick={e => e.stopPropagation()}
+                >
                     {/* Hero Image */}
                     <div className="aspect-video bg-bg-elevated relative">
                         <img
@@ -52,8 +58,8 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
 
                     <div className="p-5">
                         {/* Title + Price */}
-                        <h2 className="text-xl font-bold">{dish.name}</h2>
-                        <p className="text-accent font-semibold mt-1">${dish.price.toFixed(2)}</p>
+                        <h2 className="text-3xl font-serif font-bold tracking-tight">{dish.name}</h2>
+                        <p className="text-accent font-bold text-lg mt-1 tracking-tight">${dish.price.toFixed(2)}</p>
                         {/* Nutrition Grid */}
                         <div className="grid grid-cols-4 gap-2 mt-4">
                             {[
@@ -106,16 +112,38 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
                                     if (isZero) addedColor = "bg-text-secondary"; // Gray if doesn't contain macro
                                     else if (isOverLimit) addedColor = "bg-danger"; // Red if goes too far
 
-                                    // Text Color remains standard
-                                    let textColor = "text-text-primary";
+                                    // Color Logic for Status (Percentage vs Added value)
+                                    const dangerThreshold = maxGreen + 10;
+
+                                    // + Added value color: Green for everything "Safe" (up to maxGreen)
+                                    let addedValueColor = "text-text-primary";
+                                    if (isZero) addedValueColor = "text-text-secondary";
+                                    else if (totalOverallPct > dangerThreshold) addedValueColor = "text-danger";
+                                    else if (totalOverallPct > maxGreen) addedValueColor = "text-warning";
+                                    else addedValueColor = "text-success";
+
+                                    // % Total Percentage color: Green ONLY in sweetspot
+                                    let pctColor = "text-text-secondary";
+                                    if (isZero) pctColor = "text-text-secondary";
+                                    else if (totalOverallPct > dangerThreshold) pctColor = "text-danger";
+                                    else if (totalOverallPct > maxGreen) pctColor = "text-warning";
+                                    else if (isSweetSpot) pctColor = "text-success";
+                                    else pctColor = "text-text-secondary";
+
 
                                     return (
                                         <div key={macro.label}>
                                             <div className="flex justify-between text-sm mb-1">
                                                 <span className="text-text-secondary">{macro.label}</span>
-                                                <span className={`font-medium ${textColor}`}>
-                                                    {Math.round(totalVal)} / {Math.round(macro.tgt)} ({Math.round((totalVal / macro.tgt) * 100)}%)
-                                                </span>
+                                                <div className="font-medium flex items-baseline gap-1">
+                                                    <span className="text-text-primary">{Math.round(macro.base)}</span>
+                                                    <span className="text-text-secondary text-[10px]">+</span>
+                                                    <span className={`font-bold ${addedValueColor}`}>{Math.round(macro.added)}</span>
+                                                    <span className="text-text-secondary text-xs ml-0.5">/ {Math.round(macro.tgt)}</span>
+                                                    <span className={`ml-2 font-bold ${pctColor}`}>
+                                                        ({Math.round((totalVal / macro.tgt) * 100)}%)
+                                                    </span>
+                                                </div>
                                             </div>
                                             <div className="w-full bg-border rounded-full h-2 flex overflow-hidden">
                                                 <div className="h-full bg-accent transition-all" style={{ width: `${basePct}%` }} />

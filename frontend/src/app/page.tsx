@@ -54,12 +54,12 @@ export default function HomePage() {
       )}
 
       {/* Restaurant Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 stagger-fade-in">
         {filter.map((restaurant) => (
           <Link
             key={restaurant.slug}
             href={(`/restaurants/${restaurant.slug}`)}
-            className="bg-bg-card border border-border rounded-sm overflow-hidden hover:border-accent transition-all group"
+            className="bg-bg-card border border-border rounded-sm overflow-hidden hover:border-accent transition-all duration-300 ease-out group shadow-luxury hover:shadow-luxury-hover hover:-translate-y-1 hover:scale-[1.01]"
           >
             {/* Restaurant Image */}
             <div className="aspect-video bg-bg-elevated relative overflow-hidden">

@@ -110,8 +110,8 @@ export default function MenuPage() {
                     style={{ backgroundImage: `url(${bgImage})` }}
                 />
                 {/* Luxury Overlay: Dark Gradient + Subtle Blur */}
-                <div className="absolute inset-0 bg-stone-900/60 backdrop-blur-[4px]" />
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-transparent to-stone-900/40" />
+                <div className="absolute inset-0 bg-bg-primary/65 backdrop-blur-[4px]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-bg-primary via-transparent to-bg-primary/40" />
             </div>
 
             {/* Content Section */}
@@ -119,19 +119,19 @@ export default function MenuPage() {
                 <div className="max-w-6xl mx-auto">
                     {/* Floating Header Info */}
                     <div className="mb-10 text-center md:text-left">
-                        <h1 className="text-5xl font-extrabold text-white drop-shadow-2xl mb-4 tracking-tight">
+                        <h1 className="text-5xl font-extrabold text-text-primary mb-4 tracking-tight">
                             {menu.restaurant.name}
                         </h1>
                         <div className="flex flex-col gap-2 items-center md:items-start">
-                            <p className="text-stone-200 font-medium flex items-center gap-2 text-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-amber-500">
+                            <p className="text-text-secondary font-medium flex items-center gap-2 text-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-accent">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                                 </svg>
                                 {menu.restaurant.address}
                             </p>
                             {menu.restaurant.description && (
-                                <p className="text-stone-300 text-base max-w-2xl leading-relaxed italic border-l-2 border-accent/40 pl-4 py-1">
+                                <p className="text-text-secondary text-base max-w-2xl leading-relaxed italic border-l-2 border-accent/40 pl-4 py-1">
                                     {menu.restaurant.description}
                                 </p>
                             )}
@@ -139,7 +139,7 @@ export default function MenuPage() {
                     </div>
 
                     {/* Navigation and Filters Container - Glassmorphism style */}
-                    <div className="sticky top-4 z-20 mb-8 p-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-sm shadow-2xl">
+                    <div className="sticky top-20 z-20 mb-8 p-4 bg-white/40 backdrop-blur-md border border-border rounded-sm shadow-xl animate-fade-in-up">
                         {/* Category Tabs */}
                         <div className="flex gap-3 overflow-x-auto pb-3 mb-4 scrollbar-hide">
                             {menu.categories.map((category) => (
@@ -148,7 +148,7 @@ export default function MenuPage() {
                                     onClick={() => setActiveCategory(category.id)}
                                     className={`whitespace-nowrap px-6 py-2.5 rounded-sm text-sm font-semibold tracking-wide transition-all duration-300 ${activeCategory === category.id
                                         ? "bg-accent text-white shadow-lg shadow-accent/20"
-                                        : "bg-white/10 text-white/70 hover:text-white hover:bg-white/20 border border-white/5"
+                                        : "bg-white/50 text-text-secondary hover:text-text-primary hover:bg-white/80 border border-border/50"
                                         }`}
                                 >
                                     {category.name.toUpperCase()}
@@ -158,7 +158,7 @@ export default function MenuPage() {
 
                         {/* Nutritional Filters */}
                         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide items-center">
-                            <span className="text-xs uppercase tracking-widest text-stone-400 whitespace-nowrap mr-2">Sort by</span>
+                            <span className="text-xs uppercase tracking-widest text-text-secondary whitespace-nowrap mr-2">Sort by</span>
                             {[
                                 { id: "default", label: "Default" },
                                 { id: "high_protein", label: "High Protein" },
@@ -170,8 +170,8 @@ export default function MenuPage() {
                                     key={filter.id}
                                     onClick={() => setSortFilter(filter.id as SortFilterType)}
                                     className={`whitespace-nowrap px-4 py-1.5 rounded-sm text-[10px] uppercase font-bold tracking-widest transition-all duration-200 border ${sortFilter === filter.id
-                                        ? "bg-accent/20 border-accent text-accent"
-                                        : "bg-transparent border-white/10 text-stone-400 hover:text-white hover:border-white/30"
+                                        ? "bg-accent/10 border-accent text-accent"
+                                        : "bg-transparent border-border/50 text-text-secondary hover:text-text-primary hover:border-accent/40"
                                         }`}
                                 >
                                     {filter.label}
@@ -181,7 +181,7 @@ export default function MenuPage() {
                     </div>
 
                     {/* Dishes Grid - Floating Effect */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20 stagger-fade-in" key={activeCategory}>
                         {displayDishes.map((dish) => (
                             <div key={dish.id} className="transform transition-transform hover:-translate-y-1 duration-300">
                                 <DishCard
@@ -196,8 +196,8 @@ export default function MenuPage() {
 
                     {/* Empty State */}
                     {currentCategory?.dishes.length === 0 && (
-                        <div className="bg-white/5 backdrop-blur-md rounded-sm border border-white/10 p-12 text-center">
-                            <p className="text-stone-300 text-lg">
+                        <div className="bg-white/20 backdrop-blur-md rounded-sm border border-white/20 p-12 text-center">
+                            <p className="text-text-secondary text-lg">
                                 No dishes found in this category.
                             </p>
                         </div>

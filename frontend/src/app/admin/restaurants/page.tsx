@@ -78,7 +78,7 @@ export default function MyRestaurantsPage() {
                 <div className="space-y-3">
                     {restaurants.map((r) => (
                         <Link key={r.id} href={`/admin/restaurants/${r.id}`}
-                            className="bg-bg-card border border-border rounded-sm p-5 flex items-center gap-4 hover:border-accent transition-all block">
+                            className="bg-bg-card border border-border rounded-sm p-5 flex items-center gap-4 hover:border-accent transition-all duration-300 ease-out block shadow-luxury hover:shadow-luxury-hover hover:-translate-y-1">
                             <img 
                                 src={r.logoUrl || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80"} 
                                 alt={r.name} 
