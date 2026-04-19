@@ -76,8 +76,12 @@ export default function NavBar() {
         <>
             {/* ── Desktop Top Nav (hidden on mobile) ── */}
             <nav className="hidden md:flex sticky top-0 left-0 right-0 z-50 bg-bg-nav/80 backdrop-blur-md border-b border-border h-16 items-center px-8 shadow-sm">
-                <Link href={isRestaurantAdmin ? "/admin/restaurants" : "/"} className="text-accent font-serif font-bold text-2xl mr-8 tracking-tight">
-                    Digital Menu
+                <Link href={isRestaurantAdmin ? "/admin/restaurants" : "/"} className="flex items-center gap-2 mr-8 h-full">
+                    <img 
+                        src="/logo.png" 
+                        alt="Digital Menu Logo" 
+                        className="h-16 w-auto object-contain"
+                    />
                 </Link>
 
                 <div className="flex gap-6 flex-1">
@@ -140,7 +144,7 @@ export default function NavBar() {
             </nav>
 
             {/* ── Mobile Bottom Nav (hidden on desktop) ── */}
-            <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-bg-nav/80 backdrop-blur-md border-t border-border h-16 flex items-center justify-around px-4 shadow-lg">
+            <nav className="md:hidden fixed bottom-1 left-4 right-4 z-50 bg-bg-nav/90 backdrop-blur-lg border border-border h-16 rounded-sm flex items-center justify-around px-4 shadow-2xl safe-area-pb">
                 {mobileNav}
             </nav>
         </>

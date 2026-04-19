@@ -31,7 +31,30 @@ export default function HomePage() {
   );
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="max-w-6xl mx-auto px-4 pb-12 pt-0 md:pt-8">
+      {/* Hero Section */}
+      <section className="py-6 md:py-20 text-center max-w-3xl mx-auto px-4 animate-fade-in-up">
+        {/* Mobile-only Logo */}
+        <div className="flex justify-center mb-6 md:hidden">
+          <img 
+            src="/logo.png" 
+            alt="Digital Menu Logo" 
+            className="h-20 w-auto object-contain"
+          />
+        </div>
+        <h1 className="text-3xl md:text-5xl font-serif font-bold text-text-primary mb-3 md:mb-4 leading-tight">
+          Welcome to Digital Menu
+        </h1>
+        <p className="text-lg md:text-2xl font-serif italic text-accent mb-4 md:mb-6">
+          "Precision nutrition for the modern lifestyle"
+        </p>
+        <p className="text-text-secondary text-base md:text-lg leading-relaxed mb-6 md:mb-8">
+          To start, find the restaurant you had your meals today and start logging! 
+          Elevate your dining experience with mindful nutrition.
+        </p>
+        <div className="w-16 md:w-24 h-px bg-border mx-auto mb-6 md:mb-10" />
+      </section>
+
       {/*Search bar*/}
       <div className="mb-8">
         <input
