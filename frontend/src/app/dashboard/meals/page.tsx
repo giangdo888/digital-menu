@@ -10,12 +10,13 @@ export default function MealsPage() {
     const [meals, setMeals] = useState<MealLog[]>([]);
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const [mealsRes, profileRes] = await Promise.all([
-                    mealLogService.getMyLogs(),
+                    mealLogService.getMyLogs(selectedDate),
                     userService.getProfile(),
                 ]);
                 setMeals(mealsRes.data);
@@ -27,7 +28,7 @@ export default function MealsPage() {
             }
         };
         fetchData();
-    }, []);
+    }, [selectedDate]);
 
     // ── Derived totals (recalculates automatically when meals changes) ──
     const totals = meals.reduce(
@@ -55,17 +56,35 @@ export default function MealsPage() {
     const calorieTarget = profile?.dailyCaloriesTarget || 2000;
     const caloriePct = Math.round((totals.calories / calorieTarget) * 100);
     const calColor = caloriePct <= 80 ? "#16A34A" : caloriePct <= 100 ? "#CA8A04" : "#C2432A";
+    const selectedDateLabel = new Date(`${selectedDate}T00:00:00`).toLocaleDateString("en-AU", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+    });
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
-            <h1 className="text-2xl font-bold mb-6">Today&apos;s Meals</h1>
+            <div className="mb-6">
+                <div>
+                    <h1 className="text-2xl font-bold">Meals</h1>
+                    <p className="text-text-secondary text-sm mt-1">Showing meals for {selectedDateLabel}</p>
+                </div>
+            </div>
 
             <div className="md:flex md:gap-8">
                 {/* ── Left: Progress Ring + Macros ── */}
                 <div className="md:w-1/3 mb-6 md:mb-0">
                     {/* Calorie Circle (simplified with CSS) */}
-                    <div className="bg-bg-card border border-border rounded-sm p-6 text-center">
-                        <div className="relative w-32 h-32 mx-auto mb-4">
+                    <div className="bg-bg-card border border-border rounded-sm p-6 text-center relative">
+                        <input
+                                type="date"
+                                value={selectedDate}
+                                max={new Date().toISOString().split("T")[0]}
+                                onChange={(e) => setSelectedDate(e.target.value)}
+                                className="bg-bg-card border border-border rounded-sm absolute top-3 left-3 px-2 py-1 text-sm focus:outline-none"
+                        />
+                        <div className="relative w-32 h-32 mx-auto mb-2 mt-10">
                             <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
                                 <circle cx="60" cy="60" r="50" fill="none" stroke="#E8E2D9" strokeWidth="10" />
                                 <circle cx="60" cy="60" r="50" fill="none" stroke={calColor} strokeWidth="10"
@@ -112,7 +131,7 @@ export default function MealsPage() {
                     <div className="space-y-3">
                         {meals.length === 0 && (
                             <p className="text-text-secondary text-center py-8">
-                                No meals logged today. Browse a restaurant menu and tap &quot;Log This Meal&quot;!
+                                No meals logged for this date. Browse a restaurant menu and tap &quot;Log This Meal&quot;!
                             </p>
                         )}
                         {meals.map((meal) => {
@@ -133,7 +152,7 @@ export default function MealsPage() {
                                         <div>
                                             <p className="font-medium">{meal.dishName}</p>
                                             <p className="text-sm text-text-secondary">
-                                                {new Date(meal.createdAt.endsWith('Z') ? meal.createdAt : meal.createdAt + 'Z').toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                                                Consumed on {new Date(`${meal.consumedAt}T00:00:00`).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })}
                                             </p>
                                         </div>
                                     </div>

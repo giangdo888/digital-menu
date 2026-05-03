@@ -257,17 +257,19 @@ public class UserService : IUserService
             return Result<UserProfileResponse>.NotFound("Profile not found. Please create a profile first.");
         }
 
-        // Check if weight already logged today (UTC date)
-        var today = DateTime.UtcNow.Date;
+        var recordedAt = request.RecordedAt?.ToUniversalTime() ?? DateTime.UtcNow;
+        var targetDate = recordedAt.Date;
+
+        // Check if weight already logged on the target date (UTC date)
         var existingEntry = await _unitOfWork.WeightHistories.Query()
-            .FirstOrDefaultAsync(w => w.UserId == userId && w.RecordedAt >= today && w.RecordedAt < today.AddDays(1));
+            .FirstOrDefaultAsync(w => w.UserId == userId && w.RecordedAt >= targetDate && w.RecordedAt < targetDate.AddDays(1));
 
         if (existingEntry != null)
         {
             existingEntry.WeightKg = request.WeightKg;
-            existingEntry.RecordedAt = DateTime.UtcNow; // Update time as well
+            existingEntry.RecordedAt = recordedAt;
             _unitOfWork.WeightHistories.Update(existingEntry);
-            _logger.LogInformation("Weight updated for user {UserId}: {Weight}kg (already logged today)", userId, request.WeightKg);
+            _logger.LogInformation("Weight updated for user {UserId}: {Weight}kg (already logged on target date)", userId, request.WeightKg);
         }
         else
         {
@@ -276,7 +278,7 @@ public class UserService : IUserService
             {
                 UserId = userId,
                 WeightKg = request.WeightKg,
-                RecordedAt = DateTime.UtcNow
+                RecordedAt = recordedAt
             };
             await _unitOfWork.WeightHistories.AddAsync(weightEntry);
             _logger.LogInformation("Weight logged for user {UserId}: {Weight}kg", userId, request.WeightKg);
@@ -284,7 +286,7 @@ public class UserService : IUserService
 
         // Update current weight in profile
         profile.CurrentWeightKg = request.WeightKg;
-        profile.LastWeightUpdate = DateTime.UtcNow;
+        profile.LastWeightUpdate = recordedAt;
         _unitOfWork.UserProfiles.Update(profile);
 
         await _unitOfWork.SaveChangesAsync();

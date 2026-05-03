@@ -3,6 +3,7 @@
 import { useAuth } from "@/context/AuthContext";
 import { mealLogService } from "@/services/mealLogService";
 import { MenuDish, UserProfile } from "@/types"
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 interface DishDetailModalProps {
@@ -15,10 +16,27 @@ interface DishDetailModalProps {
 
 export default function DishDetailModal({ dish, onClose, profile, accumulator, onMealLogged }: DishDetailModalProps) {
     const { isAuthenticated, isCustomer } = useAuth();
+    const [consumedAt, setConsumedAt] = useState(new Date().toISOString().split("T")[0]);
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [shouldLogOnBlur, setShouldLogOnBlur] = useState(false);
+    const dateInputRef = useRef<HTMLInputElement | null>(null);
 
-    const handleLogMeal = async () => {
+    useEffect(() => {
+        if (!showDatePicker) {
+            return;
+        }
+
+        const openPicker = () => {
+            dateInputRef.current?.focus();
+            dateInputRef.current?.showPicker?.();
+        };
+
+        requestAnimationFrame(openPicker);
+    }, [showDatePicker]);
+
+    const logMeal = async (date: string) => {
         try {
-            await mealLogService.create({ dishId: dish.id });
+            await mealLogService.create({ dishId: dish.id, consumedAt: date });
             toast.success("Meal logged! 🎉");
             onMealLogged?.();
             onClose();
@@ -27,10 +45,41 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
         }
     };
 
+    const handleToday = () => {
+        void logMeal(new Date().toISOString().split("T")[0]);
+    };
+
+    const handleAnotherDayClick = () => {
+        setShowDatePicker((current) => !current);
+    };
+
+    const handleDateSelected = (value: string) => {
+        setConsumedAt(value);
+        setShouldLogOnBlur(true);
+        void logMeal(consumedAt);
+    };
+
+    const handleDatePickerBlur = () => {
+        setShowDatePicker(false);
+        if (shouldLogOnBlur) {
+            setShouldLogOnBlur(false);
+            void logMeal(consumedAt);
+        }
+    };
+
+    const handleBackdropClick = () => {
+        if (showDatePicker) {
+            setShouldLogOnBlur(false);
+            setShowDatePicker(false);
+        } else {
+            onClose();
+        }
+    };
+
     return (
         <>
             {/* Backdrop */}
-            <div className="fixed inset-0 bg-stone-900/40 z-[100]" onClick={onClose} />
+            <div className="fixed inset-0 bg-stone-900/40 z-[100]" onClick={handleBackdropClick} />
 
             {/* Modal — bottom-sheet on mobile, centered on desktop */}
             <div
@@ -172,14 +221,38 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
                     )}
 
                     {/* Action Buttons */}
-                    <div className="p-5 mt-6 flex gap-3">
+                    <div className="p-5 mt-6 relative overflow-visible">
                         {isAuthenticated && isCustomer && (
-                            <button
-                                onClick={handleLogMeal}
-                                className="flex-1 bg-accent hover:bg-accent-hover text-white font-semibold py-3 rounded-sm transition-colors tracking-wide"
-                            >
-                                Log This Meal
-                            </button>
+                            <>
+                                <p className="text-sm text-text-secondary mb-3">Log this meal for ...</p>
+                                <div className="flex gap-3 flex-wrap">
+                                    <button
+                                        onClick={handleToday}
+                                        className="flex-1 min-w-[140px] bg-accent hover:bg-accent-hover text-white font-semibold py-3 rounded-sm transition-colors tracking-wide"
+                                    >
+                                        today
+                                    </button>
+                                    {!showDatePicker ? (
+                                        <button
+                                            onClick={handleAnotherDayClick}
+                                            className="flex-1 min-w-[140px] bg-bg-elevated hover:bg-border text-text-primary font-semibold py-3 rounded-sm border border-border transition-colors tracking-wide"
+                                        >
+                                            another day
+                                        </button>
+                                    ) : (
+                                        <input
+                                            ref={dateInputRef}
+                                            type="date"
+                                            value={consumedAt}
+                                            max={new Date().toISOString().split("T")[0]}
+                                            onInput={(e) => handleDateSelected(e.currentTarget.value)}
+                                            onBlur={handleDatePickerBlur}
+                                            autoFocus
+                                            className="flex-1 min-w-[140px] bg-bg-primary border border-border rounded-sm px-3 py-3 text-text-primary focus:outline-none focus:border-accent"
+                                        />
+                                    )}
+                                </div>
+                            </>
                         )}
                     </div>
                 </div>

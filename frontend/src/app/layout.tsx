@@ -23,7 +23,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Digital Menu | Luxury Nutrition Tracking",
+  title: "Digital Menu",
   description: "Precision nutrition for the modern lifestyle. Track your macros at your favorite local restaurants.",
   icons: {
     icon: "/logo.png",

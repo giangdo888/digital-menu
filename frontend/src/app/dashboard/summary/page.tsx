@@ -19,6 +19,7 @@ export default function SummaryPage() {
     const [nutritionData, setNutritionData] = useState<any[]>([]);
     
     const [newWeight, setNewWeight] = useState("");
+    const [weightDate, setWeightDate] = useState(new Date().toISOString().split("T")[0]);
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -82,24 +83,26 @@ export default function SummaryPage() {
         const weightValue = parseFloat(newWeight);
         if (!newWeight || isNaN(weightValue)) return;
 
-        // Check if already logged today
-        const todayStr = new Date().toISOString().split("T")[0];
-        const loggedToday = weightData.find(w => w.recordedAt.split("T")[0] === todayStr);
+        const logDate = weightDate || new Date().toISOString().split("T")[0];
 
-        if (loggedToday) {
+        // Check if already logged on this date
+        const loggedOnDate = weightData.find(w => w.recordedAt.split("T")[0] === logDate);
+
+        if (loggedOnDate) {
             const confirmOverride = window.confirm(
-                `Already logged weight today, do you want to override?`
+                `Already logged weight on this date, do you want to override?`
             );
             if (!confirmOverride) return;
         }
 
         try {
-            await userService.logWeight({ weightKg: weightValue });
-            toast.success(loggedToday ? "Weight updated! 📈" : "Weight logged! 📊");
+            await userService.logWeight({ weightKg: weightValue, recordedAt: logDate });
+            toast.success(loggedOnDate ? "Weight updated! 📈" : "Weight logged! 📊");
             // Refresh data
             const res = await userService.getWeightHistory(30, startDate, endDate);
             setWeightData(res.data);
             setNewWeight("");
+            setWeightDate(new Date().toISOString().split("T")[0]);
         } catch {
             toast.error("Failed to log weight");
         }
@@ -210,18 +213,30 @@ export default function SummaryPage() {
                 {/* Log Weight Form */}
                 <div className="bg-bg-card border border-border rounded-sm p-5 shadow-luxury">
                     <h2 className="font-semibold mb-3">Log New Weight</h2>
-                    <form onSubmit={handleLogWeight} className="flex gap-3">
+                    <form onSubmit={handleLogWeight} className="flex flex-col gap-3">
                         <input
                             type="number"
                             step="0.1"
                             value={newWeight}
                             onChange={(e) => setNewWeight(e.target.value)}
                             placeholder="e.g., 76.5"
-                            className="flex-1 bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent"
+                            className="w-full min-w-0 flex-1 bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent"
                         />
-                        <button type="submit" className="bg-accent hover:bg-accent-hover text-white px-6 py-3 rounded-sm font-medium">
-                            Log
-                        </button>
+                        <div className="flex gap-3 items-stretch">
+                            <input
+                                type="date"
+                                value={weightDate}
+                                max={new Date().toISOString().split("T")[0]}
+                                onChange={(e) => setWeightDate(e.target.value)}
+                                className="flex-1 min-w-0 bg-bg-primary border border-border rounded-sm px-3 py-3 text-text-primary focus:outline-none focus:border-accent"
+                            />
+                            <button 
+                                type="submit" 
+                                className="shrink-0 bg-accent hover:bg-accent-hover text-white px-6 py-3 rounded-sm font-medium transition-colors"
+                            >
+                                Log
+                            </button>
+                        </div>
                     </form>
                 </div>
 

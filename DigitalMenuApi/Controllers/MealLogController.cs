@@ -42,10 +42,10 @@ public class MealLogController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "customer")]
-    public async Task<IActionResult> GetMyMealLogs()
+    public async Task<IActionResult> GetMyMealLogs([FromQuery] DateTime? consumedAt = null)
     {
         var userId = GetCurrentUserId(); // Security: Only fetch the authenticated user's logs
-        var result = await _mealLogService.GetMealLogsByUserIdAsync(userId);
+        var result = await _mealLogService.GetMealLogsByUserIdAsync(userId, consumedAt);
         if (result.IsFailure)
             return StatusCode(result.StatusCode, new { error = result.Error });
         return Ok(result.Data);

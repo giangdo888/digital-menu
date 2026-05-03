@@ -5,8 +5,8 @@ export const mealLogService = {
     create: (data: CreateMealLogRequest) =>
         api.post<MealLog>("/meal-logs", data),
 
-    getMyLogs: () =>
-        api.get<MealLog[]>("/meal-logs"),
+    getMyLogs: (consumedAt?: string) =>
+        api.get<MealLog[]>(consumedAt ? `/meal-logs?consumedAt=${encodeURIComponent(consumedAt)}` : "/meal-logs"),
 
     delete: (id: number) =>
         api.delete(`/meal-logs/${id}`),

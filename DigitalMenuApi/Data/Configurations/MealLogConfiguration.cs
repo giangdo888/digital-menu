@@ -11,7 +11,7 @@ public class MealLogConfiguration : IEntityTypeConfiguration<MealLog>
         builder.ToTable("MealLogs");
 
         // Indexes
-        builder.HasIndex(ml => new { ml.UserId, ml.CreatedAt });
+        builder.HasIndex(ml => new { ml.UserId, ml.ConsumedAt });
 
         // Column configs
         builder.Property(ml => ml.UserId)
@@ -19,6 +19,8 @@ public class MealLogConfiguration : IEntityTypeConfiguration<MealLog>
 
         builder.Property(ml => ml.DishId)
             .IsRequired();
+
+        builder.Property(ml => ml.ConsumedAt);
 
         // Nutrition snapshot
         builder.Property(ml => ml.Calories)

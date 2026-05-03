@@ -206,6 +206,7 @@ export interface MealLog {
     userId: string;
     dishId: string;
     dishName: string;
+    consumedAt: string;
     calories: string;
     proteinG: string;
     carbsG: string;
@@ -215,6 +216,7 @@ export interface MealLog {
 export interface CreateMealLogRequest {
     userId?: number;
     dishId: number;
+    consumedAt?: string;
 }
 // ═══════════════════════════════════════
 // WEIGHT HISTORY
@@ -227,6 +229,7 @@ export interface WeightHistory {
 }
 export interface LogWeightRequest {
     weightKg: number;
+    recordedAt?: string;
 }
 // ═══════════════════════════════════════
 // AFCD ITEM (Nutrition Database)

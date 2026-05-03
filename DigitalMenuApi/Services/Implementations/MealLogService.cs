@@ -19,12 +19,16 @@ public class MealLogService : IMealLogService
         _logger = logger;
     }
 
-    public async Task<Result<List<MealLogResponse>>> GetMealLogsByUserIdAsync(int userId)
+    public async Task<Result<List<MealLogResponse>>> GetMealLogsByUserIdAsync(int userId, DateTime? consumedAt = null)
     {
+        var targetDate = NormalizeConsumedDate(consumedAt);
+        var startOfDay = targetDate.Date;
+        var endOfDay = startOfDay.AddDays(1);
+
         var mealLogs = await _unitOfWork.MealLogs.Query()
             .AsNoTracking()
             .Include(m => m.Dish)
-            .Where(m => m.UserId == userId && m.CreatedAt.Date == DateTime.Today)
+            .Where(m => m.UserId == userId && (m.ConsumedAt ?? m.CreatedAt) >= startOfDay && (m.ConsumedAt ?? m.CreatedAt) < endOfDay)
             .ToListAsync();
 
         return Result<List<MealLogResponse>>.Success(mealLogs.Select(MapToResponse).ToList());
@@ -57,6 +61,7 @@ public class MealLogService : IMealLogService
         {
             UserId = request.UserId,
             DishId = request.DishId,
+            ConsumedAt = NormalizeConsumedDate(request.ConsumedAt),
             Calories = dish.Calories,
             ProteinG = dish.ProteinG,
             CarbsG = dish.CarbsG,
@@ -95,6 +100,10 @@ public class MealLogService : IMealLogService
         }
 
         existingMealLog.DishId = request.DishId;
+        if (request.ConsumedAt.HasValue)
+        {
+            existingMealLog.ConsumedAt = NormalizeConsumedDate(request.ConsumedAt);
+        }
         existingMealLog.Calories = dish.Calories;
         existingMealLog.ProteinG = dish.ProteinG;
         existingMealLog.CarbsG = dish.CarbsG;
@@ -142,11 +151,11 @@ public class MealLogService : IMealLogService
 
         var mealLogs = await _unitOfWork.MealLogs.Query()
             .AsNoTracking()
-            .Where(m => m.UserId == userId && m.CreatedAt >= startOfDay && m.CreatedAt <= endOfDay)
+            .Where(m => m.UserId == userId && (m.ConsumedAt ?? m.CreatedAt) >= startOfDay && (m.ConsumedAt ?? m.CreatedAt) <= endOfDay)
             .ToListAsync();
 
         var summary = mealLogs
-            .GroupBy(m => m.CreatedAt.Date)
+            .GroupBy(m => (m.ConsumedAt ?? m.CreatedAt).Date)
             .Select(g => new DailyNutritionSummaryResponse
             {
                 Date = g.Key.ToString("yyyy-MM-dd"),
@@ -191,6 +200,7 @@ public class MealLogService : IMealLogService
             Id = mealLog.Id.ToString(),
             UserId = mealLog.UserId.ToString(),
             DishId = mealLog.DishId.ToString(),
+            ConsumedAt = GetEffectiveConsumedAt(mealLog).ToString("yyyy-MM-dd"),
             Calories = mealLog.Calories.ToString(),
             ProteinG = mealLog.ProteinG.ToString(),
             CarbsG = mealLog.CarbsG.ToString(),
@@ -198,6 +208,16 @@ public class MealLogService : IMealLogService
             CreatedAt = mealLog.CreatedAt.ToString(),
             DishName = mealLog.Dish.Name,
         };
+    }
+
+    private DateTime NormalizeConsumedDate(DateTime? consumedAt)
+    {
+        return (consumedAt ?? DateTime.Today).Date;
+    }
+
+    private DateTime GetEffectiveConsumedAt(MealLog mealLog)
+    {
+        return (mealLog.ConsumedAt ?? mealLog.CreatedAt).Date;
     }
 
 }

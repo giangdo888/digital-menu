@@ -4,6 +4,7 @@ public class MealLog : BaseEntity
 {
     public required int UserId { get; set; }
     public required int DishId { get; set; }
+    public DateTime? ConsumedAt { get; set; }
 
     // Snapshot of nutrition at time of logging (in case dish changes later)
     public required decimal Calories { get; set; }

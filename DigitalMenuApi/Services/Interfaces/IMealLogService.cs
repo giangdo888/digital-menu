@@ -6,7 +6,7 @@ using DigitalMenuApi.Helpers;
 public interface IMealLogService
 {
     Task<Result<MealLogResponse>> CreateMealLogAsync(CreateMealLogRequest request);
-    Task<Result<List<MealLogResponse>>> GetMealLogsByUserIdAsync(int userId);
+    Task<Result<List<MealLogResponse>>> GetMealLogsByUserIdAsync(int userId, DateTime? consumedAt = null);
     Task<Result<MealLogResponse>> GetMealLogByIdAsync(int userId, int mealLogId);
     Task<Result<MealLogResponse>> UpdateMealLogAsync(UpdateMealLogRequest request);
     Task<Result<MealLogResponse>> DeleteMealLogAsync(int userId, int mealLogId);
