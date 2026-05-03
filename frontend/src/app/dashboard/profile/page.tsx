@@ -80,8 +80,10 @@ export default function ProfilePage() {
             updateUserInfo({ hasProfile: true });
             setIsEditing(false);
             toast.success("Profile saved! ✅");
-        } catch {
-            toast.error("Failed to save profile");
+        } catch (err: any) {
+            const { formatApiValidationErrors } = await import("@/lib/apiErrors");
+            const msg = formatApiValidationErrors(err);
+            toast.error(msg || "Failed to save profile");
         }
     }
 

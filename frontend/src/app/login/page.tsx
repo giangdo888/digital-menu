@@ -27,7 +27,10 @@ export default function LoginPage() {
                 router.push("/");
             }
         } catch {
-            toast.error("Invalid email or password");
+            const { formatApiValidationErrors } = await import("@/lib/apiErrors");
+            // @ts-ignore
+            const msg = formatApiValidationErrors((arguments[0]) || new Error("Invalid email or password"));
+            toast.error(msg || "Invalid email or password");
         } finally {
             setIsSubmitting(false);
         }

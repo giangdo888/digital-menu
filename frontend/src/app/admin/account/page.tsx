@@ -63,8 +63,10 @@ export default function AdminAccountPage() {
             });
             setIsEditing(false);
             toast.success("Account updated successfully! ✅");
-        } catch (error: any) {
-            toast.error(error.response?.data?.error || "Failed to update account");
+        } catch (err: any) {
+            const { formatApiValidationErrors } = await import("@/lib/apiErrors");
+            const msg = formatApiValidationErrors(err);
+            toast.error(msg || "Failed to update account");
         } finally {
             setIsLoading(false);
         }

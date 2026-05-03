@@ -41,7 +41,10 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
             onMealLogged?.();
             onClose();
         } catch {
-            toast.error("Failed to log meal");
+            const { formatApiValidationErrors } = await import("@/lib/apiErrors");
+            // @ts-ignore
+            const msg = formatApiValidationErrors((arguments[0]) || (new Error("Failed to log meal")));
+            toast.error(msg || "Failed to log meal");
         }
     };
 

@@ -10,11 +10,11 @@ public class UpdateRestaurantRequest
     [MaxLength(255)]
     public string? Address { get; set; }
 
-    [Phone]
+    [DigitalMenuApi.Validation.OptionalPhone]
     [MaxLength(20)]
     public string? Phone { get; set; }
 
-    [EmailAddress]
+    [DigitalMenuApi.Validation.OptionalEmail]
     [MaxLength(100)]
     public string? Email { get; set; }
 
@@ -25,6 +25,6 @@ public class UpdateRestaurantRequest
     public string? OpeningHours { get; set; }
 
     [MaxLength(1000)]
-    [Url]
+    [DigitalMenuApi.Validation.OptionalUrl]
     public string? LogoUrl { get; set; }
 }

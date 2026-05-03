@@ -13,6 +13,7 @@ export default function MyRestaurantsPage() {
     const [form, setForm] = useState<CreateRestaurantRequest>({
         name: "", address: "", phone: "", email: "", description: "", logoUrl: "", openingHours: "",
     });
+    const [formErrors, setFormErrors] = useState<Record<string, string[]>>({});
 
     useEffect(() => {
         restaurantService.getMyRestaurants().then((res) => setRestaurants(res.data));
@@ -20,14 +21,25 @@ export default function MyRestaurantsPage() {
 
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
+        setFormErrors({});
         try {
             const res = await restaurantService.create(form);
             setRestaurants((prev) => [...prev, res.data]);
             setShowForm(false);
             setForm({ name: "", address: "", logoUrl: "", openingHours: "" });
             toast.success("Restaurant created! 🎉");
-        } catch {
-            toast.error("Failed to create restaurant");
+        } catch (err: any) {
+            const { parseApiValidationErrors, formatApiValidationErrors } = await import("@/lib/apiErrors");
+            const parsed = parseApiValidationErrors(err);
+            // Show inline field errors when available
+            if (Object.keys(parsed).length > 0 && !(Object.keys(parsed).length === 1 && parsed._general)) {
+                setFormErrors(parsed);
+                // also show compact toast
+                toast.error(formatApiValidationErrors(err));
+            } else {
+                const msg = formatApiValidationErrors(err);
+                toast.error(msg || "Failed to create restaurant");
+            }
         }
     };
 
@@ -55,13 +67,22 @@ export default function MyRestaurantsPage() {
                             <input placeholder="Phone" value={form.phone || ""}
                                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                                 className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
+                            {formErrors.Phone && (
+                                <p className="text-danger text-sm mt-1">{formErrors.Phone.join(' ')}</p>
+                            )}
                             <input placeholder="Email" value={form.email || ""}
                                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                                 className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
+                            {formErrors.Email && (
+                                <p className="text-danger text-sm mt-1">{formErrors.Email.join(' ')}</p>
+                            )}
                         </div>
                         <input placeholder="Logo URL" value={form.logoUrl || ""}
                             onChange={(e) => setForm({ ...form, logoUrl: e.target.value })}
                             className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />
+                        {formErrors.LogoUrl && (
+                            <p className="text-danger text-sm mt-1">{formErrors.LogoUrl.join(' ')}</p>
+                        )}
                         <input placeholder="Opening Hours (e.g., Mon-Fri 9am-9pm)" value={form.openingHours || ""}
                             onChange={(e) => setForm({ ...form, openingHours: e.target.value })}
                             className="w-full bg-bg-primary border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent" />

@@ -103,8 +103,10 @@ export default function SummaryPage() {
             setWeightData(res.data);
             setNewWeight("");
             setWeightDate(new Date().toISOString().split("T")[0]);
-        } catch {
-            toast.error("Failed to log weight");
+        } catch (err: any) {
+            const { formatApiValidationErrors } = await import("@/lib/apiErrors");
+            const msg = formatApiValidationErrors(err);
+            toast.error(msg || "Failed to log weight");
         }
     };
 
@@ -134,8 +136,10 @@ export default function SummaryPage() {
         try {
             const res = await mealLogService.getSummary(startDate, endDate);
             setNutritionData(res.data);
-        } catch {
-            toast.error("Failed to load nutrition summary");
+        } catch (err: any) {
+            const { formatApiValidationErrors } = await import("@/lib/apiErrors");
+            const msg = formatApiValidationErrors(err);
+            toast.error(msg || "Failed to load nutrition summary");
         }
     };
 

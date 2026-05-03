@@ -47,7 +47,10 @@ export default function MealsPage() {
             setMeals((prev) => prev.filter((m) => m.id !== id));
             toast.success("Meal removed");
         } catch {
-            toast.error("Failed to remove meal");
+            const { formatApiValidationErrors } = await import("@/lib/apiErrors");
+            // @ts-ignore
+            const msg = formatApiValidationErrors((arguments[0]) || new Error("Failed to remove meal"));
+            toast.error(msg || "Failed to remove meal");
         }
     };
 

@@ -12,12 +12,12 @@ public class CreateRestaurantRequest
     [MaxLength(255)]
     public required string Address { get; set; }
 
-    [Phone]
     [MaxLength(20)]
+    [DigitalMenuApi.Validation.OptionalPhone]
     public string? Phone { get; set; }
 
-    [EmailAddress]
     [MaxLength(100)]
+    [DigitalMenuApi.Validation.OptionalEmail]
     public string? Email { get; set; }
 
     [MaxLength(500)]
@@ -27,6 +27,6 @@ public class CreateRestaurantRequest
     public string? OpeningHours { get; set; }
 
     [MaxLength(1000)]
-    [Url]
+    [DigitalMenuApi.Validation.OptionalUrl]
     public string? LogoUrl { get; set; }
 }

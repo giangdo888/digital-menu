@@ -22,6 +22,7 @@ export default function RestaurantDetailPage() {
     // Edit restaurant
     const [isEditingInfo, setIsEditingInfo] = useState(false);
     const [editForm, setEditForm] = useState<CreateRestaurantRequest>({ name: "", address: "" });
+    const [editErrors, setEditErrors] = useState<Record<string, string[]>>({});
 
     useEffect(() => {
         Promise.all([
@@ -48,7 +49,9 @@ export default function RestaurantDetailPage() {
             setCatForm({ name: "", type: "food", displayOrder: 0 });
             toast.success("Category created!");
         } catch {
-            toast.error("Failed to create category");
+            const { formatApiValidationErrors } = await import("@/lib/apiErrors");
+            const msg = formatApiValidationErrors(arguments[0]);
+            toast.error(msg || "Failed to create category");
         }
     };
 
@@ -59,7 +62,9 @@ export default function RestaurantDetailPage() {
             setCategories((prev) => prev.filter((c) => c.id !== catId));
             toast.success("Category deleted!");
         } catch {
-            toast.error("Failed to delete category");
+            const { formatApiValidationErrors } = await import("@/lib/apiErrors");
+            const msg = formatApiValidationErrors(arguments[0]);
+            toast.error(msg || "Failed to delete category");
         }
     };
 
@@ -79,13 +84,21 @@ export default function RestaurantDetailPage() {
 
     const handleUpdateRestaurant = async (e: React.FormEvent) => {
         e.preventDefault();
+        setEditErrors({});
         try {
             const res = await restaurantService.update(id, editForm);
             setRestaurant(res.data);
             setIsEditingInfo(false);
             toast.success("Restaurant updated!");
-        } catch {
-            toast.error("Failed to update");
+        } catch (err: any) {
+            const { parseApiValidationErrors, formatApiValidationErrors } = await import("@/lib/apiErrors");
+            const parsed = parseApiValidationErrors(err);
+            if (Object.keys(parsed).length > 0 && !(Object.keys(parsed).length === 1 && parsed._general)) {
+                setEditErrors(parsed);
+                toast.error(formatApiValidationErrors(err));
+            } else {
+                toast.error(formatApiValidationErrors(err));
+            }
         }
     };
 
@@ -150,7 +163,7 @@ export default function RestaurantDetailPage() {
                 {isEditingInfo && (
                     <>
                         <div className="fixed inset-0 bg-stone-900/40 z-50" onClick={() => setIsEditingInfo(false)} />
-                        <div className="fixed z-50 inset-x-0 bottom-0 md:inset-0 md:flex md:items-center md:justify-center">
+                        <div className="fixed z-50 inset-x-0 bottom-20 md:inset-0 md:flex md:items-center md:justify-center">
                             <div className="bg-bg-card border border-border rounded-t-sm md:rounded-sm max-h-[85vh] overflow-y-auto w-full md:max-w-lg p-5">
                                 <div className="flex justify-between items-center mb-4">
                                     <h2 className="text-lg font-bold">Edit Restaurant</h2>
@@ -172,17 +185,26 @@ export default function RestaurantDetailPage() {
                                             <label className="text-xs text-text-secondary">Phone</label>
                                             <input value={editForm.phone || ""} onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
                                                 className="w-full bg-bg-primary border border-border rounded-sm px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent" />
+                                                {editErrors.Phone && (
+                                                    <p className="text-danger text-sm mt-1">{editErrors.Phone.join(' ')}</p>
+                                                )}
                                         </div>
                                         <div>
                                             <label className="text-xs text-text-secondary">Email</label>
                                             <input value={editForm.email || ""} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
                                                 className="w-full bg-bg-primary border border-border rounded-sm px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent" />
+                                                {editErrors.Email && (
+                                                    <p className="text-danger text-sm mt-1">{editErrors.Email.join(' ')}</p>
+                                                )}
                                         </div>
                                     </div>
                                     <div>
                                         <label className="text-xs text-text-secondary">Logo URL</label>
                                         <input value={editForm.logoUrl || ""} onChange={(e) => setEditForm({ ...editForm, logoUrl: e.target.value })}
                                             className="w-full bg-bg-primary border border-border rounded-sm px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent" />
+                                            {editErrors.LogoUrl && (
+                                                <p className="text-danger text-sm mt-1">{editErrors.LogoUrl.join(' ')}</p>
+                                            )}
                                         {editForm.logoUrl && (
                                             <img src={editForm.logoUrl} alt="Preview" className="mt-2 w-16 h-16 rounded-sm object-cover border border-border" />
                                         )}

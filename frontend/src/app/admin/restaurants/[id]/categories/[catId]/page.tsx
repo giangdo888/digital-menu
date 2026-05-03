@@ -51,8 +51,10 @@ export default function CategoryDetailPage() {
                 setRestaurant(foundRest || null);
                 setCategory(foundCat || null);
                 setDishes(dishRes.data);
-            } catch {
-                toast.error("Failed to load data");
+            } catch (err: any) {
+                const { formatApiValidationErrors } = await import("@/lib/apiErrors");
+                const msg = formatApiValidationErrors(err);
+                toast.error(msg || "Failed to load data");
             } finally {
                 setIsLoading(false);
             }
@@ -74,8 +76,10 @@ export default function CategoryDetailPage() {
             setShowDishForm(false);
             setDishForm({ name: "", price: 0, displayOrder: 0 });
             toast.success("Dish created!");
-        } catch {
-            toast.error("Failed to create dish");
+        } catch (err: any) {
+            const { formatApiValidationErrors } = await import("@/lib/apiErrors");
+            const msg = formatApiValidationErrors(err);
+            toast.error(msg || "Failed to create dish");
         }
     };
 
@@ -85,8 +89,10 @@ export default function CategoryDetailPage() {
             await dishService.delete(id);
             setDishes((prev) => prev.filter((d) => d.id !== id));
             toast.success("Dish deleted!");
-        } catch {
-            toast.error("Failed to delete dish");
+        } catch (err: any) {
+            const { formatApiValidationErrors } = await import("@/lib/apiErrors");
+            const msg = formatApiValidationErrors(err);
+            toast.error(msg || "Failed to delete dish");
         }
     };
 
@@ -111,8 +117,10 @@ export default function CategoryDetailPage() {
         try {
             const res = await dishService.searchAFCD(searchQuery);
             setSearchResults(res.data);
-        } catch {
-            toast.error("Search failed");
+        } catch (err: any) {
+            const { formatApiValidationErrors } = await import("@/lib/apiErrors");
+            const msg = formatApiValidationErrors(err);
+            toast.error(msg || "Search failed");
         } finally {
             setIsSearching(false);
         }
@@ -153,8 +161,10 @@ export default function CategoryDetailPage() {
             const res = await dishService.getByCategory(categoryId);
             setDishes(res.data);
             setEditingDish(null);
-        } catch {
-            toast.error("Failed to save");
+        } catch (err: any) {
+            const { formatApiValidationErrors } = await import("@/lib/apiErrors");
+            const msg = formatApiValidationErrors(err);
+            toast.error(msg || "Failed to save");
         }
     };
 
@@ -203,8 +213,19 @@ export default function CategoryDetailPage() {
                 {/* Dishes List */}
                 <div className="space-y-3">
                     {dishes.map((dish) => (
-                        <button key={dish.id} onClick={() => openDishModal(dish)}
-                            className="w-full text-left bg-bg-card border border-border rounded-sm p-4 hover:border-accent transition-all">
+                        <div
+                            key={dish.id}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => openDishModal(dish)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                    e.preventDefault();
+                                    openDishModal(dish);
+                                }
+                            }}
+                            className="w-full text-left bg-bg-card border border-border rounded-sm p-4 hover:border-accent transition-all cursor-pointer"
+                        >
                             <div className="flex gap-4 items-center">
                                 {/* Dish Image */}
                                 {dish.imageUrl ? (
@@ -245,7 +266,7 @@ export default function CategoryDetailPage() {
                                     </svg>
                                 </button>
                             </div>
-                        </button>
+                        </div>
                     ))}
                     {dishes.length === 0 && (
                         <p className="text-text-secondary text-center py-8">No dishes yet. Add your first dish above!</p>

@@ -24,9 +24,16 @@ export default function RegisterPage() {
         try {
             await register(firstName, lastName, email, password, accountType);
             toast.success("Account created! 🎉");
-            router.push("/dashboard/profile");
+            if (accountType === "customer") {
+                router.push("/dashboard/profile");
+            } else {
+                router.push("/admin/restaurants");
+            }
         } catch {
-            toast.error("Registration failed. Email might already exist.");
+            const { formatApiValidationErrors } = await import("@/lib/apiErrors");
+            // @ts-ignore
+            const msg = formatApiValidationErrors((arguments[0]) || new Error("Registration failed"));
+            toast.error(msg || "Registration failed. Email might already exist.");
         } finally {
             setIsSubmitting(false);
         }
