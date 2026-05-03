@@ -55,11 +55,19 @@ export default function RootLayout({
           </div>
 
           <NavBar />
-          <main className="min-h-screen pb-20 md:pb-0 relative z-10">
+          <main className="min-h-screen pb-28 md:pb-0 relative z-10">
             <ProfileGuard>
               {children}
             </ProfileGuard>
           </main>
+
+          <div className="pointer-events-none fixed inset-x-0 bottom-4 hidden md:flex justify-center px-4 z-50">
+            <div className="max-w-3xl rounded-full border border-border/70 bg-bg-primary/90 px-6 py-3 text-center shadow-2xl backdrop-blur-md">
+              <p className="text-sm text-text-secondary">
+                Nutrition values are estimates only, not medical advice.
+              </p>
+            </div>
+          </div>
 
           <Toaster
             position="top-right"

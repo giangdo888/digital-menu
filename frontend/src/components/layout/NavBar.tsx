@@ -144,8 +144,13 @@ export default function NavBar() {
             </nav>
 
             {/* ── Mobile Bottom Nav (hidden on desktop) ── */}
-            <nav className="md:hidden fixed bottom-1 left-4 right-4 z-50 bg-bg-nav/90 backdrop-blur-lg border border-border h-16 rounded-sm flex items-center justify-around px-4 shadow-2xl safe-area-pb">
-                {mobileNav}
+            <nav className="md:hidden fixed bottom-1 left-4 right-4 z-50 bg-bg-nav/90 backdrop-blur-lg border border-border h-20 rounded-sm flex flex-col justify-center px-4 shadow-2xl safe-area-pb">
+                <div className="flex items-center justify-around w-full pt-2 pb-1">
+                    {mobileNav}
+                </div>
+                <p className="text-[10px] leading-none text-text-secondary text-center px-2">
+                    Nutrition values are estimates only, not medical advice.
+                </p>
             </nav>
         </>
     );

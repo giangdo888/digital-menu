@@ -139,7 +139,7 @@ export default function MenuPage() {
                     </div>
 
                     {/* Navigation and Filters Container - Glassmorphism style */}
-                    <div className="sticky top-20 z-20 mb-8 p-4 bg-white/40 backdrop-blur-md border border-border rounded-sm shadow-xl animate-fade-in-up">
+                    <div className="sticky top-14 md:top-20 z-20 mb-4 md:mb-8 p-4 bg-white/40 backdrop-blur-md border border-border rounded-sm shadow-xl animate-fade-in-up">
                         {/* Category Tabs */}
                         <div className="flex gap-3 overflow-x-auto pb-3 mb-4 scrollbar-hide">
                             {menu.categories.map((category) => (
@@ -181,7 +181,7 @@ export default function MenuPage() {
                     </div>
 
                     {/* Dishes Grid - Floating Effect */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20 stagger-fade-in" key={activeCategory}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-40 md:pb-24 stagger-fade-in" key={activeCategory}>
                         {displayDishes.map((dish) => (
                             <div key={dish.id} className="transform transition-transform hover:-translate-y-1 duration-300">
                                 <DishCard
