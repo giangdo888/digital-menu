@@ -173,7 +173,7 @@ export default function CategoryDetailPage() {
 
     return (
         <ProtectedRoute allowedRoles={["restaurant_admin", "system_admin"]}>
-            <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="max-w-4xl mx-auto px-4 pt-8 pb-36 md:py-8">
                 <Breadcrumbs items={[
                     { label: "Restaurants", href: "/admin/restaurants" },
                     { label: restaurant.name, href: `/admin/restaurants/${restaurantId}` },
@@ -279,7 +279,7 @@ export default function CategoryDetailPage() {
                 <>
                     <div className="fixed inset-0 bg-stone-900/40 z-50" onClick={() => setEditingDish(null)} />
                     <div className="fixed z-50 inset-x-0 bottom-0 md:inset-0 md:flex md:items-center md:justify-center">
-                        <div className="bg-bg-card border border-border rounded-t-sm md:rounded-sm max-h-[85vh] overflow-y-auto w-full md:max-w-xl p-5 shadow-2xl transition-all duration-300">
+                        <div className="bg-bg-card border border-border rounded-t-sm md:rounded-sm max-h-[85vh] overflow-y-auto w-full md:max-w-xl p-5 pb-25 md:pb-5 shadow-2xl transition-all duration-300">
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-lg font-bold">{editingDish.name}</h2>
                                 <button onClick={() => setEditingDish(null)} className="text-text-secondary hover:text-text-primary text-xl">✕</button>
