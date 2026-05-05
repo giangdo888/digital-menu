@@ -297,6 +297,18 @@ export default function CategoryDetailPage() {
                             </div>
 
                             {/* Search AFCD */}
+                            <p className="text-xs text-text-secondary mb-2">
+                                Nutrition info is estimated from {" "}
+                                <a
+                                    href="https://www.foodstandards.gov.au/about-us"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="underline underline-offset-2 hover:text-text-primary"
+                                >
+                                    Australian Food Composition Database (AFCD)
+                                </a>{" "}
+                                data.
+                            </p>
                             <label className="text-xs text-text-secondary block mb-1">Ingredients</label>
                             <div className="flex gap-2 mb-4">
                                 <input

@@ -23,6 +23,7 @@ export default function RestaurantDetailPage() {
     const [isEditingInfo, setIsEditingInfo] = useState(false);
     const [editForm, setEditForm] = useState<CreateRestaurantRequest>({ name: "", address: "" });
     const [editErrors, setEditErrors] = useState<Record<string, string[]>>({});
+    const [isTogglingStatus, setIsTogglingStatus] = useState(false);
 
     useEffect(() => {
         Promise.all([
@@ -102,6 +103,36 @@ export default function RestaurantDetailPage() {
         }
     };
 
+    const handleToggleRestaurantStatus = async () => {
+        if (!restaurant) return;
+
+        const action = restaurant.isActive ? "deactivate" : "activate";
+        const confirmMessage = restaurant.isActive
+            ? `Deactivate "${restaurant.name}"? It will stop showing publicly.`
+            : `Activate "${restaurant.name}"? It will be visible publicly again.`;
+
+        if (!window.confirm(confirmMessage)) return;
+
+        setIsTogglingStatus(true);
+        try {
+            if (restaurant.isActive) {
+                await restaurantService.deactivate(id);
+                setRestaurant((prev) => (prev ? { ...prev, isActive: false } : prev));
+                toast.success("Restaurant deactivated!");
+            } else {
+                await restaurantService.activate(id);
+                setRestaurant((prev) => (prev ? { ...prev, isActive: true } : prev));
+                toast.success("Restaurant activated!");
+            }
+        } catch (err: any) {
+            const { formatApiValidationErrors } = await import("@/lib/apiErrors");
+            const msg = formatApiValidationErrors(err);
+            toast.error(msg || `Failed to ${action} restaurant`);
+        } finally {
+            setIsTogglingStatus(false);
+        }
+    };
+
     if (!restaurant) return <div className="text-center py-20 text-text-secondary">Loading...</div>;
 
     return (
@@ -126,10 +157,29 @@ export default function RestaurantDetailPage() {
                                 <p className="text-text-secondary">{restaurant.address}</p>
                             </div>
                         </div>
-                        <button onClick={openEditForm}
-                            className="text-sm text-accent hover:text-accent-hover">
-                            Edit
-                        </button>
+                        <div className="flex flex-col items-end gap-2">
+                            <button
+                                onClick={openEditForm}
+                                title="Edit restaurant"
+                                aria-label="Edit restaurant"
+                                className="text-accent hover:text-accent-hover transition-colors p-1"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931ZM18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                </svg>
+                            </button>
+                            <button
+                                onClick={handleToggleRestaurantStatus}
+                                disabled={isTogglingStatus}
+                                title={restaurant.isActive ? "Deactivate restaurant" : "Activate restaurant"}
+                                aria-label={restaurant.isActive ? "Deactivate restaurant" : "Activate restaurant"}
+                                className={`text-sm hover:opacity-80 disabled:opacity-50 transition-colors ${restaurant.isActive ? "text-danger" : "text-accent"}`}
+                            >
+                                {isTogglingStatus
+                                    ? (restaurant.isActive ? "Deactivating..." : "Activating...")
+                                    : (restaurant.isActive ? "Deactivate" : "Activate")}
+                            </button>
+                        </div>
                     </div>
                     <div className="grid grid-cols-2 gap-3 text-sm">
                         {restaurant.phone && (

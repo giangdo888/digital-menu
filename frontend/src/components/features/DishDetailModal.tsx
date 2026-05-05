@@ -70,6 +70,18 @@ export default function DishDetailModal({ dish, onClose, profile, accumulator, o
                         {/* Title + Price */}
                         <h2 className="text-3xl font-serif font-bold tracking-tight">{dish.name}</h2>
                         <p className="text-accent font-bold text-lg mt-1 tracking-tight">${dish.price.toFixed(2)}</p>
+                        <p className="text-xs text-text-secondary mt-1">
+                            Nutrition information is estimated from {" "}
+                            <a
+                                href="https://www.foodstandards.gov.au/about-us"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="underline underline-offset-2 hover:text-text-primary"
+                            >
+                                Australian Food Composition Database (AFCD)
+                            </a>{" "}
+                            data.
+                        </p>
                         {/* Nutrition Grid */}
                         <div className="grid grid-cols-4 gap-2 mt-4">
                             {[

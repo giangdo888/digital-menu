@@ -26,11 +26,11 @@ export const restaurantService = {
     update: (id: number, data: CreateRestaurantRequest) =>
         api.put<Restaurant>(`/restaurants/${id}`, data),
 
-    active: (id: number) =>
-        api.put<Restaurant>(`/restaurants/${id}/active`),
+    activate: (id: number) =>
+        api.post<{ message: string }>(`/restaurants/${id}/activate`),
 
-    deactive: (id: number) =>
-        api.put<Restaurant>(`/restaurants/${id}/deactive`),
+    deactivate: (id: number) =>
+        api.post<{ message: string }>(`/restaurants/${id}/deactivate`),
 
     //admin only
     getAll: () =>
