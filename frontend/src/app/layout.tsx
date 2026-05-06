@@ -61,7 +61,7 @@ export default function RootLayout({
             </ProfileGuard>
           </main>
 
-          <div className="pointer-events-none fixed inset-x-0 bottom-4 hidden md:flex justify-center px-4 z-50">
+          <div className="pointer-events-none fixed inset-x-0 bottom-1 hidden md:flex justify-center px-4 z-50">
             <div className="max-w-3xl rounded-full border border-border/70 bg-bg-primary/90 px-6 py-3 text-center shadow-2xl backdrop-blur-md">
               <p className="text-sm text-text-secondary">
                 Nutrition values are estimates only, not medical advice.
