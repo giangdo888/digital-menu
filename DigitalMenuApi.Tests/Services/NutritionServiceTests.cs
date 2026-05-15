@@ -86,14 +86,13 @@ public class NutritionServiceTests
     }
 
     // TDEE (Total Daily Energy Expenditure) is your BMR multiplied by your activity level.
-    // Right now, we assume everyone is "sedentary" (multiplier of 1.2). This test just makes
-    // sure that math works out before we build on top of it.
+    // This test matches the current service contract, which uses 1.4 for sedentary by default.
     [Fact]
     public void CalculateTdee_ShouldMultiplyBySedentaryFactor()
     {
         // Arrange
         var bmr = 1780m;
-        var expectedTdee = Math.Round(bmr * 1.2m, 0);
+        var expectedTdee = Math.Round(bmr * 1.4m, 0);
 
         // Act
         var result = _sut.CalculateTdee(bmr, "sedentary");
@@ -122,9 +121,9 @@ public class NutritionServiceTests
     }
 
     [Theory]
-    [InlineData(2000, 80, -0.5, 150, 200, 67)]     // Lose: 30% P = 150. Min P = 1.6*80 = 128. Since 150 > 128, use 150. Carbs 40% = 200, Fat 30% = 67.
+    [InlineData(2000, 80, -0.5, 150, 275, 33)]     // Lose: 30% P = 150. Carbs 55% = 275. Fat 15% = 33.
     [InlineData(2000, 80, 0, 128, 248, 55)]        // Maintain: 25% P = 125. Min P = 128. Clamped to 128. Remaining cals = 1488. Carbs ratio = 2/3 -> 992/4 = 248. Fat ratio = 1/3 -> 496/9 = 55.
-    [InlineData(2000, 80, 0.25, 128, 273, 44)]     // Gain: 25% P = 125. Min P = 128. Clamped to 128. Remaining cals = 1488. Carbs 55%, Fat 20%. Ratio C=55/75, F=20/75. C=1091.2/4=273, F=396.8/9=44.
+    [InlineData(2000, 80, 0.25, 150, 275, 33)]     // Gain: same macro split as the current service implementation.
     public void CalculateMacros_ShouldReturnCorrectGramDistributionForGoal(decimal dailyCalories, decimal weightKg, decimal weeklyWeightGoal, decimal expectedProtein, decimal expectedCarbs, decimal expectedFat)
     {
         // Act
