@@ -62,11 +62,11 @@ public class NutritionService : INutritionService
     {
         var activityMultiplier = activityLevel.ToLower() switch
         {
-            "lightly_active" => 1.375m,
-            "moderately_active" => 1.55m,
-            "very_active" => 1.725m,
-            "extra_active" => 1.9m,
-            _ => 1.2m // sedentary default
+            "lightly_active" => 1.6m,
+            "moderately_active" => 1.7m,
+            "very_active" => 1.9m,
+            "extra_active" => 2.2m,
+            _ => 1.4m // sedentary default
         };
 
         return Math.Round(bmr * activityMultiplier, 0);
@@ -99,14 +99,14 @@ public class NutritionService : INutritionService
         if (targetWeightChangeKgPerWeek < 0) // lose
         {
             proteinPct = 0.30m;
-            carbsPct = 0.40m;
-            fatPct = 0.30m;
+            carbsPct = 0.55m;
+            fatPct = 0.15m;
         }
         else if (targetWeightChangeKgPerWeek > 0) // gain
         {
-            proteinPct = 0.25m;
+            proteinPct = 0.30m;
             carbsPct = 0.55m;
-            fatPct = 0.20m;
+            fatPct = 0.15m;
         }
         else // maintain
         {

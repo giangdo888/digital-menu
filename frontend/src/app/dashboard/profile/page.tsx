@@ -205,15 +205,30 @@ export default function ProfilePage() {
                     </select>
                 </div>
                 <div>
-                    <label className="text-sm text-text-secondary block mb-1">Activity Level</label>
-                    <select value={form.activityLevel} onChange={(e) => updateField("activityLevel", e.target.value)}
-                        className="w-full bg-bg-card border border-border rounded-sm px-4 py-3 text-text-primary focus:outline-none focus:border-accent">
-                        <option value="sedentary">Sedentary (Little exercise)</option>
-                        <option value="lightly_active">Lightly Active (1-3 days/week)</option>
-                        <option value="moderately_active">Moderately Active (3-5 days/week)</option>
-                        <option value="very_active">Very Active (6-7 days/week)</option>
-                        <option value="extra_active">Extra Active (Athlete / Physical job)</option>
-                    </select>
+                    <label className="text-sm text-text-secondary block mb-3">Activity Level</label>
+                    <div className="space-y-2">
+                        {[
+                            { value: "sedentary", label: "Sedentary", desc: "Occupations with no physical effort; no need to walk long distances; no exercise" },
+                            { value: "lightly_active", label: "Lightly Active", desc: "Occupations with no physical effort; occasionally participate in sports or casual walking" },
+                            { value: "moderately_active", label: "Moderately Active", desc: "Occupations with low energy demands; doing 1 hour/day of moderate or vigorous exercise" },
+                            { value: "very_active", label: "Very Active", desc: "Occupations with high energy consumption such as masons or construction workers, agriculture workers; doing 1 hour/day of moderate or vigorous exercise" },
+                            { value: "extra_active", label: "Extra Active", desc: "Physical jobs; doing 2 hours/day of extreme exercise such as swimming, dancing" },
+                        ].map((level) => (
+                            <label key={level.value} className={`flex items-start p-3 border rounded-sm cursor-pointer transition-colors ${form.activityLevel === level.value ? "bg-accent/10 border-accent" : "bg-bg-card border-border hover:border-accent/50"}`}>
+                                <input
+                                    type="radio"
+                                    value={level.value}
+                                    checked={form.activityLevel === level.value}
+                                    onChange={(e) => updateField("activityLevel", e.target.value)}
+                                    className="mt-1 cursor-pointer"
+                                />
+                                <div className="ml-3 flex-1 min-w-0">
+                                    <p className="font-semibold text-text-primary">{level.label}</p>
+                                    <p className="text-xs text-text-secondary mt-1">{level.desc}</p>
+                                </div>
+                            </label>
+                        ))}
+                    </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                     <button type="submit" className="w-full bg-accent hover:bg-accent-hover text-white font-semibold py-3 rounded-sm">
