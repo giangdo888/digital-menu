@@ -29,7 +29,7 @@ public static class ServiceCollectionExtensions
                 {
                     builder.WithOrigins(
                             "http://localhost:3000",
-                            "https://squid-app-zbydk.ondigitalocean.app")
+                            "https://digital-menu-frontend-g7f5hebtheaqhagj.eastasia-01.azurewebsites.net")
                            .AllowAnyMethod()
                            .AllowAnyHeader()
                            .AllowCredentials();
