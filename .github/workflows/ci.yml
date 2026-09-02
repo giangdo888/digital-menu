@@ -30,15 +30,31 @@ jobs:
     - name: Run Unit Tests
       run: dotnet test DigitalMenu.sln --no-build --configuration Release --verbosity normal
 
-  # This job simulates building the Docker image for deployment.
-  # We will expand this in the AWS Phase to push to a container registry.
-  docker_build:
+    - name: Publish application
+      run: dotnet publish DigitalMenuApi/DigitalMenuApi.csproj --no-restore --configuration Release --output ./publish
+
+    - name: Upload publish artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: digital-menu-api
+        path: ./publish
+
+  deploy:
     needs: build_and_test
     runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
 
-    - name: Build Docker Image
-      run: docker build -t digitalmenuapi:latest .
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
+    - name: Download publish artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: digital-menu-api
+        path: ./publish
+
+    - name: Deploy to Azure App Service
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: ${{ vars.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ./publish
