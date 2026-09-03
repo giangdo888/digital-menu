@@ -109,32 +109,6 @@ jobs:
         name: digital-menu-frontend
         path: ./frontend-deploy
 
-    - name: Configure frontend App Service
-      uses: azure/appservice-settings@v1
-      with:
-        app-name: ${{ secrets.AZURE_FRONTEND_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_FRONTEND_PUBLISH_PROFILE }}
-        app-settings-json: |
-          [
-            {
-              "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
-              "value": "false",
-              "slotSetting": false
-            },
-            {
-              "name": "WEBSITE_NODE_DEFAULT_VERSION",
-              "value": "22",
-              "slotSetting": false
-            }
-          ]
-        general-settings-json: |
-          [
-            {
-              "linuxFxVersion": "NODE|22-lts",
-              "appCommandLine": "npm start"
-            }
-          ]
-
     - name: Deploy frontend to Azure App Service
       uses: azure/webapps-deploy@v3
       with:
