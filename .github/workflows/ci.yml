@@ -87,17 +87,13 @@ jobs:
 
     - name: Prepare deployment package
       run: |
-        mkdir frontend-deploy
-        cp -r .next/standalone/. frontend-deploy/
-        mkdir -p frontend-deploy/.next/static
-        cp -r .next/static/. frontend-deploy/.next/static/
-        if [ -d public ]; then cp -r public frontend-deploy/; fi
+        zip -r ../frontend.zip . -x ".next/cache/*" "node_modules/.cache/*"
 
     - name: Upload frontend artifact
       uses: actions/upload-artifact@v4
       with:
         name: digital-menu-frontend
-        path: frontend/frontend-deploy
+        path: frontend/frontend.zip
 
   frontend_deploy:
     needs: frontend_build
@@ -110,7 +106,10 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: digital-menu-frontend
-        path: ./frontend-deploy
+        path: .
+
+    - name: Unzip frontend package
+      run: unzip -q frontend.zip -d frontend-deploy
 
     - name: Deploy frontend to Azure App Service
       uses: azure/webapps-deploy@v3
