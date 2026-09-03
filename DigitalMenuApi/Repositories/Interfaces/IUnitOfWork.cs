@@ -18,6 +18,8 @@ public interface IUnitOfWork : IDisposable
 
     Task<int> SaveChangesAsync();
 
+    Task<TResult> ExecuteInTransactionAsync<TResult>(Func<Task<TResult>> operation);
+
     //explicit transaction management for complex operations
     Task BeginTransactionAsync();
     Task CommitTransactionAsync();

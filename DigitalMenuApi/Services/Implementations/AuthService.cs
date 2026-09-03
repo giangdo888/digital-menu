@@ -53,28 +53,27 @@ public class AuthService : IAuthService
 
         try
         {
-            await _unitOfWork.BeginTransactionAsync();
-
-            //3. Create User
-            var user = new User
+            var responseData = await _unitOfWork.ExecuteInTransactionAsync(async () =>
             {
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Email = request.Email,
-                PasswordHash = BCrypt.HashPassword(request.Password),
-                RoleId = role.Id,
-                IsActive = true
-            };
+                //3. Create User
+                var user = new User
+                {
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    Email = request.Email,
+                    PasswordHash = BCrypt.HashPassword(request.Password),
+                    RoleId = role.Id,
+                    IsActive = true
+                };
 
-            await _unitOfWork.Users.AddAsync(user);
-            await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.Users.AddAsync(user);
+                await _unitOfWork.SaveChangesAsync();
 
-            //4. Generate token and return response
-            var responseData = await GenerateAuthResponse(user, role.Name);
+                //4. Generate token and return response
+                return await GenerateAuthResponse(user, role.Name);
+            });
 
-            await _unitOfWork.CommitTransactionAsync();
-
-            _logger.LogInformation("User registered successfully: {UserId} ({Email})", user.Id, user.Email);
+            _logger.LogInformation("User registered successfully: ({Email})", request.Email);
             return Result<AuthResponse>.Success(responseData);
         }
         catch (Exception ex)

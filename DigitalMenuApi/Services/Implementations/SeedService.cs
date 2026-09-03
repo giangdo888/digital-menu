@@ -30,6 +30,19 @@ public partial class SeedService : ISeedService
 
     public async Task<Result<SeedResult>> SeedSampleDataAsync()
     {
+        try
+        {
+            return await _unitOfWork.ExecuteInTransactionAsync(SeedSampleDataCoreAsync);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to seed sample data");
+            return Result<SeedResult>.Failure($"Failed to seed data: {ex.Message}", 500);
+        }
+    }
+
+    private async Task<Result<SeedResult>> SeedSampleDataCoreAsync()
+    {
         var result = new SeedResult();
 
         var existingUser = await _unitOfWork.Users.Query()
@@ -41,11 +54,7 @@ public partial class SeedService : ISeedService
             return Result<SeedResult>.Failure("Seed data already exists. Clear the database first if you want to re-seed.", 409);
         }
 
-        try
-        {
-            await _unitOfWork.BeginTransactionAsync();
-
-            var restaurantAdminRole = await _unitOfWork.Roles.Query()
+        var restaurantAdminRole = await _unitOfWork.Roles.Query()
                 .FirstOrDefaultAsync(r => r.Name == "restaurant_admin");
 
             if (restaurantAdminRole == null)
@@ -53,9 +62,9 @@ public partial class SeedService : ISeedService
                 return Result<SeedResult>.Failure("restaurant_admin role not found. Run migrations first.", 500);
             }
 
-            var restaurantData = GetRestaurantData();
+        var restaurantData = GetRestaurantData();
 
-            foreach (var data in restaurantData)
+        foreach (var data in restaurantData)
             {
                 var user = new User
                 {
@@ -148,20 +157,11 @@ public partial class SeedService : ISeedService
                 }
             }
 
-            await _unitOfWork.CommitTransactionAsync();
-
-            _logger.LogInformation(
+        _logger.LogInformation(
                 "Seed completed: {Users} users, {Restaurants} restaurants, {Categories} categories, {Dishes} dishes, {Ingredients} ingredients",
                 result.UsersCreated, result.RestaurantsCreated, result.CategoriesCreated, result.DishesCreated, result.IngredientsLinked);
 
-            return Result<SeedResult>.Success(result);
-        }
-        catch (Exception ex)
-        {
-            await _unitOfWork.RollbackTransactionAsync();
-            _logger.LogError(ex, "Failed to seed sample data");
-            return Result<SeedResult>.Failure($"Failed to seed data: {ex.Message}", 500);
-        }
+        return Result<SeedResult>.Success(result);
     }
 
     private async Task<AFCDItem?> FindAfcdItemAsync(string searchTerm)
