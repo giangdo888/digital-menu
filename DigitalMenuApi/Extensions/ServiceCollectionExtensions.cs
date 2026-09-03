@@ -76,7 +76,12 @@ public static class ServiceCollectionExtensions
 
         // Add DbContext
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), sqlOptions =>
+                sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 5,
+                    maxRetryDelay: TimeSpan.FromSeconds(10),
+                    errorNumbersToAdd: null
+        )));
 
         // - Repositories
         services.AddScoped<IUnitOfWork, UnitOfWork>();
