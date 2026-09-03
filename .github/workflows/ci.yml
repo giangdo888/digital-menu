@@ -93,7 +93,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: digital-menu-frontend
-        path: frontend/frontend.zip
+        path: frontend.zip
 
   frontend_deploy:
     needs: frontend_build
