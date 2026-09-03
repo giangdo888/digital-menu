@@ -88,7 +88,7 @@ jobs:
     - name: Prepare deployment package
       run: |
         mkdir frontend-deploy
-        cp -r .next public package.json package-lock.json frontend-deploy/
+        cp -r .next public node_modules package.json package-lock.json frontend-deploy/
 
     - name: Upload frontend artifact
       uses: actions/upload-artifact@v4
